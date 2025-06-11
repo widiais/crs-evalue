@@ -1,206 +1,178 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { 
-  DocumentChartBarIcon, 
-  MagnifyingGlassIcon,
+  UserIcon, 
   ArrowLeftIcon,
-  UserIcon,
   ChartBarIcon,
-  CalendarIcon,
-  DocumentArrowDownIcon
+  DocumentTextIcon,
+  StarIcon,
+  TrophyIcon,
+  EyeIcon,
+  FunnelIcon
 } from '@heroicons/react/24/outline';
-import { employeeService } from '@/services/employees';
 import { assessmentService } from '@/services/assessments';
-import { divisionService, Division } from '@/services/divisions';
 import { templateService } from '@/services/templates';
-import { locationService } from '@/services/locations';
-import { Employee, AssessmentResult } from '@/types';
+import { employeeService } from '@/services/employees';
+import { Assessment, CriteriaTemplate, Employee, AssessmentResult } from '@/types';
 
-interface PersonalReport {
-  employee: Employee;
+interface EmployeeSummary {
+  employeeId: string;
+  employeeName: string;
   totalAssessments: number;
   averageScore: number;
-  competencyScores: Record<string, number>;
-  workSpiritScores: number[];
-  lastAssessment: Date | null;
-  recommendations: string[];
-  assessmentResults: AssessmentResult[];
-  workSpiritQuestions: string[];
+  latestAssessment: string;
+  latestAssessmentDate: Date;
+  competencyBreakdown: Record<string, number>;
+  assessmentHistory: AssessmentResult[];
 }
 
-export default function PersonalReportPage() {
+function PersonalReportsPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [assessments, setAssessments] = useState<Assessment[]>([]);
+  const [templates, setTemplates] = useState<CriteriaTemplate[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [divisions, setDivisions] = useState<Division[]>([]);
-  const [templates, setTemplates] = useState<any[]>([]);
-  const [locations, setLocations] = useState<any[]>([]);
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
-  const [reportData, setReportData] = useState<PersonalReport | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterLocation, setFilterLocation] = useState('');
-  const [filterPosition, setFilterPosition] = useState('');
-  const [filterDivision, setFilterDivision] = useState('');
+  const [allResults, setAllResults] = useState<AssessmentResult[]>([]);
+  const [employeeSummaries, setEmployeeSummaries] = useState<EmployeeSummary[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedAssessment, setSelectedAssessment] = useState('');
+  const [filteredSummaries, setFilteredSummaries] = useState<EmployeeSummary[]>([]);
 
-  // Get unique positions from templates and locations
-  const availablePositions = Array.from(new Set(templates.map(template => template.level))).sort();
-  const availableLocations = locations.map(location => location.name).sort();
+  // Get assessment ID from URL params
+  const assessmentFromUrl = searchParams.get('assessment');
 
   useEffect(() => {
-    loadInitialData();
+    loadData();
   }, []);
 
-  const loadInitialData = async () => {
+  useEffect(() => {
+    if (assessmentFromUrl && assessments.length > 0) {
+      setSelectedAssessment(assessmentFromUrl);
+      generateEmployeeSummaries(assessmentFromUrl);
+    }
+  }, [assessmentFromUrl, assessments, allResults]);
+
+  const loadData = async () => {
     try {
-      // Load all required data in parallel
-      const [employeesData, divisionsData, templatesData, locationsData] = await Promise.all([
-        employeeService.getAllEmployees(),
-        divisionService.getActiveDivisions(),
+      setLoading(true);
+      const [assessmentData, templateData, employeeData, resultsData] = await Promise.all([
+        assessmentService.getAllAssessments(),
         templateService.getAllTemplates(),
-        locationService.getAllLocations()
+        employeeService.getAllEmployees(),
+        assessmentService.getAllAssessmentResults()
       ]);
-
-      setEmployees(employeesData);
-      setDivisions(divisionsData);
-      setTemplates(templatesData);
-      setLocations(locationsData.filter(location => location.isActive));
-    } catch (error) {
-      console.error('Error loading initial data:', error);
-    }
-  };
-
-  const generatePersonalReport = async (employee: Employee): Promise<PersonalReport> => {
-    try {
-      // Get all assessment results for this employee from Firebase
-      const allResults = await assessmentService.getAllAssessmentResults();
-      const employeeResults = allResults.filter((result: AssessmentResult) => 
-        result.targetUser.id === employee.id
-      );
-
-      if (employeeResults.length === 0) {
-        // Return empty report if no assessments found
-        return {
-          employee,
-          totalAssessments: 0,
-          averageScore: 0,
-          competencyScores: {},
-          workSpiritScores: [],
-          lastAssessment: null,
-          recommendations: [],
-          assessmentResults: [],
-          workSpiritQuestions: []
-        };
-      }
-
-      // Get the template for work spirit questions (use the first assessment's associated template)
-      let workSpiritQuestions: string[] = [];
-      if (employeeResults.length > 0) {
-        try {
-          // Find template that matches employee's position
-          const employeeTemplate = templates.find(t => t.level === employee.position);
-          if (employeeTemplate && employeeTemplate.section2) {
-            workSpiritQuestions = employeeTemplate.section2.map((q: any) => q.text);
-          }
-        } catch (error) {
-          console.error('Error loading template for work spirit questions:', error);
-        }
-      }
-
-      // Calculate statistics from real assessment results
-      const totalAssessments = employeeResults.length;
+      setAssessments(assessmentData);
+      setTemplates(templateData);
+      setEmployees(employeeData);
+      setAllResults(resultsData);
       
-      // Calculate average competency scores by category
-      const competencyScores: Record<string, number[]> = {};
-      employeeResults.forEach((result: AssessmentResult) => {
-        result.scores.forEach((categoryScore: any) => {
-          if (!competencyScores[categoryScore.category]) {
-            competencyScores[categoryScore.category] = [];
-          }
-          competencyScores[categoryScore.category].push(categoryScore.average);
-        });
-      });
-
-      // Average the scores per category
-      const avgCompetencyScores: Record<string, number> = {};
-      Object.entries(competencyScores).forEach(([category, scores]) => {
-        avgCompetencyScores[category] = scores.reduce((a, b) => a + b, 0) / scores.length;
-      });
-
-      // Calculate overall average score
-      const allScores = Object.values(avgCompetencyScores);
-      const averageScore = allScores.length > 0 
-        ? allScores.reduce((a, b) => a + b, 0) / allScores.length 
-        : 0;
-
-      // Get work spirit scores (average across all assessments)
-      const allWorkSpiritScores: number[][] = employeeResults.map((result: AssessmentResult) => result.semangatScores);
-      const workSpiritAverages: number[] = [];
-      
-      if (allWorkSpiritScores.length > 0) {
-        const maxLength = Math.max(...allWorkSpiritScores.map(scores => scores.length));
-        for (let i = 0; i < maxLength; i++) {
-          const scores = allWorkSpiritScores.map(scoreArray => scoreArray[i]).filter(score => score !== undefined);
-          if (scores.length > 0) {
-            workSpiritAverages.push(scores.reduce((a, b) => a + b, 0) / scores.length);
-          }
-        }
+      // Generate summaries for all employees if no specific assessment selected
+      if (!assessmentFromUrl) {
+        generateEmployeeSummaries('', resultsData, employeeData);
       }
-
-      // Get all recommendations
-      const recommendations = Array.from(new Set(employeeResults.map((result: AssessmentResult) => result.recommendation)));
-
-      // Get last assessment date
-      const lastAssessment = employeeResults.length > 0
-        ? new Date(Math.max(...employeeResults.map((result: AssessmentResult) => new Date(result.submittedAt).getTime())))
-        : null;
-
-      return {
-        employee,
-        totalAssessments,
-        averageScore,
-        competencyScores: avgCompetencyScores,
-        workSpiritScores: workSpiritAverages,
-        lastAssessment,
-        recommendations,
-        assessmentResults: employeeResults,
-        workSpiritQuestions
-      };
     } catch (error) {
-      console.error('Error generating personal report:', error);
-      // Return empty report on error
-      return {
-        employee,
-        totalAssessments: 0,
-        averageScore: 0,
-        competencyScores: {},
-        workSpiritScores: [],
-        lastAssessment: null,
-        recommendations: ['Error loading assessment data'],
-        assessmentResults: [],
-        workSpiritQuestions: []
-      };
-    }
-  };
-
-  const handleSelectEmployee = async (employee: Employee) => {
-    setSelectedEmployee(employee);
-    setLoading(true);
-    
-    try {
-      const report = await generatePersonalReport(employee);
-      setReportData(report);
-    } catch (error) {
-      console.error('Error generating report:', error);
+      console.error('Error loading data:', error);
     } finally {
       setLoading(false);
     }
   };
 
+  const generateEmployeeSummaries = (assessmentId: string = '', results: AssessmentResult[] = allResults, employeeData: Employee[] = employees) => {
+    const summaries: EmployeeSummary[] = [];
+    
+    // Group results by employee
+    const employeeResults = results.reduce((acc, result) => {
+      const employeeId = result.targetUser.id;
+      if (!acc[employeeId]) {
+        acc[employeeId] = [];
+      }
+      acc[employeeId].push(result);
+      return acc;
+    }, {} as Record<string, AssessmentResult[]>);
+
+    // Filter by selected assessment if specified
+    const filteredResults = assessmentId 
+      ? results.filter(result => result.assessmentId === assessmentId)
+      : results;
+
+    const filteredEmployeeResults = filteredResults.reduce((acc, result) => {
+      const employeeId = result.targetUser.id;
+      if (!acc[employeeId]) {
+        acc[employeeId] = [];
+      }
+      acc[employeeId].push(result);
+      return acc;
+    }, {} as Record<string, AssessmentResult[]>);
+
+    // Generate summary for each employee
+    Object.entries(filteredEmployeeResults).forEach(([employeeId, empResults]) => {
+      if (empResults.length === 0) return;
+
+      // Calculate average score across all assessments
+      let totalScore = 0;
+      let scoreCount = 0;
+      const competencyTotals: Record<string, number[]> = {};
+
+      empResults.forEach(result => {
+        result.scores.forEach(categoryScore => {
+          if (!competencyTotals[categoryScore.category]) {
+            competencyTotals[categoryScore.category] = [];
+          }
+          competencyTotals[categoryScore.category].push(categoryScore.average);
+          totalScore += categoryScore.average;
+          scoreCount++;
+        });
+      });
+
+      const averageScore = scoreCount > 0 ? totalScore / scoreCount : 0;
+
+      // Calculate competency breakdown
+      const competencyBreakdown: Record<string, number> = {};
+      Object.entries(competencyTotals).forEach(([category, scores]) => {
+        competencyBreakdown[category] = scores.reduce((sum, score) => sum + score, 0) / scores.length;
+      });
+
+      // Find latest assessment
+      const sortedResults = empResults.sort((a, b) => 
+        new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
+      );
+      const latestResult = sortedResults[0];
+      const latestAssessment = assessments.find(a => a.id === latestResult.assessmentId);
+
+      summaries.push({
+        employeeId,
+        employeeName: latestResult.targetUser.name,
+        totalAssessments: empResults.length,
+        averageScore,
+        latestAssessment: latestAssessment?.title || 'Unknown',
+        latestAssessmentDate: new Date(latestResult.submittedAt),
+        competencyBreakdown,
+        assessmentHistory: employeeResults[employeeId] || []
+      });
+    });
+
+    // Sort by average score descending
+    summaries.sort((a, b) => b.averageScore - a.averageScore);
+    
+    setEmployeeSummaries(summaries);
+    setFilteredSummaries(summaries);
+  };
+
+  const handleAssessmentChange = (assessmentId: string) => {
+    setSelectedAssessment(assessmentId);
+    if (assessmentId) {
+      generateEmployeeSummaries(assessmentId);
+    } else {
+      generateEmployeeSummaries('');
+    }
+  };
+
   const getScoreColor = (score: number) => {
     if (score >= 4.5) return 'text-green-600 bg-green-100';
-    if (score >= 3.5) return 'text-yellow-600 bg-yellow-100';
+    if (score >= 3.5) return 'text-blue-600 bg-blue-100';
+    if (score >= 2.5) return 'text-yellow-600 bg-yellow-100';
     return 'text-red-600 bg-red-100';
   };
 
@@ -208,327 +180,307 @@ export default function PersonalReportPage() {
     if (score >= 4.5) return 'Excellent';
     if (score >= 3.5) return 'Good';
     if (score >= 2.5) return 'Fair';
-    return 'Needs Improvement';
+    return 'Poor';
   };
 
-  const exportReport = () => {
-    if (!reportData) return;
-    
-    // Create CSV content
-    const csvContent = `Personal Assessment Report - ${reportData.employee.name}\n\n` +
-      `Employee Details:\n` +
-      `Name,${reportData.employee.name}\n` +
-      `Position,${reportData.employee.position}\n` +
-      `Location,${reportData.employee.location}\n` +
-      `Division,${reportData.employee.division || 'N/A'}\n\n` +
-      
-      `Assessment Summary:\n` +
-      `Total Assessments,${reportData.totalAssessments}\n` +
-      `Average Score,${reportData.averageScore.toFixed(2)}\n` +
-      `Last Assessment,${reportData.lastAssessment ? reportData.lastAssessment.toLocaleDateString() : 'N/A'}\n\n` +
-      
-      `Competency Scores:\n` +
-      Object.entries(reportData.competencyScores).map(([category, score]) => 
-        `${category},${score.toFixed(2)}`
-      ).join('\n') + '\n\n' +
-      
-      `Work Spirit Scores:\n` +
-      reportData.workSpiritScores.map((score, index) => 
-        `Question ${index + 1},${score.toFixed(2)}`
-      ).join('\n') + '\n\n' +
-      
-      `Recommendations:\n` +
-      reportData.recommendations.map(rec => `"${rec}"`).join('\n');
+  const selectedAssessmentData = assessments.find(a => a.id === selectedAssessment);
 
-    // Download CSV
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.style.display = 'none';
-    a.href = url;
-    a.download = `personal_report_${reportData.employee.name.replace(/\s+/g, '_')}.csv`;
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(a);
-  };
-
-  // Filter employees
-  const filteredEmployees = employees.filter(emp => {
-    const matchesSearch = emp.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesLocation = !filterLocation || emp.location === filterLocation;
-    const matchesPosition = !filterPosition || emp.position === filterPosition;
-    const matchesDivision = !filterDivision || emp.division === filterDivision;
-    return matchesSearch && matchesLocation && matchesPosition && matchesDivision;
-  });
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto"></div>
+          <p className="mt-4 text-white">Loading reports...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => router.push('/admin')}
-                className="flex items-center text-gray-600 hover:text-gray-900"
-              >
-                <ArrowLeftIcon className="h-5 w-5 mr-2" />
-                Back to Dashboard
-              </button>
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">Report Personal</h1>
-                <p className="mt-2 text-gray-600">Laporan detail assessment per individu berdasarkan data real Firebase</p>
+    <div className="min-h-screen bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 relative overflow-hidden">
+      {/* Background Geometric Shapes */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-0 w-full h-full opacity-5">
+          <div className="absolute top-20 left-10 w-32 h-32 border border-white transform rotate-45"></div>
+          <div className="absolute top-40 right-20 w-24 h-24 border border-white transform rotate-12"></div>
+          <div className="absolute bottom-32 left-1/4 w-40 h-40 border border-white transform -rotate-12"></div>
+          <div className="absolute bottom-20 right-10 w-28 h-28 border border-white transform rotate-45"></div>
+        </div>
+        
+        {/* Gradient Overlay Lines */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white to-transparent transform -skew-y-12 translate-y-20"></div>
+        </div>
+      </div>
+
+      <div className="relative z-10 min-h-screen py-6 lg:py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <div className="mb-8">
+            <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-xl">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                <div className="mb-6 lg:mb-0">
+                  <button
+                    onClick={() => router.push('/admin')}
+                    className="flex items-center text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+                  >
+                    <ArrowLeftIcon className="h-5 w-5 mr-2" />
+                    Back to Dashboard
+                  </button>
+                  <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                    Personal Assessment Reports
+                  </h1>
+                  <p className="text-gray-600 text-lg">
+                    Laporan akumulasi penilaian per karyawan
+                  </p>
+                </div>
               </div>
             </div>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
+              <div className="flex items-center">
+                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 p-3 rounded-xl">
+                  <DocumentTextIcon className="h-8 w-8 text-white" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-500">Total Assessment</p>
+                  <p className="text-2xl font-semibold text-gray-900">{assessments.length}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
+              <div className="flex items-center">
+                <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-3 rounded-xl">
+                  <UserIcon className="h-8 w-8 text-white" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-500">Karyawan Dinilai</p>
+                  <p className="text-2xl font-semibold text-gray-900">{filteredSummaries.length}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
+              <div className="flex items-center">
+                <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-xl">
+                  <ChartBarIcon className="h-8 w-8 text-white" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-500">Total Penilaian</p>
+                  <p className="text-2xl font-semibold text-gray-900">
+                    {filteredSummaries.reduce((sum, emp) => sum + emp.totalAssessments, 0)}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
+              <div className="flex items-center">
+                <div className="bg-gradient-to-r from-orange-500 to-red-500 p-3 rounded-xl">
+                  <TrophyIcon className="h-8 w-8 text-white" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-500">Avg Score</p>
+                  <p className="text-2xl font-semibold text-gray-900">
+                    {filteredSummaries.length > 0 
+                      ? (filteredSummaries.reduce((sum, emp) => sum + emp.averageScore, 0) / filteredSummaries.length).toFixed(1)
+                      : '0.0'
+                    }
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Filters */}
+          <div className="bg-white rounded-2xl shadow-xl p-6 lg:p-8 mb-8">
+            <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+              <FunnelIcon className="h-6 w-6 mr-2" />
+              Filter Report
+            </h2>
             
-            {reportData && (
-              <button
-                onClick={exportReport}
-                className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-              >
-                <DocumentArrowDownIcon className="h-5 w-5 mr-2" />
-                Export Report
-              </button>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Assessment</label>
+                <select
+                  value={selectedAssessment}
+                  onChange={(e) => handleAssessmentChange(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                >
+                  <option value="">Semua Assessment</option>
+                  {assessments.map(assessment => (
+                    <option key={assessment.id} value={assessment.id}>
+                      {assessment.title} ({assessment.pin})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex items-end">
+                <div className="text-sm text-gray-600">
+                  {selectedAssessment ? (
+                    <p>Menampilkan data untuk assessment terpilih</p>
+                  ) : (
+                    <p>Menampilkan akumulasi dari semua assessment</p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {selectedAssessmentData && (
+              <div className="mt-6 p-4 bg-blue-50 rounded-xl">
+                <h3 className="font-semibold text-blue-900 mb-2">Assessment Info:</h3>
+                <div className="text-sm text-blue-800">
+                  <p><strong>Title:</strong> {selectedAssessmentData.title}</p>
+                  <p><strong>PIN:</strong> {selectedAssessmentData.pin}</p>
+                  <p><strong>Status:</strong> {selectedAssessmentData.isActive ? 'Active' : 'Inactive'}</p>
+                  {selectedAssessmentData.description && (
+                    <p><strong>Description:</strong> {selectedAssessmentData.description}</p>
+                  )}
+                </div>
+              </div>
             )}
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Employee Selection */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Pilih Karyawan</h3>
-              
-              {/* Search and Filters */}
-              <div className="space-y-4 mb-6">
-                <div className="relative">
-                  <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Cari nama..."
-                    className="pl-10 form-input"
-                  />
-                </div>
-
-                <select
-                  value={filterLocation}
-                  onChange={(e) => setFilterLocation(e.target.value)}
-                  className="form-input"
-                >
-                  <option value="">Semua Lokasi</option>
-                  {availableLocations.map(location => (
-                    <option key={location} value={location}>{location}</option>
-                  ))}
-                </select>
-
-                <select
-                  value={filterPosition}
-                  onChange={(e) => setFilterPosition(e.target.value)}
-                  className="form-input"
-                >
-                  <option value="">Semua Jabatan</option>
-                  {availablePositions.map(position => (
-                    <option key={position} value={position}>{position}</option>
-                  ))}
-                </select>
-
-                <select
-                  value={filterDivision}
-                  onChange={(e) => setFilterDivision(e.target.value)}
-                  className="form-input"
-                >
-                  <option value="">Semua Divisi</option>
-                  {divisions.map(division => (
-                    <option key={division.id} value={division.name}>{division.name}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Employee List */}
-              <div className="max-h-96 overflow-y-auto space-y-2">
-                {filteredEmployees.map(employee => (
-                  <div
-                    key={employee.id}
-                    onClick={() => handleSelectEmployee(employee)}
-                    className={`p-3 rounded-lg border cursor-pointer transition-colors ${
-                      selectedEmployee?.id === employee.id
-                        ? 'bg-blue-50 border-blue-200'
-                        : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
-                    }`}
-                  >
-                    <div className="flex items-center">
-                      <UserIcon className="h-5 w-5 text-gray-400 mr-3" />
-                      <div>
-                        <p className="font-medium text-gray-900">{employee.name}</p>
-                        <p className="text-sm text-gray-500">{employee.position} • {employee.location}</p>
-                        {employee.division && (
-                          <p className="text-xs text-gray-400">{employee.division}</p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                
-                {filteredEmployees.length === 0 && (
-                  <div className="text-center py-8">
-                    <UserIcon className="mx-auto h-12 w-12 text-gray-400" />
-                    <h3 className="mt-2 text-sm font-medium text-gray-900">No employees found</h3>
-                    <p className="mt-1 text-sm text-gray-500">
-                      Try adjusting your search or filters
-                    </p>
-                  </div>
-                )}
-              </div>
+          {/* Employee Summary Table */}
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div className="px-6 lg:px-8 py-6 border-b border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900">
+                📊 Laporan Per Karyawan ({filteredSummaries.length})
+              </h3>
             </div>
-          </div>
 
-          {/* Report Content */}
-          <div className="lg:col-span-2">
-            {!selectedEmployee ? (
-              <div className="bg-white rounded-lg shadow p-12 text-center">
-                <DocumentChartBarIcon className="mx-auto h-16 w-16 text-gray-400" />
-                <h3 className="mt-4 text-lg font-medium text-gray-900">
-                  Pilih Karyawan untuk Melihat Report
-                </h3>
+            {filteredSummaries.length === 0 ? (
+              <div className="px-6 py-12 text-center">
+                <ChartBarIcon className="mx-auto h-16 w-16 text-gray-400" />
+                <h3 className="mt-4 text-lg font-medium text-gray-900">Belum ada data</h3>
                 <p className="mt-2 text-gray-500">
-                  Pilih karyawan dari daftar di sebelah kiri untuk melihat laporan assessment personal
+                  Pilih assessment atau tunggu hingga ada hasil penilaian
                 </p>
               </div>
-            ) : loading ? (
-              <div className="bg-white rounded-lg shadow p-12 text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                <p className="mt-4 text-gray-600">Loading report...</p>
-              </div>
-            ) : reportData ? (
-              <div className="space-y-6">
-                {/* Employee Info Card */}
-                <div className="bg-white rounded-lg shadow p-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="bg-blue-100 p-3 rounded-full">
-                        <UserIcon className="h-8 w-8 text-blue-600" />
-                      </div>
-                      <div>
-                        <h2 className="text-xl font-semibold text-gray-900">
-                          {reportData.employee.name}
-                        </h2>
-                        <p className="text-gray-600">
-                          {reportData.employee.position} • {reportData.employee.division}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          📍 {reportData.employee.location}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-bold text-blue-600">
-                        {reportData.averageScore.toFixed(1)}
-                      </div>
-                      <div className="text-sm text-gray-500">Average Score</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Assessment Summary */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-white rounded-lg shadow p-6">
-                    <div className="flex items-center">
-                      <ChartBarIcon className="h-8 w-8 text-green-500" />
-                      <div className="ml-4">
-                        <p className="text-sm font-medium text-gray-500">Total Assessments</p>
-                        <p className="text-2xl font-semibold text-gray-900">
-                          {reportData.totalAssessments}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white rounded-lg shadow p-6">
-                    <div className="flex items-center">
-                      <CalendarIcon className="h-8 w-8 text-blue-500" />
-                      <div className="ml-4">
-                        <p className="text-sm font-medium text-gray-500">Last Assessment</p>
-                        <p className="text-lg font-semibold text-gray-900">
-                          {reportData.lastAssessment ? reportData.lastAssessment.toLocaleDateString('id-ID') : 'N/A'}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white rounded-lg shadow p-6">
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-500">Performance Level</p>
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${
-                        getScoreColor(reportData.averageScore)
-                      }`}>
-                        {getScoreLabel(reportData.averageScore)}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Competency Scores */}
-                <div className="bg-white rounded-lg shadow p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Competency Scores</h3>
-                  <div className="space-y-4">
-                    {Object.entries(reportData.competencyScores).map(([competency, score]) => (
-                      <div key={competency}>
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="text-sm font-medium text-gray-700">{competency}</span>
-                          <span className="text-sm font-medium text-gray-900">
-                            {score.toFixed(1)}/5.0
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Nama Karyawan
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Jumlah Assessment
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Rata-rata Score
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Assessment Terakhir
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Tanggal Terakhir
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {filteredSummaries.map((employee) => (
+                      <tr key={employee.employeeId} className="hover:bg-gray-50 transition-colors">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 p-2 rounded-lg">
+                              <UserIcon className="h-5 w-5 text-white" />
+                            </div>
+                            <div className="ml-4">
+                              <div className="text-sm font-medium text-gray-900">
+                                {employee.employeeName}
+                              </div>
+                              <div className="text-sm text-gray-500">
+                                ID: {employee.employeeId}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+                            {employee.totalAssessments} assessment{employee.totalAssessments > 1 ? 's' : ''}
                           </span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
-                            className="bg-blue-600 h-2 rounded-full" 
-                            style={{ width: `${(score / 5) * 100}%` }}
-                          ></div>
-                        </div>
-                      </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getScoreColor(employee.averageScore)}`}>
+                            <StarIcon className="h-4 w-4 mr-1" />
+                            {employee.averageScore.toFixed(1)} - {getScoreLabel(employee.averageScore)}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-sm text-gray-900">{employee.latestAssessment}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {employee.latestAssessmentDate.toLocaleDateString('id-ID')}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <button
+                            onClick={() => router.push(`/admin/reports/personal/${employee.employeeId}?assessment=${selectedAssessment}`)}
+                            className="text-blue-600 hover:text-blue-900 transition-colors flex items-center"
+                            title="View Details"
+                          >
+                            <EyeIcon className="h-5 w-5 mr-1" />
+                            Detail
+                          </button>
+                        </td>
+                      </tr>
                     ))}
-                  </div>
-                </div>
-
-                {/* Work Spirit Scores */}
-                <div className="bg-white rounded-lg shadow p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Work Spirit Scores</h3>
-                  <div className="space-y-3">
-                    {reportData.workSpiritScores.map((score, index) => (
-                      <div key={index} className="flex justify-between items-start p-3 bg-gray-50 rounded-lg">
-                        <span className="text-sm font-medium text-gray-700 flex-1 mr-4">
-                          {reportData.workSpiritQuestions[index] || `Pertanyaan ${index + 1}`}
-                        </span>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
-                          getScoreColor(score)
-                        }`}>
-                          {score.toFixed(1)}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Recommendations */}
-                <div className="bg-white rounded-lg shadow p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Recommendations</h3>
-                  <div className="space-y-2">
-                    {reportData.recommendations.map((recommendation, index) => (
-                      <div key={index} className="flex items-start">
-                        <span className="text-blue-500 mr-2">•</span>
-                        <span className="text-gray-700">{recommendation}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                  </tbody>
+                </table>
               </div>
-            ) : null}
+            )}
+          </div>
+
+          {/* Info Section */}
+          <div className="mt-8 bg-white rounded-2xl shadow-xl p-6 lg:p-8">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">📊 Informasi Personal Reports</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700">
+              <div>
+                <h4 className="font-semibold mb-3">Cara Menggunakan:</h4>
+                <ul className="space-y-2">
+                  <li>• Pilih assessment tertentu atau lihat akumulasi semua</li>
+                  <li>• Klik "Detail" pada baris karyawan untuk melihat rincian</li>
+                  <li>• Data diurutkan berdasarkan rata-rata score tertinggi</li>
+                  <li>• Satu baris per karyawan menampilkan akumulasi penilaian</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-3">Score Interpretation:</h4>
+                <ul className="space-y-2">
+                  <li>• <strong>4.5-5.0:</strong> Excellent - Outstanding performance</li>
+                  <li>• <strong>3.5-4.4:</strong> Good - Above average performance</li>
+                  <li>• <strong>2.5-3.4:</strong> Fair - Meets expectations</li>
+                  <li>• <strong>1.0-2.4:</strong> Poor - Needs improvement</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function PersonalReportsPageWrapper() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto"></div>
+          <p className="mt-4 text-white">Loading...</p>
+        </div>
+      </div>
+    }>
+      <PersonalReportsPage />
+    </Suspense>
   );
 } 

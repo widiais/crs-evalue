@@ -6,103 +6,18 @@ import {
   updateDoc,
   deleteDoc,
   query,
-  orderBy 
+  orderBy,
+  Timestamp 
 } from 'firebase/firestore';
 import { db } from './firebase';
-
-export interface Division {
-  id: string;
-  name: string;
-  description?: string;
-  head?: string; // Division Head name
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-// Mock divisions as fallback
-const mockDivisions: Division[] = [
-  {
-    id: 'div_001',
-    name: 'HRD',
-    description: 'Human Resources Development',
-    head: 'Sarah Indira',
-    isActive: true,
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01')
-  },
-  {
-    id: 'div_002', 
-    name: 'Finance',
-    description: 'Financial Management & Accounting',
-    head: 'Ahmad Reza',
-    isActive: true,
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01')
-  },
-  {
-    id: 'div_003',
-    name: 'Operations',
-    description: 'Daily Operations & Store Management',
-    head: 'Budi Santoso',
-    isActive: true,
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01')
-  },
-  {
-    id: 'div_004',
-    name: 'Marketing',
-    description: 'Marketing & Business Development',
-    head: 'Linda Wijaya',
-    isActive: true,
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01')
-  },
-  {
-    id: 'div_005',
-    name: 'IT',
-    description: 'Information Technology & Systems',
-    head: 'Rio Pratama',
-    isActive: true,
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01')
-  },
-  {
-    id: 'div_006',
-    name: 'Quality Assurance',
-    description: 'Product Quality Control & Standards',
-    head: 'Maya Sari',
-    isActive: true,
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01')
-  },
-  {
-    id: 'div_007',
-    name: 'Procurement',
-    description: 'Purchasing & Supply Chain Management',
-    head: 'Agus Prasetyo',
-    isActive: true,
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01')
-  },
-  {
-    id: 'div_008',
-    name: 'Legal',
-    description: 'Legal Affairs & Compliance',
-    head: 'Rina Kartika',
-    isActive: true,
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01')
-  }
-];
+import { Division } from '@/types';
 
 export const divisionService = {
   // Get all divisions
   async getAllDivisions(): Promise<Division[]> {
     try {
       if (!db) {
-        console.log('Firebase not available, using mock data');
-        return mockDivisions;
+        throw new Error('Firebase not initialized');
       }
 
       const divisionsRef = collection(db, 'divisions');
@@ -117,7 +32,7 @@ export const divisionService = {
       })) as Division[];
     } catch (error) {
       console.error('Error fetching divisions:', error);
-      return mockDivisions;
+      throw error;
     }
   },
 
@@ -128,21 +43,19 @@ export const divisionService = {
   },
 
   // Add new division
-  async addDivision(divisionData: Omit<Division, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
+  async addDivision(division: Omit<Division, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
     try {
       if (!db) {
-        console.log('Firebase not available, cannot add division');
-        return 'mock_id_' + Date.now();
+        throw new Error('Firebase not initialized');
       }
 
-      const divisionsRef = collection(db, 'divisions');
-      const newDivision = {
-        ...divisionData,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      };
-
-      const docRef = await addDoc(divisionsRef, newDivision);
+      const now = Timestamp.now();
+      const docRef = await addDoc(collection(db, 'divisions'), {
+        ...division,
+        createdAt: now,
+        updatedAt: now
+      });
+      
       return docRef.id;
     } catch (error) {
       console.error('Error adding division:', error);
@@ -151,20 +64,17 @@ export const divisionService = {
   },
 
   // Update division
-  async updateDivision(id: string, divisionData: Partial<Division>): Promise<void> {
+  async updateDivision(id: string, updates: Partial<Division>): Promise<void> {
     try {
       if (!db) {
-        console.log('Firebase not available, cannot update division');
-        return;
+        throw new Error('Firebase not initialized');
       }
 
       const divisionRef = doc(db, 'divisions', id);
-      const updateData = {
-        ...divisionData,
-        updatedAt: new Date()
-      };
-
-      await updateDoc(divisionRef, updateData);
+      await updateDoc(divisionRef, {
+        ...updates,
+        updatedAt: Timestamp.now()
+      });
     } catch (error) {
       console.error('Error updating division:', error);
       throw error;
@@ -175,32 +85,13 @@ export const divisionService = {
   async deleteDivision(id: string): Promise<void> {
     try {
       if (!db) {
-        console.log('Firebase not available, cannot delete division');
-        return;
+        throw new Error('Firebase not initialized');
       }
 
       const divisionRef = doc(db, 'divisions', id);
       await deleteDoc(divisionRef);
     } catch (error) {
       console.error('Error deleting division:', error);
-      throw error;
-    }
-  },
-
-  // Seed sample divisions
-  async seedSampleDivisions(): Promise<void> {
-    try {
-      console.log('🌱 Seeding sample divisions...');
-      
-      for (const division of mockDivisions) {
-        const { id, ...divisionData } = division;
-        await this.addDivision(divisionData);
-        console.log(`✅ Added division: ${division.name}`);
-      }
-      
-      console.log('🎉 Division seeding completed!');
-    } catch (error) {
-      console.error('❌ Error seeding divisions:', error);
       throw error;
     }
   }

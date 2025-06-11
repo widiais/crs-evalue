@@ -3,19 +3,22 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
-  DocumentTextIcon,
+  DocumentTextIcon, 
   PlusIcon, 
   ArrowLeftIcon,
+  EyeIcon,
   PencilIcon,
   TrashIcon,
-  ClipboardDocumentListIcon,
+  ChatBubbleBottomCenterTextIcon,
+  HeartIcon,
   ClipboardDocumentCheckIcon,
-  ChatBubbleLeftRightIcon
+  PlusCircleIcon,
+  XMarkIcon
 } from '@heroicons/react/24/outline';
 import { templateService } from '@/services/templates';
 import { CriteriaTemplate, AssessmentCriteria } from '@/types';
-import { COMPETENCY_CATEGORIES, RECOMMENDATION_OPTIONS } from '@/constants/templates';
 import { POSITIONS, Position } from '@/constants/positions';
+import { COMPETENCY_CATEGORIES, RECOMMENDATION_OPTIONS } from '@/constants/templates';
 
 export default function AdminTemplatesPage() {
   const router = useRouter();
@@ -24,20 +27,13 @@ export default function AdminTemplatesPage() {
   const [submitting, setSubmitting] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState<CriteriaTemplate | null>(null);
-  
+  const [viewingTemplate, setViewingTemplate] = useState<CriteriaTemplate | null>(null);
+
+  // Form state
   const [templateForm, setTemplateForm] = useState({
     level: '' as Position | '',
-    section1: [] as AssessmentCriteria[],
-    section2: [] as AssessmentCriteria[],
-    section3: {
-      type: 'fixed_options' as const,
-      options: [...RECOMMENDATION_OPTIONS]
-    }
-  });
-
-  const [newQuestion, setNewQuestion] = useState({
-    section1: { text: '', category: '' },
-    section2: { text: '', category: 'semangat' }
+    section1: [{ text: '', category: COMPETENCY_CATEGORIES[0] }] as AssessmentCriteria[],
+    section2: [{ text: '', category: 'semangat' }] as AssessmentCriteria[]
   });
 
   useEffect(() => {
@@ -59,42 +55,24 @@ export default function AdminTemplatesPage() {
   const resetForm = () => {
     setTemplateForm({
       level: '',
-      section1: [],
-      section2: [],
-      section3: {
-        type: 'fixed_options',
-        options: [...RECOMMENDATION_OPTIONS]
-      }
-    });
-    setNewQuestion({
-      section1: { text: '', category: '' },
-      section2: { text: '', category: 'semangat' }
+      section1: [{ text: '', category: COMPETENCY_CATEGORIES[0] }],
+      section2: [{ text: '', category: 'semangat' }]
     });
     setEditingTemplate(null);
   };
 
-  const addQuestion = (section: 'section1' | 'section2') => {
-    const question = newQuestion[section];
-    if (!question.text.trim()) {
-      alert('Pertanyaan tidak boleh kosong');
-      return;
-    }
-
-    if (section === 'section1' && !question.category) {
-      alert('Kategori harus dipilih untuk Section 1');
-      return;
-    }
-
+  const updateQuestion = (section: 'section1' | 'section2', index: number, field: 'text' | 'category', value: string) => {
     setTemplateForm(prev => ({
       ...prev,
-      [section]: [...prev[section], { ...question }]
+      [section]: prev[section].map((q, i) => i === index ? { ...q, [field]: value } : q)
     }));
+  };
 
-    setNewQuestion(prev => ({
+  const addQuestion = (section: 'section1' | 'section2') => {
+    const category = section === 'section1' ? COMPETENCY_CATEGORIES[0] : 'semangat';
+    setTemplateForm(prev => ({
       ...prev,
-      [section]: section === 'section1' 
-        ? { text: '', category: '' }
-        : { text: '', category: 'semangat' }
+      [section]: [...prev[section], { text: '', category }]
     }));
   };
 
@@ -109,17 +87,33 @@ export default function AdminTemplatesPage() {
     e.preventDefault();
     
     if (!templateForm.level) {
-      alert('Level assessment harus diisi');
+      alert('Level/Jabatan harus dipilih');
       return;
     }
 
+    // Check if each section has at least one question
     if (templateForm.section1.length === 0) {
-      alert('Minimal harus ada 1 pertanyaan di Section 1');
+      alert('Section Kompetensi harus memiliki minimal 1 pertanyaan');
       return;
     }
 
     if (templateForm.section2.length === 0) {
-      alert('Minimal harus ada 1 pertanyaan di Section 2');
+      alert('Section Semangat harus memiliki minimal 1 pertanyaan');
+      return;
+    }
+
+    // Check if all questions are filled
+    const allSection1Filled = templateForm.section1.every(q => q.text.trim() && q.category.trim());
+    const allSection2Filled = templateForm.section2.every(q => q.text.trim());
+    
+    if (!allSection1Filled || !allSection2Filled) {
+      alert('Semua pertanyaan dan kategori harus diisi');
+      return;
+    }
+
+    // Check if template for this level already exists (only for create, not edit)
+    if (!editingTemplate && templates.some(t => t.level === templateForm.level)) {
+      alert('Template untuk level ini sudah ada');
       return;
     }
 
@@ -127,18 +121,19 @@ export default function AdminTemplatesPage() {
     try {
       const templateData = {
         level: templateForm.level as Position,
-        section1: templateForm.section1,
-        section2: templateForm.section2,
-        section3: templateForm.section3
+        section1: templateForm.section1.filter(q => q.text.trim()),
+        section2: templateForm.section2.filter(q => q.text.trim()),
+        section3: {
+          type: 'fixed_options' as const,
+          options: [...RECOMMENDATION_OPTIONS]
+        }
       };
 
       if (editingTemplate) {
-        // Update existing template
         await templateService.updateTemplate(editingTemplate.id, templateData);
         alert('✅ Template berhasil diperbarui!');
       } else {
-        // Create new template
-        await templateService.createTemplate(templateData);
+        await templateService.addTemplate(templateData);
         alert('✅ Template berhasil dibuat!');
       }
 
@@ -157,11 +152,7 @@ export default function AdminTemplatesPage() {
     setTemplateForm({
       level: template.level,
       section1: [...template.section1],
-      section2: [...template.section2],
-      section3: { 
-        type: 'fixed_options',
-        options: [...RECOMMENDATION_OPTIONS]
-      }
+      section2: [...template.section2]
     });
     setEditingTemplate(template);
     setShowCreateForm(true);
@@ -182,384 +173,513 @@ export default function AdminTemplatesPage() {
     }
   };
 
+  const groupedTemplates = templates.reduce((acc, template) => {
+    if (!acc[template.level]) {
+      acc[template.level] = [];
+    }
+    acc[template.level].push(template);
+    return acc;
+  }, {} as Record<string, CriteriaTemplate[]>);
+
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading templates...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto"></div>
+          <p className="mt-4 text-white">Loading templates...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => router.push('/admin')}
-                className="flex items-center text-gray-600 hover:text-gray-900"
-              >
-                <ArrowLeftIcon className="h-5 w-5 mr-2" />
-                Back to Dashboard
-              </button>
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">Setup Template Assessment</h1>
-                <p className="mt-2 text-gray-600">Kelola pertanyaan assessment per section</p>
-              </div>
-            </div>
-            
-            <button
-              onClick={() => {
-                resetForm();
-                setShowCreateForm(true);
-              }}
-              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-            >
-              <PlusIcon className="h-5 w-5 mr-2" />
-              Buat Template Baru
-            </button>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 relative overflow-hidden">
+      {/* Background Geometric Shapes */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-0 w-full h-full opacity-5">
+          <div className="absolute top-20 left-10 w-32 h-32 border border-white transform rotate-45"></div>
+          <div className="absolute top-40 right-20 w-24 h-24 border border-white transform rotate-12"></div>
+          <div className="absolute bottom-32 left-1/4 w-40 h-40 border border-white transform -rotate-12"></div>
+          <div className="absolute bottom-20 right-10 w-28 h-28 border border-white transform rotate-45"></div>
         </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <DocumentTextIcon className="h-8 w-8 text-blue-500" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">Total Template</p>
-                <p className="text-2xl font-semibold text-gray-900">{templates.length}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <ClipboardDocumentListIcon className="h-8 w-8 text-green-500" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">Avg Section 1 Questions</p>
-                <p className="text-2xl font-semibold text-gray-900">
-                  {templates.length > 0 ? Math.round(templates.reduce((sum, t) => sum + t.section1.length, 0) / templates.length) : 0}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <ClipboardDocumentCheckIcon className="h-8 w-8 text-purple-500" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">Avg Section 2 Questions</p>
-                <p className="text-2xl font-semibold text-gray-900">
-                  {templates.length > 0 ? Math.round(templates.reduce((sum, t) => sum + t.section2.length, 0) / templates.length) : 0}
-                </p>
-              </div>
-            </div>
-          </div>
+        
+        {/* Gradient Overlay Lines */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white to-transparent transform -skew-y-12 translate-y-20"></div>
         </div>
+      </div>
 
-        {/* Create/Edit Template Form Modal */}
-        {showCreateForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                {editingTemplate ? 'Edit Template' : 'Buat Template Baru'}
-              </h3>
-              
-              <form onSubmit={handleSubmitTemplate} className="space-y-6">
-                {/* Template Level */}
-                <div>
-                  <label className="form-label">Level Assessment *</label>
-                  <select
-                    value={templateForm.level}
-                    onChange={(e) => setTemplateForm({...templateForm, level: e.target.value as Position})}
-                    className="form-input"
-                    required
+      <div className="relative z-10 min-h-screen py-6 lg:py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <div className="mb-8">
+            <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-xl">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                <div className="mb-6 lg:mb-0">
+                  <button
+                    onClick={() => router.push('/admin')}
+                    className="flex items-center text-gray-600 hover:text-gray-900 mb-4 transition-colors"
                   >
-                    <option value="">Pilih Level</option>
-                    {POSITIONS.map(position => (
-                      <option key={position} value={position}>{position}</option>
-                    ))}
-                  </select>
+                    <ArrowLeftIcon className="h-5 w-5 mr-2" />
+                    Back to Dashboard
+                  </button>
+                  <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                    Setup Assessment Templates
+                  </h1>
+                  <p className="text-gray-600 text-lg">
+                    Kelola template pertanyaan assessment berdasarkan level jabatan
+                  </p>
                 </div>
+                
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <button
+                    onClick={() => {
+                      resetForm();
+                      setShowCreateForm(true);
+                    }}
+                    className="flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+                  >
+                    <PlusIcon className="h-5 w-5 mr-2" />
+                    Buat Template Baru
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
 
-                {/* Section 1: 6 Dimensi Kompetensi */}
-                <div className="border-b pb-6">
-                  <h4 className="text-lg font-medium text-gray-900 mb-4">
-                    Section 1: Penilaian 6 Dimensi Kompetensi
-                  </h4>
-                  
-                  {/* Add Question Form */}
-                  <div className="bg-gray-50 p-4 rounded-lg mb-4">
-                    <div className="space-y-3">
-                      {/* Question input - full width */}
-                      <input
-                        type="text"
-                        value={newQuestion.section1.text}
-                        onChange={(e) => setNewQuestion(prev => ({
-                          ...prev,
-                          section1: { ...prev.section1, text: e.target.value }
-                        }))}
-                        className="form-input w-full"
-                        placeholder="Masukkan pertanyaan..."
-                      />
-                      
-                      {/* Category and Add button - same row */}
-                      <div className="flex gap-3">
-                        <select
-                          value={newQuestion.section1.category}
-                          onChange={(e) => setNewQuestion(prev => ({
-                            ...prev,
-                            section1: { ...prev.section1, category: e.target.value }
-                          }))}
-                          className="form-input flex-1"
-                        >
-                          <option value="">Pilih Kategori</option>
-                          {COMPETENCY_CATEGORIES.map(category => (
-                            <option key={category} value={category}>{category}</option>
-                          ))}
-                        </select>
-                        <button
-                          type="button"
-                          onClick={() => addQuestion('section1')}
-                          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 whitespace-nowrap"
-                        >
-                          + Tambah
-                        </button>
+          {/* Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
+              <div className="flex items-center">
+                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 p-3 rounded-xl">
+                  <DocumentTextIcon className="h-8 w-8 text-white" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-500">Total Template</p>
+                  <p className="text-2xl font-semibold text-gray-900">{templates.length}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
+              <div className="flex items-center">
+                <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-3 rounded-xl">
+                  <ClipboardDocumentCheckIcon className="h-8 w-8 text-white" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-500">Level Tersedia</p>
+                  <p className="text-2xl font-semibold text-gray-900">{Object.keys(groupedTemplates).length}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
+              <div className="flex items-center">
+                <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-xl">
+                  <ChatBubbleBottomCenterTextIcon className="h-8 w-8 text-white" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-500">Kompetensi</p>
+                  <p className="text-2xl font-semibold text-gray-900">
+                    {templates.reduce((acc, t) => acc + t.section1.length, 0)}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
+              <div className="flex items-center">
+                <div className="bg-gradient-to-r from-orange-500 to-red-500 p-3 rounded-xl">
+                  <HeartIcon className="h-8 w-8 text-white" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-500">Semangat</p>
+                  <p className="text-2xl font-semibold text-gray-900">
+                    {templates.reduce((acc, t) => acc + t.section2.length, 0)}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Create/Edit Template Form Modal */}
+          {showCreateForm && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-2xl p-6 lg:p-8 w-full max-w-5xl mx-4 max-h-[90vh] overflow-y-auto shadow-2xl">
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">
+                  {editingTemplate ? 'Edit Template' : 'Buat Template Baru'}
+                </h3>
+                
+                <form onSubmit={handleSubmitTemplate} className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Level/Jabatan *</label>
+                    <select
+                      value={templateForm.level}
+                      onChange={(e) => setTemplateForm({...templateForm, level: e.target.value as Position})}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      required
+                      disabled={!!editingTemplate}
+                    >
+                      <option value="">Pilih Level/Jabatan</option>
+                      {POSITIONS.map(position => (
+                        <option key={position} value={position}>{position}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Section 1 - Kompetensi */}
+                  <div className="bg-blue-50 rounded-xl p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="text-lg font-semibold text-blue-900 flex items-center">
+                        <ChatBubbleBottomCenterTextIcon className="h-5 w-5 mr-2" />
+                        Section 1: Pertanyaan Kompetensi ({templateForm.section1.length})
+                      </h4>
+                      <button
+                        type="button"
+                        onClick={() => addQuestion('section1')}
+                        className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm"
+                      >
+                        <PlusCircleIcon className="h-4 w-4 mr-1" />
+                        Tambah Pertanyaan
+                      </button>
+                    </div>
+                    <div className="space-y-4">
+                      {templateForm.section1.map((question, index) => (
+                        <div key={index} className="relative bg-white rounded-lg p-4 border border-blue-200">
+                          <div className="flex items-start space-x-4">
+                            <div className="flex-1 space-y-3">
+                              <div>
+                                <label className="block text-sm font-medium text-blue-700 mb-2">
+                                  Pertanyaan {index + 1} *
+                                </label>
+                                <textarea
+                                  value={question.text}
+                                  onChange={(e) => updateQuestion('section1', index, 'text', e.target.value)}
+                                  className="w-full px-4 py-3 border border-blue-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                  rows={3}
+                                  placeholder={`Masukkan pertanyaan kompetensi ${index + 1}...`}
+                                  required
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-blue-700 mb-2">
+                                  Kategori Kompetensi *
+                                </label>
+                                <select
+                                  value={question.category}
+                                  onChange={(e) => updateQuestion('section1', index, 'category', e.target.value)}
+                                  className="w-full px-4 py-3 border border-blue-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white"
+                                  required
+                                >
+                                  {COMPETENCY_CATEGORIES.map(category => (
+                                    <option key={category} value={category}>{category}</option>
+                                  ))}
+                                </select>
+                              </div>
+                            </div>
+                            {templateForm.section1.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => removeQuestion('section1', index)}
+                                className="mt-8 p-2 text-red-600 hover:text-red-800 hover:bg-red-100 rounded-lg transition-colors"
+                                title="Hapus pertanyaan"
+                              >
+                                <XMarkIcon className="h-5 w-5" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-4 p-3 bg-blue-100 rounded-lg">
+                      <h5 className="text-sm font-medium text-blue-900 mb-2">📋 Kategori Kompetensi Tersedia:</h5>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-blue-800">
+                        {COMPETENCY_CATEGORIES.map((category, index) => (
+                          <div key={category} className="flex items-center">
+                            <span className="bg-blue-200 text-blue-800 px-2 py-1 rounded text-xs mr-2">{index + 1}</span>
+                            {category}
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
 
-                  {/* Questions List */}
-                  <div className="space-y-2">
-                    {templateForm.section1.map((question, index) => (
-                      <div key={index} className="flex items-center justify-between bg-white p-3 rounded border">
-                        <div>
-                          <p className="font-medium">{question.text}</p>
-                          <p className="text-sm text-gray-500">Kategori: {question.category}</p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => removeQuestion('section1', index)}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          <TrashIcon className="h-4 w-4" />
-                        </button>
-                      </div>
-                    ))}
-                    {templateForm.section1.length === 0 && (
-                      <p className="text-gray-500 text-center py-4">Belum ada pertanyaan</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Section 2: 7 Semangat Sedjati */}
-                <div className="border-b pb-6">
-                  <h4 className="text-lg font-medium text-gray-900 mb-4">
-                    Section 2: Penerapan 7 Semangat Sedjati
-                  </h4>
-                  
-                  {/* Add Question Form */}
-                  <div className="bg-gray-50 p-4 rounded-lg mb-4">
-                    <div className="flex gap-3">
-                      <input
-                        type="text"
-                        value={newQuestion.section2.text}
-                        onChange={(e) => setNewQuestion(prev => ({
-                          ...prev,
-                          section2: { ...prev.section2, text: e.target.value }
-                        }))}
-                        className="form-input flex-1"
-                        placeholder="Masukkan pertanyaan terkait semangat kerja..."
-                      />
+                  {/* Section 2 - Semangat */}
+                  <div className="bg-orange-50 rounded-xl p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="text-lg font-semibold text-orange-900 flex items-center">
+                        <HeartIcon className="h-5 w-5 mr-2" />
+                        Section 2: Pertanyaan Semangat ({templateForm.section2.length})
+                      </h4>
                       <button
                         type="button"
                         onClick={() => addQuestion('section2')}
-                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                        className="flex items-center px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors text-sm"
                       >
-                        + Tambah
+                        <PlusCircleIcon className="h-4 w-4 mr-1" />
+                        Tambah Pertanyaan
                       </button>
+                    </div>
+                    <div className="space-y-4">
+                      {templateForm.section2.map((question, index) => (
+                        <div key={index} className="relative bg-white rounded-lg p-4 border border-orange-200">
+                          <div className="flex items-start space-x-2">
+                            <div className="flex-1">
+                              <label className="block text-sm font-medium text-orange-700 mb-2">
+                                Pertanyaan {index + 1} *
+                              </label>
+                              <textarea
+                                value={question.text}
+                                onChange={(e) => updateQuestion('section2', index, 'text', e.target.value)}
+                                className="w-full px-4 py-3 border border-orange-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                                rows={3}
+                                placeholder={`Masukkan pertanyaan semangat ${index + 1}...`}
+                                required
+                              />
+                            </div>
+                            {templateForm.section2.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => removeQuestion('section2', index)}
+                                className="mt-8 p-2 text-red-600 hover:text-red-800 hover:bg-red-100 rounded-lg transition-colors"
+                                title="Hapus pertanyaan"
+                              >
+                                <XMarkIcon className="h-5 w-5" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
 
-                  {/* Questions List */}
-                  <div className="space-y-2">
-                    {templateForm.section2.map((question, index) => (
-                      <div key={index} className="flex items-center justify-between bg-white p-3 rounded border">
-                        <p className="font-medium">{question.text}</p>
-                        <button
-                          type="button"
-                          onClick={() => removeQuestion('section2', index)}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          <TrashIcon className="h-4 w-4" />
-                        </button>
-                      </div>
-                    ))}
-                    {templateForm.section2.length === 0 && (
-                      <p className="text-gray-500 text-center py-4">Belum ada pertanyaan</p>
-                    )}
+                  <div className="flex space-x-3 pt-4">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowCreateForm(false);
+                        resetForm();
+                      }}
+                      className="flex-1 px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+                      disabled={submitting}
+                    >
+                      Batal
+                    </button>
+                    <button
+                      type="submit"
+                      className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-50 shadow-lg"
+                      disabled={submitting}
+                    >
+                      {submitting ? 'Menyimpan...' : editingTemplate ? 'Update Template' : 'Buat Template'}
+                    </button>
                   </div>
-                </div>
-
-                {/* Section 3: Rekomendasi (Fixed) */}
-                <div>
-                  <h4 className="text-lg font-medium text-gray-900 mb-4">
-                    Section 3: Rekomendasi Evaluator (Opsi Tetap)
-                  </h4>
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <ul className="space-y-2">
-                      {RECOMMENDATION_OPTIONS.map((option, index) => (
-                        <li key={index} className="flex items-center">
-                          <span className="w-6 h-6 bg-blue-100 text-blue-800 rounded-full flex items-center justify-center text-sm mr-3">
-                            {index + 1}
-                          </span>
-                          {option}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="flex space-x-3 pt-4">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowCreateForm(false);
-                      resetForm();
-                    }}
-                    className="flex-1 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-                    disabled={submitting}
-                  >
-                    Batal
-                  </button>
-                  <button
-                    type="submit"
-                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-                    disabled={submitting}
-                  >
-                    {submitting ? 'Menyimpan...' : editingTemplate ? 'Update Template' : 'Buat Template'}
-                  </button>
-                </div>
-              </form>
+                </form>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Templates Table */}
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900">
-              Daftar Template Assessment ({templates.length})
-            </h3>
-          </div>
-          
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Level Assessment
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Section 1 Questions
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Section 2 Questions
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {templates.length === 0 ? (
+          {/* View Template Modal */}
+          {viewingTemplate && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-2xl p-6 lg:p-8 w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto shadow-2xl">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-2xl font-bold text-gray-900">
+                    Template: {viewingTemplate.level}
+                  </h3>
+                  <button
+                    onClick={() => setViewingTemplate(null)}
+                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    ✕
+                  </button>
+                </div>
+                
+                <div className="space-y-6">
+                  {/* Section 1 Preview */}
+                  <div className="bg-blue-50 rounded-xl p-6">
+                    <h4 className="text-lg font-semibold text-blue-900 mb-4 flex items-center">
+                      <ChatBubbleBottomCenterTextIcon className="h-5 w-5 mr-2" />
+                      Section 1: Kompetensi ({viewingTemplate.section1.length} pertanyaan)
+                    </h4>
+                    <div className="space-y-3">
+                      {viewingTemplate.section1.map((question, index) => (
+                        <div key={index} className="bg-white rounded-lg p-4 border border-blue-200">
+                          <div className="flex justify-between items-start mb-2">
+                            <p className="text-sm font-medium text-blue-700">Pertanyaan {index + 1}</p>
+                            <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                              {question.category}
+                            </span>
+                          </div>
+                          <p className="text-gray-800">{question.text}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Section 2 Preview */}
+                  <div className="bg-orange-50 rounded-xl p-6">
+                    <h4 className="text-lg font-semibold text-orange-900 mb-4 flex items-center">
+                      <HeartIcon className="h-5 w-5 mr-2" />
+                      Section 2: Semangat ({viewingTemplate.section2.length} pertanyaan)
+                    </h4>
+                    <div className="space-y-3">
+                      {viewingTemplate.section2.map((question, index) => (
+                        <div key={index} className="bg-white rounded-lg p-4 border border-orange-200">
+                          <p className="text-sm font-medium text-orange-700 mb-2">Pertanyaan {index + 1}</p>
+                          <p className="text-gray-800">{question.text}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Section 3 Preview */}
+                  <div className="bg-green-50 rounded-xl p-6">
+                    <h4 className="text-lg font-semibold text-green-900 mb-4 flex items-center">
+                      <ClipboardDocumentCheckIcon className="h-5 w-5 mr-2" />
+                      Section 3: Opsi Rekomendasi ({viewingTemplate.section3.options.length} opsi)
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {viewingTemplate.section3.options.map((option, index) => (
+                        <div key={index} className="bg-white rounded-lg p-3 border border-green-200">
+                          <div className="flex items-center">
+                            <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium mr-3">
+                              {index + 1}
+                            </span>
+                            <p className="text-gray-800 text-sm">{option}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 pt-4">
+                  <button
+                    onClick={() => setViewingTemplate(null)}
+                    className="w-full px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+                  >
+                    Tutup
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Templates List */}
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div className="px-6 lg:px-8 py-6 border-b border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900">
+                📝 Template Assessment ({templates.length})
+              </h3>
+            </div>
+            
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
                   <tr>
-                    <td colSpan={4} className="px-6 py-12 text-center">
-                      <DocumentTextIcon className="mx-auto h-12 w-12 text-gray-400" />
-                      <h3 className="mt-2 text-sm font-medium text-gray-900">Belum ada template</h3>
-                      <p className="mt-1 text-sm text-gray-500">
-                        Mulai dengan membuat template assessment baru
-                      </p>
-                    </td>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Level/Jabatan
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Kompetensi
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Semangat
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Total Pertanyaan
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Actions
+                    </th>
                   </tr>
-                ) : (
-                  templates.map((template) => (
-                    <tr key={template.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">
-                          {template.level}
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          ID: {template.id}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-900">
-                          {template.section1.length} pertanyaan
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          Categories: {Array.from(new Set(template.section1.map(q => q.category))).length}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
-                          {template.section2.length} pertanyaan
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <div className="flex space-x-2">
-                          <button
-                            onClick={() => handleEditTemplate(template)}
-                            className="text-blue-600 hover:text-blue-900"
-                            title="Edit"
-                          >
-                            <PencilIcon className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => deleteTemplate(template)}
-                            className="text-red-600 hover:text-red-900"
-                            title="Delete"
-                          >
-                            <TrashIcon className="h-4 w-4" />
-                          </button>
-                        </div>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {templates.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="px-6 py-12 text-center">
+                        <DocumentTextIcon className="mx-auto h-16 w-16 text-gray-400" />
+                        <h3 className="mt-4 text-lg font-medium text-gray-900">Belum ada template</h3>
+                        <p className="mt-2 text-gray-500">
+                          Mulai dengan membuat template assessment
+                        </p>
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Info Section */}
-        <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-blue-900 mb-4">📋 Informasi Setup Template</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-800">
-            <div>
-              <h4 className="font-semibold mb-2">Section 1 - 6 Dimensi Kompetensi:</h4>
-              <ul className="space-y-1">
-                <li>• Functional Competency</li>
-                <li>• Leadership dan Managerial</li>
-                <li>• Soft Skill</li>
-                <li>• Problem Solving & Analytical Thinking</li>
-                <li>• Culture Fit and Commitment</li>
-                <li>• Akhlak dan Etika Kerja Islam</li>
-              </ul>
+                  ) : (
+                    templates.map((template) => (
+                      <tr key={template.id} className="hover:bg-gray-50 transition-colors">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="font-medium text-gray-900">{template.level}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            {template.section1.length} pertanyaan
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                            {template.section2.length} pertanyaan
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-medium text-gray-900">
+                            {template.section1.length + template.section2.length} pertanyaan
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <div className="flex space-x-3">
+                            <button
+                              onClick={() => setViewingTemplate(template)}
+                              className="text-green-600 hover:text-green-900 transition-colors"
+                              title="View"
+                            >
+                              <EyeIcon className="h-5 w-5" />
+                            </button>
+                            <button
+                              onClick={() => handleEditTemplate(template)}
+                              className="text-blue-600 hover:text-blue-900 transition-colors"
+                              title="Edit"
+                            >
+                              <PencilIcon className="h-5 w-5" />
+                            </button>
+                            <button
+                              onClick={() => deleteTemplate(template)}
+                              className="text-red-600 hover:text-red-900 transition-colors"
+                              title="Delete"
+                            >
+                              <TrashIcon className="h-5 w-5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
             </div>
-            <div>
-              <h4 className="font-semibold mb-2">Section 2 - 7 Semangat Sedjati:</h4>
-              <ul className="space-y-1">
-                <li>• Pertanyaan bebas terkait semangat kerja</li>
-                <li>• Skala penilaian 1-5 (sama dengan Section 1)</li>
-                <li>• Fokus pada motivasi dan dedikasi</li>
-              </ul>
+          </div>
+
+          {/* Info Section */}
+          <div className="mt-8 bg-white rounded-2xl shadow-xl p-6 lg:p-8">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">📋 Informasi Template Assessment</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700">
+              <div>
+                <h4 className="font-semibold mb-3">Struktur Template:</h4>
+                <ul className="space-y-2">
+                  <li>• <strong>Level/Jabatan:</strong> Menentukan untuk siapa template ini</li>
+                  <li>• <strong>Section 1 (Kompetensi):</strong> Pertanyaan dengan 6 kategori kompetensi (minimal 1)</li>
+                  <li>• <strong>Section 2 (Semangat):</strong> Pertanyaan tentang motivasi dan semangat (minimal 1)</li>
+                  <li>• <strong>Jumlah Pertanyaan:</strong> Tidak dibatasi, bisa ditambah sesuai kebutuhan</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-3">Kategori Kompetensi:</h4>
+                <ul className="space-y-1 text-sm">
+                  {COMPETENCY_CATEGORIES.map((category, index) => (
+                    <li key={category}>• {category}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </div>
