@@ -366,7 +366,7 @@ export default function AssessmentFormPage() {
       </div>
 
       <div className="relative z-10 min-h-screen py-6 lg:py-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header Card */}
           <div className="bg-white rounded-2xl shadow-xl p-6 lg:p-8 mb-8">
             <div className="flex items-center justify-between mb-6">
@@ -377,7 +377,7 @@ export default function AssessmentFormPage() {
                 <div>
                   <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
                     Assessment Form
-                  </h1>
+            </h1>
                   <p className="text-gray-600">{assessment?.title}</p>
                 </div>
               </div>
@@ -421,8 +421,8 @@ export default function AssessmentFormPage() {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-8">
-            {/* Section 1: Competency Assessment */}
+            <form onSubmit={handleSubmit} className="space-y-8">
+              {/* Section 1: Competency Assessment */}
             <div className="bg-white rounded-2xl shadow-xl p-6 lg:p-8">
               <div className="flex items-center mb-6">
                 <div className="bg-gradient-to-r from-blue-500 to-indigo-500 p-3 rounded-xl mr-4">
@@ -430,14 +430,14 @@ export default function AssessmentFormPage() {
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-gray-900">
-                    Bagian 1: Penilaian Kompetensi
-                  </h2>
+                  Bagian 1: Penilaian Kompetensi
+                </h2>
                   <p className="text-sm text-gray-600">
                     Berikan penilaian dengan skala 1-5 berdasarkan performa karyawan
                   </p>
-                </div>
-              </div>
-              
+                        </div>
+                      </div>
+                      
               <div className="space-y-6">
                 {template.section1.map((criteria, index) => (
                   <div key={index} className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100">
@@ -459,12 +459,12 @@ export default function AssessmentFormPage() {
                       onChange={(score) => handleSection1Score(index, score)}
                       questionIndex={index}
                     />
-                  </div>
-                ))}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Section 2: Work Spirit Assessment */}
+              {/* Section 2: Work Spirit Assessment */}
             <div className="bg-white rounded-2xl shadow-xl p-6 lg:p-8">
               <div className="flex items-center mb-6">
                 <div className="bg-gradient-to-r from-red-500 to-pink-500 p-3 rounded-xl mr-4">
@@ -472,16 +472,16 @@ export default function AssessmentFormPage() {
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-gray-900">
-                    Bagian 2: Penilaian Semangat Kerja
-                  </h2>
+                  Bagian 2: Penilaian Semangat Kerja
+                </h2>
                   <p className="text-sm text-gray-600">
                     Evaluasi motivasi dan dedikasi karyawan dalam bekerja
-                  </p>
+                </p>
                 </div>
               </div>
-              
+                
               <div className="space-y-6">
-                {template.section2.map((criteria, index) => (
+                  {template.section2.map((criteria, index) => (
                   <div key={index} className="bg-gradient-to-r from-red-50 to-pink-50 p-6 rounded-xl border border-red-100">
                     <div className="mb-4">
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -491,26 +491,26 @@ export default function AssessmentFormPage() {
                     </div>
                     
                     <ScoreRating
-                      name={`section2_${index}`}
+                              name={`section2_${index}`}
                       value={section2Scores[index]}
                       onChange={(score) => handleSection2Score(index, score)}
                       questionIndex={index}
                     />
-                  </div>
-                ))}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Section 3: Recommendation */}
+              {/* Section 3: Recommendation */}
             <div className="bg-white rounded-2xl shadow-xl p-6 lg:p-8">
               <div className="flex items-center mb-6">
                 <div className="bg-gradient-to-r from-yellow-500 to-orange-500 p-3 rounded-xl mr-4">
                   <LightBulbIcon className="h-6 w-6 text-white" />
                 </div>
-                <div>
+              <div>
                   <h2 className="text-xl font-bold text-gray-900">
-                    Bagian 3: Rekomendasi
-                  </h2>
+                  Bagian 3: Rekomendasi
+                </h2>
                   <p className="text-sm text-gray-600">
                     Berikan rekomendasi terbaik berdasarkan penilaian Anda
                   </p>
@@ -537,9 +537,9 @@ export default function AssessmentFormPage() {
                         name="recommendation"
                         value={option}
                         checked={recommendation === option}
-                        onChange={(e) => setRecommendation(e.target.value)}
+                    onChange={(e) => setRecommendation(e.target.value)}
                         className="h-4 w-4 text-yellow-600 focus:ring-yellow-500 border-gray-300"
-                        required
+                    required
                       />
                       <div className="ml-3">
                         <span className={`font-medium ${
@@ -549,13 +549,13 @@ export default function AssessmentFormPage() {
                         </span>
                       </div>
                     </label>
-                  ))}
+                    ))}
+                </div>
                 </div>
               </div>
-            </div>
 
             {/* Error Display */}
-            {error && (
+              {error && (
               <div className="bg-white rounded-2xl shadow-xl p-6">
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center">
                   <div className="flex-shrink-0 mr-3">
@@ -565,8 +565,8 @@ export default function AssessmentFormPage() {
                   </div>
                   <span>{error}</span>
                 </div>
-              </div>
-            )}
+                </div>
+              )}
 
             {/* Action Buttons */}
             <div className="bg-white rounded-2xl shadow-xl p-6 lg:p-8">
@@ -605,8 +605,8 @@ export default function AssessmentFormPage() {
                   Progress: {answeredQuestions} dari {totalQuestions} pertanyaan telah dijawab
                 </p>
               </div>
-            </div>
-          </form>
+              </div>
+            </form>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 export const POSITIONS = [
+  "Magang",
   "Training",
   "Member",
   "Star",

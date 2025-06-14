@@ -1,11 +1,11 @@
 // Assessment Template Categories for Section 1: 6 Dimensi Kompetensi
 export const COMPETENCY_CATEGORIES = [
   'Functional Competency',
-  'Leadership dan Managerial',
-  'Soft Skill',
+  'Leadership & Managerial',
+  'Soft Skills',
   'Problem Solving & Analytical Thinking',
-  'Culture Fit and Commitment',
-  'Akhlak dan Etika Kerja Islam'
+  'Culture Fit & Organizational Commitment',
+  'Akhlak & Etika Kerja Islami'
 ] as const;
 
 // Assessment Scale Labels

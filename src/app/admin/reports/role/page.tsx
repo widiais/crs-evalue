@@ -349,19 +349,19 @@ export default function RoleReportPage() {
       </div>
 
       <div className="relative z-10 min-h-screen py-6 lg:py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="mb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-8">
             <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-xl">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
                 <div className="mb-6 lg:mb-0">
-                  <button
-                    onClick={() => router.push('/admin')}
+              <button
+                onClick={() => router.push('/admin')}
                     className="flex items-center text-gray-600 hover:text-gray-900 mb-4 transition-colors"
-                  >
-                    <ArrowLeftIcon className="h-5 w-5 mr-2" />
-                    Back to Dashboard
-                  </button>
+              >
+                <ArrowLeftIcon className="h-5 w-5 mr-2" />
+                Back to Dashboard
+              </button>
                   <div className="flex items-center mb-4">
                     <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-4 rounded-xl">
                       <UsersIcon className="h-8 w-8 text-white" />
@@ -372,8 +372,8 @@ export default function RoleReportPage() {
                         Analisis performance berdasarkan role/posisi jabatan
                       </p>
                     </div>
-                  </div>
-                </div>
+              </div>
+            </div>
                 <div className="flex space-x-3">
                   <button
                     onClick={handleDownloadPDF}
@@ -382,33 +382,33 @@ export default function RoleReportPage() {
                     <ArrowDownTrayIcon className="h-5 w-5 mr-2" />
                     Download PDF
                   </button>
-                  <button
-                    onClick={exportReport}
+            <button
+              onClick={exportReport}
                     className="flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
-                  >
-                    <DocumentArrowDownIcon className="h-5 w-5 mr-2" />
+            >
+              <DocumentArrowDownIcon className="h-5 w-5 mr-2" />
                     Export CSV
-                  </button>
+            </button>
                 </div>
               </div>
-            </div>
           </div>
+        </div>
 
-          {/* Filter */}
-          <div className="mb-6">
+        {/* Filter */}
+        <div className="mb-6">
             <div className="bg-white rounded-2xl p-6 shadow-xl">
               <div className="flex items-center space-x-4">
                 <label className="text-sm font-medium text-gray-700">Filter Role/Position:</label>
-                <select
-                  value={selectedRole}
-                  onChange={(e) => setSelectedRole(e.target.value)}
+          <select
+            value={selectedRole}
+            onChange={(e) => setSelectedRole(e.target.value)}
                   className="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-                >
+          >
                   <option value="">Semua Role</option>
-                  {availablePositions.map(position => (
-                    <option key={position} value={position}>{position}</option>
-                  ))}
-                </select>
+            {availablePositions.map(position => (
+              <option key={position} value={position}>{position}</option>
+            ))}
+          </select>
                 {selectedRole && (
                   <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">
                     {filteredStats.length} Role Selected
@@ -433,18 +433,18 @@ export default function RoleReportPage() {
             </div>
 
             <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200">
-              <div className="flex items-center">
+            <div className="flex items-center">
                 <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-3 rounded-xl">
                   <ChartBarIcon className="h-6 w-6 text-white" />
                 </div>
-                <div className="ml-4">
+              <div className="ml-4">
                   <p className="text-sm font-medium text-gray-500">Total Employees</p>
-                  <p className="text-2xl font-semibold text-gray-900">
+                <p className="text-2xl font-semibold text-gray-900">
                     {filteredStats.reduce((sum, stats) => sum + stats.totalEmployees, 0)}
-                  </p>
-                </div>
+                </p>
               </div>
             </div>
+          </div>
 
             <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200">
               <div className="flex items-center">
@@ -461,73 +461,73 @@ export default function RoleReportPage() {
             </div>
 
             <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200">
-              <div className="flex items-center">
+            <div className="flex items-center">
                 <div className="bg-gradient-to-r from-yellow-500 to-orange-500 p-3 rounded-xl">
                   <TrophyIcon className="h-6 w-6 text-white" />
                 </div>
-                <div className="ml-4">
+              <div className="ml-4">
                   <p className="text-sm font-medium text-gray-500">Top Role</p>
-                  <p className="text-lg font-semibold text-gray-900">
-                    {roleStats.sort((a, b) => b.averageScore - a.averageScore)[0]?.position || 'N/A'}
-                  </p>
-                </div>
+                <p className="text-lg font-semibold text-gray-900">
+                  {roleStats.sort((a, b) => b.averageScore - a.averageScore)[0]?.position || 'N/A'}
+                </p>
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Role Performance Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {filteredStats.map((stats) => (
+        {/* Role Performance Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          {filteredStats.map((stats) => (
               <div key={stats.position} className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900">{stats.position}</h3>
-                  <div className="text-right">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">{stats.position}</h3>
+                <div className="text-right">
                     <div className="text-2xl font-bold text-purple-600">
-                      {stats.averageScore.toFixed(1)}
-                    </div>
+                    {stats.averageScore.toFixed(1)}
+                  </div>
                     <div className="text-xs text-gray-500">
                       {stats.promotionReadiness}% Ready
                     </div>
-                  </div>
                 </div>
+              </div>
 
-                <div className="space-y-3">
-                  <div className="flex justify-between">
+              <div className="space-y-3">
+                <div className="flex justify-between">
                     <span className="text-sm text-gray-600">Employees:</span>
-                    <span className="text-sm font-medium">{stats.totalEmployees}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Assessments:</span>
-                    <span className="text-sm font-medium">{stats.totalAssessments}</span>
-                  </div>
+                  <span className="text-sm font-medium">{stats.totalEmployees}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Assessments:</span>
+                  <span className="text-sm font-medium">{stats.totalAssessments}</span>
+                </div>
                   <div className="flex justify-between">
                     <span className="text-sm text-gray-600">Semangat Avg:</span>
                     <span className="text-sm font-medium text-red-600">{stats.semangatAverage.toFixed(1)}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Top Performer:</span>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Top Performer:</span>
                     <span className="text-sm font-medium text-purple-600">{stats.topPerformer}</span>
-                  </div>
-                  
+                </div>
+                
                   <div className="pt-2 flex flex-wrap gap-2">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      getScoreColor(stats.averageScore)
-                    }`}>
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    getScoreColor(stats.averageScore)
+                  }`}>
                       {getScoreLabel(stats.averageScore)}
-                    </span>
+                  </span>
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                       getPromotionReadinessColor(stats.promotionReadiness)
                     }`}>
                       {stats.promotionReadiness}% Promotion Ready
                     </span>
-                  </div>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
+        </div>
 
           {/* Detailed Analysis for Selected Role */}
-          {selectedRole && filteredStats.length > 0 && (
+        {selectedRole && filteredStats.length > 0 && (
             <>
               {/* Competency Breakdown */}
               {Object.keys(filteredStats[0].competencyBreakdown).length > 0 && (
@@ -537,13 +537,13 @@ export default function RoleReportPage() {
                     {Object.entries(filteredStats[0].competencyBreakdown).map(([category, score]) => (
                       <div key={category} className="bg-gray-50 rounded-xl p-4">
                         <div className="flex justify-between items-center">
-                          <div>
+              <div>
                             <p className="text-sm font-medium text-gray-700">{category}</p>
                             <p className="text-xs text-gray-500 mt-1">{getScoreLabel(score)}</p>
                           </div>
                           <span className={`px-3 py-1 rounded-full text-sm font-medium ${getScoreColor(score)}`}>
                             {score.toFixed(1)}
-                          </span>
+                        </span>
                         </div>
                       </div>
                     ))}
@@ -598,11 +598,11 @@ export default function RoleReportPage() {
                             <span className="px-3 py-1 rounded-full text-sm font-medium bg-yellow-200 text-yellow-800">
                               {count}
                             </span>
-                          </div>
-                        </div>
-                      ))}
-                  </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
+              </div>
               )}
 
               {/* Skills Gap Analysis */}
@@ -632,37 +632,37 @@ export default function RoleReportPage() {
             <div className="px-6 lg:px-8 py-6 border-b border-gray-200">
               <h3 className="text-xl font-bold text-gray-900">📋 Summary All Roles</h3>
             </div>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Position
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Employees
-                    </th>
+                  </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Assessments
-                    </th>
+                  </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Avg Score
-                    </th>
+                    Avg Score
+                  </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Semangat Avg
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Promotion Ready
-                    </th>
+                    Promotion Ready
+                  </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Top Performer
-                    </th>
+                  </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Status
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
                   {roleStats.map((stats) => (
                     <tr key={stats.position} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -671,37 +671,37 @@ export default function RoleReportPage() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">{stats.totalEmployees}</div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">{stats.totalAssessments}</div>
-                      </td>
+                    </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">{stats.averageScore.toFixed(1)}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">{stats.semangatAverage.toFixed(1)}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          getPromotionReadinessColor(stats.promotionReadiness)
-                        }`}>
-                          {stats.promotionReadiness}%
-                        </span>
-                      </td>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        getPromotionReadinessColor(stats.promotionReadiness)
+                      }`}>
+                        {stats.promotionReadiness}%
+                      </span>
+                    </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-purple-600">{stats.topPerformer}</div>
                         <div className="text-xs text-gray-500">({stats.topPerformerScore.toFixed(1)})</div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          getScoreColor(stats.averageScore)
-                        }`}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        getScoreColor(stats.averageScore)
+                      }`}>
                           {getScoreLabel(stats.averageScore)}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
             </div>
           </div>
         </div>

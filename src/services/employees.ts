@@ -22,7 +22,7 @@ export const employeeService = {
 
       const q = query(collection(db, 'employees'), orderBy('name', 'asc'));
       const snapshot = await getDocs(q);
-      
+
       return snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -46,7 +46,7 @@ export const employeeService = {
         orderBy('name', 'asc')
       );
       const snapshot = await getDocs(q);
-      
+
       return snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -70,7 +70,7 @@ export const employeeService = {
         orderBy('name', 'asc')
       );
       const snapshot = await getDocs(q);
-      
+
       return snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -95,7 +95,7 @@ export const employeeService = {
         orderBy('name', 'asc')
       );
       const snapshot = await getDocs(q);
-      
+
       return snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -133,7 +133,7 @@ export const employeeService = {
     } catch (error) {
       console.error('Error updating employee:', error);
       throw error;
-    }
+      }
   },
 
   // Delete employee

@@ -87,15 +87,15 @@ export default function SuccessPage() {
             <div className="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-green-100 mb-6">
               <CheckCircleIcon className="h-12 w-12 text-green-600" />
             </div>
-            
+          
             <h1 className="text-3xl font-bold text-gray-900 mb-3">
-              Penilaian Berhasil Disimpan!
-            </h1>
-            
+            Penilaian Berhasil Disimpan!
+          </h1>
+          
             <p className="text-gray-600 mb-8 leading-relaxed">
-              Terima kasih telah mengisi formulir penilaian. Data Anda telah berhasil disimpan dalam sistem.
-            </p>
-
+            Terima kasih telah mengisi formulir penilaian. Data Anda telah berhasil disimpan dalam sistem.
+          </p>
+          
             {/* Assessment Summary */}
             {(employee || evaluator) && (
               <div className="bg-gray-50 rounded-xl p-6 mb-8 text-left">
@@ -132,22 +132,22 @@ export default function SuccessPage() {
             )}
             
             {/* Action Buttons */}
-            <div className="space-y-3">
-              <button
-                onClick={() => router.push(`/pin/${pin}`)}
+          <div className="space-y-3">
+            <button
+              onClick={() => router.push(`/pin/${pin}`)}
                 className="w-full flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 shadow-lg"
-              >
+            >
                 <DocumentCheckIcon className="h-5 w-5 mr-2" />
-                Isi Penilaian Lain
-              </button>
-              
-              <button
-                onClick={() => router.push('/')}
+              Isi Penilaian Lain
+            </button>
+            
+            <button
+              onClick={() => router.push('/')}
                 className="w-full flex items-center justify-center px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 shadow-lg"
-              >
+            >
                 <HomeIcon className="h-5 w-5 mr-2" />
-                Kembali ke Halaman Utama
-              </button>
+              Kembali ke Halaman Utama
+            </button>
             </div>
 
             {/* Additional Info */}

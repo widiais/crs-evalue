@@ -188,299 +188,299 @@ export default function LocationsPage() {
       </div>
 
       <div className="relative z-10 min-h-screen py-6 lg:py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="mb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-8">
             <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-xl">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
                 <div className="mb-6 lg:mb-0">
-                  <button
-                    onClick={() => router.push('/admin')}
+              <button
+                onClick={() => router.push('/admin')}
                     className="flex items-center text-gray-600 hover:text-gray-900 mb-4 transition-colors"
-                  >
-                    <ArrowLeftIcon className="h-5 w-5 mr-2" />
-                    Back to Dashboard
-                  </button>
+              >
+                <ArrowLeftIcon className="h-5 w-5 mr-2" />
+                Back to Dashboard
+              </button>
                   <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
                     Setup Work Location
                   </h1>
                   <p className="text-gray-600 text-lg">
                     Kelola lokasi kerja dan kategori
                   </p>
-                </div>
-                
-                <button
-                  onClick={() => {
-                    resetForm();
-                    setShowAddForm(true);
-                  }}
+            </div>
+            
+            <button
+              onClick={() => {
+                resetForm();
+                setShowAddForm(true);
+              }}
                   className="flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
-                >
-                  <PlusIcon className="h-5 w-5 mr-2" />
-                  Tambah Lokasi
-                </button>
+            >
+              <PlusIcon className="h-5 w-5 mr-2" />
+              Tambah Lokasi
+            </button>
+              </div>
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
+            <div className="flex items-center">
+                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 p-3 rounded-xl">
+                  <MapPinIcon className="h-8 w-8 text-white" />
+                </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-500">Total Lokasi</p>
+                <p className="text-2xl font-semibold text-gray-900">{locations.length}</p>
               </div>
             </div>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
-              <div className="flex items-center">
-                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 p-3 rounded-xl">
-                  <MapPinIcon className="h-8 w-8 text-white" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500">Total Lokasi</p>
-                  <p className="text-2xl font-semibold text-gray-900">{locations.length}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
-              <div className="flex items-center">
+            <div className="flex items-center">
                 <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-3 rounded-xl">
                   <BuildingStorefrontIcon className="h-8 w-8 text-white" />
                 </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500">Store</p>
-                  <p className="text-2xl font-semibold text-gray-900">
-                    {locations.filter(loc => loc.category === 'Store').length}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
-              <div className="flex items-center">
-                <div className="bg-gradient-to-r from-indigo-500 to-blue-500 p-3 rounded-xl">
-                  <BuildingOfficeIcon className="h-8 w-8 text-white" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500">Head Office</p>
-                  <p className="text-2xl font-semibold text-gray-900">
-                    {locations.filter(loc => loc.category === 'Head Office').length}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">Lokasi Aktif</p>
+                <p className="text-sm font-medium text-gray-500">Store</p>
                 <p className="text-2xl font-semibold text-gray-900">
-                  {locations.filter(loc => loc.isActive).length}
+                  {locations.filter(loc => loc.category === 'Store').length}
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Add/Edit Location Form Modal */}
-          {showAddForm && (
+            <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
+            <div className="flex items-center">
+                <div className="bg-gradient-to-r from-indigo-500 to-blue-500 p-3 rounded-xl">
+                  <BuildingOfficeIcon className="h-8 w-8 text-white" />
+                </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-500">Head Office</p>
+                <p className="text-2xl font-semibold text-gray-900">
+                  {locations.filter(loc => loc.category === 'Head Office').length}
+                </p>
+              </div>
+            </div>
+          </div>
+
+            <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-500">Lokasi Aktif</p>
+              <p className="text-2xl font-semibold text-gray-900">
+                {locations.filter(loc => loc.isActive).length}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Add/Edit Location Form Modal */}
+        {showAddForm && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
               <div className="bg-white rounded-2xl p-6 lg:p-8 w-full max-w-md mx-4 shadow-2xl">
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                  {editingLocation ? 'Edit Lokasi' : 'Tambah Lokasi Baru'}
-                </h3>
-                
-                <form onSubmit={handleAddLocation} className="space-y-4">
-                  <div>
+                {editingLocation ? 'Edit Lokasi' : 'Tambah Lokasi Baru'}
+              </h3>
+              
+              <form onSubmit={handleAddLocation} className="space-y-4">
+                <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Nama Lokasi</label>
-                    <input
-                      type="text"
-                      value={locationForm.name}
-                      onChange={(e) => setLocationForm({...locationForm, name: e.target.value})}
+                  <input
+                    type="text"
+                    value={locationForm.name}
+                    onChange={(e) => setLocationForm({...locationForm, name: e.target.value})}
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                      placeholder="Contoh: LC Margahayu"
-                      required
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                      Contoh: LC Margahayu, Central Kitchen, Head Office Bandung
-                    </p>
-                  </div>
+                    placeholder="Contoh: LC Margahayu"
+                    required
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Contoh: LC Margahayu, Central Kitchen, Head Office Bandung
+                  </p>
+                </div>
 
-                  <div>
+                <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Kota</label>
-                    <input
-                      type="text"
-                      value={locationForm.city}
-                      onChange={(e) => setLocationForm({...locationForm, city: e.target.value})}
+                  <input
+                    type="text"
+                    value={locationForm.city}
+                    onChange={(e) => setLocationForm({...locationForm, city: e.target.value})}
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                      placeholder="Contoh: Bandung"
-                      required
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                      Masukkan nama kota bebas
-                    </p>
-                  </div>
+                    placeholder="Contoh: Bandung"
+                    required
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Masukkan nama kota bebas
+                  </p>
+                </div>
 
-                  <div>
+                <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
-                    <select
-                      value={locationForm.category}
-                      onChange={(e) => setLocationForm({...locationForm, category: e.target.value as 'Head Office' | 'Store'})}
+                  <select
+                    value={locationForm.category}
+                    onChange={(e) => setLocationForm({...locationForm, category: e.target.value as 'Head Office' | 'Store'})}
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                      required
-                    >
-                      {LOCATION_CATEGORIES.map(category => (
-                        <option key={category} value={category}>{category}</option>
-                      ))}
-                    </select>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Head Office: Kantor pusat, dapur, gudang | Store: Outlet, toko
-                    </p>
-                  </div>
+                    required
+                  >
+                    {LOCATION_CATEGORIES.map(category => (
+                      <option key={category} value={category}>{category}</option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Head Office: Kantor pusat, dapur, gudang | Store: Outlet, toko
+                  </p>
+                </div>
 
                   <div className="flex items-center p-4 bg-gray-50 rounded-xl">
-                    <input
-                      type="checkbox"
-                      checked={locationForm.isActive}
-                      onChange={(e) => setLocationForm({...locationForm, isActive: e.target.checked})}
+                  <input
+                    type="checkbox"
+                    checked={locationForm.isActive}
+                    onChange={(e) => setLocationForm({...locationForm, isActive: e.target.checked})}
                       className="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-3"
-                    />
-                    <label className="text-sm text-gray-700">Lokasi aktif</label>
-                  </div>
+                  />
+                  <label className="text-sm text-gray-700">Lokasi aktif</label>
+                </div>
 
-                  <div className="flex space-x-3 pt-4">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowAddForm(false);
-                        resetForm();
-                      }}
+                <div className="flex space-x-3 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowAddForm(false);
+                      resetForm();
+                    }}
                       className="flex-1 px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
-                      disabled={submitting}
-                    >
-                      Batal
-                    </button>
-                    <button
-                      type="submit"
+                    disabled={submitting}
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
                       className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-50 shadow-lg"
-                      disabled={submitting}
-                    >
-                      {submitting ? 'Menyimpan...' : editingLocation ? 'Update' : 'Simpan'}
-                    </button>
-                  </div>
-                </form>
-              </div>
+                    disabled={submitting}
+                  >
+                    {submitting ? 'Menyimpan...' : editingLocation ? 'Update' : 'Simpan'}
+                  </button>
+                </div>
+              </form>
             </div>
-          )}
+          </div>
+        )}
 
-          {/* Locations by Category */}
-          <div className="space-y-8">
-            {Object.entries(groupedLocations).map(([category, categoryLocations]) => {
-              const IconComponent = getCategoryIcon(category);
+        {/* Locations by Category */}
+        <div className="space-y-8">
+          {Object.entries(groupedLocations).map(([category, categoryLocations]) => {
+            const IconComponent = getCategoryIcon(category);
               const gradientColor = getCategoryColor(category);
-              return (
+            return (
                 <div key={category} className="bg-white rounded-2xl shadow-xl overflow-hidden">
                   <div className="px-6 lg:px-8 py-6 bg-gray-50 border-b border-gray-200">
-                    <div className="flex items-center">
+                  <div className="flex items-center">
                       <div className={`bg-gradient-to-r ${gradientColor} p-3 rounded-xl`}>
                         <IconComponent className="h-6 w-6 text-white" />
                       </div>
                       <h3 className="text-xl font-bold text-gray-900 ml-4">
-                        {category} ({categoryLocations.length} lokasi)
-                      </h3>
-                    </div>
-                  </div>
-
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Nama Lokasi
-                          </th>
-                          <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Kota
-                          </th>
-                          <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Kategori
-                          </th>
-                          <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Status
-                          </th>
-                          <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Actions
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {categoryLocations.map((location) => (
-                          <tr key={location.id} className="hover:bg-gray-50 transition-colors">
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="font-medium text-gray-900">{location.name}</div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <span className="text-gray-900">{location.city}</span>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                                location.category === 'Head Office' 
-                                  ? 'bg-blue-100 text-blue-800' 
-                                  : 'bg-green-100 text-green-800'
-                              }`}>
-                                {location.category}
-                              </span>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <button
-                                onClick={() => toggleLocationStatus(location)}
-                                className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                                  location.isActive 
-                                    ? 'bg-green-100 text-green-800 hover:bg-green-200' 
-                                    : 'bg-red-100 text-red-800 hover:bg-red-200'
-                                }`}
-                              >
-                                {location.isActive ? 'Aktif' : 'Nonaktif'}
-                              </button>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              <div className="flex space-x-3">
-                                <button 
-                                  onClick={() => handleEditLocation(location)}
-                                  className="text-blue-600 hover:text-blue-900 transition-colors"
-                                  title="Edit"
-                                >
-                                  <PencilIcon className="h-5 w-5" />
-                                </button>
-                                <button 
-                                  onClick={() => deleteLocation(location)}
-                                  className="text-red-600 hover:text-red-900 transition-colors"
-                                  title="Delete"
-                                >
-                                  <TrashIcon className="h-5 w-5" />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                      {category} ({categoryLocations.length} lokasi)
+                    </h3>
                   </div>
                 </div>
-              );
-            })}
-          </div>
 
-          {/* Info Section */}
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                          <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Nama Lokasi
+                        </th>
+                          <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Kota
+                        </th>
+                          <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Kategori
+                        </th>
+                          <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Status
+                        </th>
+                          <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {categoryLocations.map((location) => (
+                          <tr key={location.id} className="hover:bg-gray-50 transition-colors">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="font-medium text-gray-900">{location.name}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className="text-gray-900">{location.city}</span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                              <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                              location.category === 'Head Office' 
+                                ? 'bg-blue-100 text-blue-800' 
+                                : 'bg-green-100 text-green-800'
+                            }`}>
+                              {location.category}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <button
+                              onClick={() => toggleLocationStatus(location)}
+                                className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                                location.isActive 
+                                    ? 'bg-green-100 text-green-800 hover:bg-green-200' 
+                                    : 'bg-red-100 text-red-800 hover:bg-red-200'
+                              }`}
+                            >
+                              {location.isActive ? 'Aktif' : 'Nonaktif'}
+                            </button>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              <div className="flex space-x-3">
+                              <button 
+                                onClick={() => handleEditLocation(location)}
+                                  className="text-blue-600 hover:text-blue-900 transition-colors"
+                                title="Edit"
+                              >
+                                  <PencilIcon className="h-5 w-5" />
+                              </button>
+                              <button 
+                                onClick={() => deleteLocation(location)}
+                                  className="text-red-600 hover:text-red-900 transition-colors"
+                                title="Delete"
+                              >
+                                  <TrashIcon className="h-5 w-5" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Info Section */}
           <div className="mt-8 bg-white rounded-2xl shadow-xl p-6 lg:p-8">
             <h3 className="text-xl font-bold text-gray-900 mb-4">📋 Informasi Setup Lokasi</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700">
-              <div>
+            <div>
                 <h4 className="font-semibold mb-3">Kategori Lokasi:</h4>
                 <ul className="space-y-2">
-                  <li>• <strong>Head Office:</strong> Kantor pusat, dapur, gudang</li>
-                  <li>• <strong>Store:</strong> Outlet, toko, cabang</li>
-                </ul>
-              </div>
-              <div>
+                <li>• <strong>Head Office:</strong> Kantor pusat, dapur, gudang</li>
+                <li>• <strong>Store:</strong> Outlet, toko, cabang</li>
+              </ul>
+            </div>
+            <div>
                 <h4 className="font-semibold mb-3">Contoh Penamaan:</h4>
                 <ul className="space-y-2">
-                  <li>• Store: LC Margahayu, LC Dago</li>
-                  <li>• Head Office: Central Kitchen, Warehouse</li>
-                  <li>• Kota bisa nama bebas: Bandung, Jakarta, dll</li>
-                </ul>
+                <li>• Store: LC Margahayu, LC Dago</li>
+                <li>• Head Office: Central Kitchen, Warehouse</li>
+                <li>• Kota bisa nama bebas: Bandung, Jakarta, dll</li>
+              </ul>
               </div>
             </div>
           </div>

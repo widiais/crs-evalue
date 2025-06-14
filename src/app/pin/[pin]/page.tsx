@@ -306,8 +306,8 @@ export default function AssessmentPage() {
                 <IdentificationIcon className="h-8 w-8 text-white" />
               </div>
               <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
-                {assessment?.title}
-              </h1>
+              {assessment?.title}
+            </h1>
               <div className="inline-flex items-center px-4 py-2 bg-gray-100 rounded-xl">
                 <span className="text-gray-600 text-sm font-medium mr-2">PIN:</span>
                 <span className="font-mono font-bold text-lg text-blue-600">{pin}</span>
@@ -323,8 +323,8 @@ export default function AssessmentPage() {
                   <UserGroupIcon className="h-6 w-6 text-white" />
                 </div>
                 <h2 className="text-xl font-bold text-gray-900">
-                  Siapa yang Dinilai?
-                </h2>
+                Siapa yang Dinilai?
+              </h2>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -418,8 +418,8 @@ export default function AssessmentPage() {
                   <BuildingOfficeIcon className="h-6 w-6 text-white" />
                 </div>
                 <h2 className="text-xl font-bold text-gray-900">
-                  Data Penilai (Evaluator)
-                </h2>
+                Data Penilai (Evaluator)
+              </h2>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -495,7 +495,7 @@ export default function AssessmentPage() {
               <div className="bg-white rounded-2xl shadow-xl p-6">
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center">
                   <ExclamationTriangleIcon className="h-5 w-5 mr-2" />
-                  {error}
+                {error}
                 </div>
               </div>
             )}
@@ -538,27 +538,27 @@ export default function AssessmentPage() {
             {/* Action Buttons */}
             <div className="bg-white rounded-2xl shadow-xl p-6 lg:p-8">
               <div className="flex flex-col sm:flex-row justify-between gap-4">
-                <button
-                  type="button"
-                  onClick={() => router.push('/')}
+              <button
+                type="button"
+                onClick={() => router.push('/')}
                   className="flex items-center justify-center px-6 py-3 text-gray-600 bg-gray-100 rounded-xl hover:bg-gray-200 transition-all duration-200 transform hover:scale-105"
-                >
+              >
                   <ArrowLeftIcon className="h-5 w-5 mr-2" />
-                  Kembali
-                </button>
-                
-                <button
-                  type="submit"
-                  disabled={!selectedEmployee || !evaluator.name || !evaluator.position || !evaluator.division || !evaluator.status}
+                Kembali
+              </button>
+              
+              <button
+                type="submit"
+                disabled={!selectedEmployee || !evaluator.name || !evaluator.position || !evaluator.division || !evaluator.status}
                   className="flex items-center justify-center px-8 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 shadow-lg"
-                >
+              >
                   <span>Mulai Assessment</span>
                   <ArrowRightIcon className="h-5 w-5 ml-2" />
-                </button>
+              </button>
               </div>
             </div>
           </form>
-          
+
         </div>
       </div>
     </div>

@@ -1,44 +1,41 @@
-[debug] [2025-06-11T19:43:55.441Z] ----------------------------------------------------------------------
-[debug] [2025-06-11T19:43:55.442Z] Command:       /home/widi/.nvm/versions/node/v22.16.0/bin/node /home/widi/.nvm/versions/node/v22.16.0/bin/firebase deploy
-[debug] [2025-06-11T19:43:55.443Z] CLI Version:   14.6.0
-[debug] [2025-06-11T19:43:55.443Z] Platform:      linux
-[debug] [2025-06-11T19:43:55.443Z] Node Version:  v22.16.0
-[debug] [2025-06-11T19:43:55.443Z] Time:          Thu Jun 12 2025 02:43:55 GMT+0700 (Western Indonesia Time)
-[debug] [2025-06-11T19:43:55.443Z] ----------------------------------------------------------------------
+[debug] [2025-06-14T02:14:22.515Z] ----------------------------------------------------------------------
+[debug] [2025-06-14T02:14:22.520Z] Command:       /home/widi/.nvm/versions/node/v22.16.0/bin/node /home/widi/.nvm/versions/node/v22.16.0/bin/firebase deploy
+[debug] [2025-06-14T02:14:22.521Z] CLI Version:   14.6.0
+[debug] [2025-06-14T02:14:22.521Z] Platform:      linux
+[debug] [2025-06-14T02:14:22.521Z] Node Version:  v22.16.0
+[debug] [2025-06-14T02:14:22.522Z] Time:          Sat Jun 14 2025 09:14:22 GMT+0700 (Western Indonesia Time)
+[debug] [2025-06-14T02:14:22.522Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2025-06-11T19:43:55.444Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
-[debug] [2025-06-11T19:43:55.593Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2025-06-11T19:43:55.593Z] > authorizing via signed-in user (widiahmadibnu@gmail.com)
-[debug] [2025-06-11T19:43:55.593Z] [iam] checking project crs-evalue for permissions ["firebase.projects.get","firebasehosting.sites.update"]
-[debug] [2025-06-11T19:43:55.593Z] Checked if tokens are valid: false, expires at: 1749555768617
-[debug] [2025-06-11T19:43:55.593Z] Checked if tokens are valid: false, expires at: 1749555768617
-[debug] [2025-06-11T19:43:55.593Z] > refreshing access token with scopes: []
-[debug] [2025-06-11T19:43:55.594Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
-[debug] [2025-06-11T19:43:55.594Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
-[debug] [2025-06-11T19:43:56.220Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
-[debug] [2025-06-11T19:43:56.220Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
-[debug] [2025-06-11T19:43:56.234Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/crs-evalue:testIamPermissions [none]
-[debug] [2025-06-11T19:43:56.234Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/crs-evalue:testIamPermissions x-goog-quota-user=projects/crs-evalue
-[debug] [2025-06-11T19:43:56.234Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/crs-evalue:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
-[debug] [2025-06-11T19:43:56.623Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
-[debug] [2025-06-11T19:43:56.623Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
-[debug] [2025-06-11T19:44:02.657Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/crs-evalue:testIamPermissions 200
-[debug] [2025-06-11T19:44:02.657Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/crs-evalue:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
-[debug] [2025-06-11T19:44:02.659Z] Checked if tokens are valid: true, expires at: 1749674635220
-[debug] [2025-06-11T19:44:02.659Z] Checked if tokens are valid: true, expires at: 1749674635220
-[debug] [2025-06-11T19:44:02.659Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/crs-evalue [none]
-[debug] [2025-06-11T19:44:06.345Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/crs-evalue 200
-[debug] [2025-06-11T19:44:06.345Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/crs-evalue {"projectId":"crs-evalue","projectNumber":"155444535947","displayName":"CRS-Evalue","name":"projects/crs-evalue","resources":{"hostingSite":"crs-evalue"},"state":"ACTIVE","etag":"1_e875df68-90e4-4dfb-a342-af0d65eeb870"}
-[debug] [2025-06-11T19:44:06.962Z] Checked if tokens are valid: true, expires at: 1749674635220
-[debug] [2025-06-11T19:44:06.962Z] Checked if tokens are valid: true, expires at: 1749674635220
-[debug] [2025-06-11T19:44:06.963Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/crs-evalue/sites pageToken=&pageSize=10
-[debug] [2025-06-11T19:44:08.131Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/crs-evalue/sites 200
-[debug] [2025-06-11T19:44:08.132Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/crs-evalue/sites {"sites":[{"name":"projects/crs-evalue/sites/crs-evalue","defaultUrl":"https://crs-evalue.web.app","appId":"1:155444535947:web:9d9a7ffd40921667b76a8e","type":"DEFAULT_SITE"}]}
-[debug] [2025-06-11T19:44:08.132Z] Checked if tokens are valid: true, expires at: 1749674635220
-[debug] [2025-06-11T19:44:08.132Z] Checked if tokens are valid: true, expires at: 1749674635220
-[debug] [2025-06-11T19:44:08.132Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:155444535947:web:9d9a7ffd40921667b76a8e/config [none]
-[debug] [2025-06-11T19:44:09.101Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:155444535947:web:9d9a7ffd40921667b76a8e/config 200
-[debug] [2025-06-11T19:44:09.101Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:155444535947:web:9d9a7ffd40921667b76a8e/config {"projectId":"crs-evalue","appId":"1:155444535947:web:9d9a7ffd40921667b76a8e","storageBucket":"crs-evalue.firebasestorage.app","apiKey":"AIzaSyC0EyEfBjskf7iLhs65aNM-ZkQ_ZO6rrVE","authDomain":"crs-evalue.firebaseapp.com","messagingSenderId":"155444535947","measurementId":"G-RNDBXVTW9V"}
+[debug] [2025-06-14T02:14:22.696Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-06-14T02:14:22.697Z] > authorizing via signed-in user (widiahmadibnu@gmail.com)
+[debug] [2025-06-14T02:14:22.697Z] [iam] checking project crs-evalue for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2025-06-14T02:14:22.697Z] Checked if tokens are valid: false, expires at: 1749803380053
+[debug] [2025-06-14T02:14:22.697Z] Checked if tokens are valid: false, expires at: 1749803380053
+[debug] [2025-06-14T02:14:22.697Z] > refreshing access token with scopes: []
+[debug] [2025-06-14T02:14:22.698Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-06-14T02:14:22.698Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-06-14T02:14:23.478Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-06-14T02:14:23.479Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-06-14T02:14:23.496Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/crs-evalue:testIamPermissions [none]
+[debug] [2025-06-14T02:14:23.496Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/crs-evalue:testIamPermissions x-goog-quota-user=projects/crs-evalue
+[debug] [2025-06-14T02:14:23.496Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/crs-evalue:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-06-14T02:14:24.906Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/crs-evalue:testIamPermissions 200
+[debug] [2025-06-14T02:14:24.906Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/crs-evalue:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-06-14T02:14:24.907Z] Checked if tokens are valid: true, expires at: 1749870862479
+[debug] [2025-06-14T02:14:24.908Z] Checked if tokens are valid: true, expires at: 1749870862479
+[debug] [2025-06-14T02:14:24.908Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/crs-evalue [none]
+[debug] [2025-06-14T02:14:26.379Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/crs-evalue 200
+[debug] [2025-06-14T02:14:26.380Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/crs-evalue {"projectId":"crs-evalue","projectNumber":"155444535947","displayName":"CRS-Evalue","name":"projects/crs-evalue","resources":{"hostingSite":"crs-evalue"},"state":"ACTIVE","etag":"1_e875df68-90e4-4dfb-a342-af0d65eeb870"}
+[debug] [2025-06-14T02:14:27.822Z] Checked if tokens are valid: true, expires at: 1749870862479
+[debug] [2025-06-14T02:14:27.822Z] Checked if tokens are valid: true, expires at: 1749870862479
+[debug] [2025-06-14T02:14:27.823Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/crs-evalue/sites pageToken=&pageSize=10
+[debug] [2025-06-14T02:14:30.984Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/crs-evalue/sites 200
+[debug] [2025-06-14T02:14:30.985Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/crs-evalue/sites {"sites":[{"name":"projects/crs-evalue/sites/crs-evalue","defaultUrl":"https://crs-evalue.web.app","appId":"1:155444535947:web:9d9a7ffd40921667b76a8e","type":"DEFAULT_SITE"}]}
+[debug] [2025-06-14T02:14:30.985Z] Checked if tokens are valid: true, expires at: 1749870862479
+[debug] [2025-06-14T02:14:30.985Z] Checked if tokens are valid: true, expires at: 1749870862479
+[debug] [2025-06-14T02:14:30.986Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:155444535947:web:9d9a7ffd40921667b76a8e/config [none]
+[debug] [2025-06-14T02:14:32.452Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:155444535947:web:9d9a7ffd40921667b76a8e/config 200
+[debug] [2025-06-14T02:14:32.452Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:155444535947:web:9d9a7ffd40921667b76a8e/config {"projectId":"crs-evalue","appId":"1:155444535947:web:9d9a7ffd40921667b76a8e","storageBucket":"crs-evalue.firebasestorage.app","apiKey":"AIzaSyC0EyEfBjskf7iLhs65aNM-ZkQ_ZO6rrVE","authDomain":"crs-evalue.firebaseapp.com","messagingSenderId":"155444535947","measurementId":"G-RNDBXVTW9V"}
 [info] 
    Thank you for trying our early preview of Next.js support on Firebase Hosting.
    During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
@@ -49,11 +46,11 @@
 
    We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
 
-[debug] [2025-06-11T19:44:10.745Z] Checked if tokens are valid: true, expires at: 1749674635220
-[debug] [2025-06-11T19:44:10.745Z] Checked if tokens are valid: true, expires at: 1749674635220
-[debug] [2025-06-11T19:44:10.745Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/crs-evalue/sites/crs-evalue [none]
-[debug] [2025-06-11T19:44:11.248Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/crs-evalue/sites/crs-evalue 200
-[debug] [2025-06-11T19:44:11.248Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/crs-evalue/sites/crs-evalue {"name":"projects/crs-evalue/sites/crs-evalue","defaultUrl":"https://crs-evalue.web.app","appId":"1:155444535947:web:9d9a7ffd40921667b76a8e","type":"DEFAULT_SITE"}
+[debug] [2025-06-14T02:14:34.960Z] Checked if tokens are valid: true, expires at: 1749870862479
+[debug] [2025-06-14T02:14:34.960Z] Checked if tokens are valid: true, expires at: 1749870862479
+[debug] [2025-06-14T02:14:34.960Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/crs-evalue/sites/crs-evalue [none]
+[debug] [2025-06-14T02:14:35.553Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/crs-evalue/sites/crs-evalue 200
+[debug] [2025-06-14T02:14:35.554Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/crs-evalue/sites/crs-evalue {"name":"projects/crs-evalue/sites/crs-evalue","defaultUrl":"https://crs-evalue.web.app","appId":"1:155444535947:web:9d9a7ffd40921667b76a8e","type":"DEFAULT_SITE"}
 [info]    ▲ Next.js 14.0.4
 
 [info]    - Environments: .env.local
@@ -65,4 +62,17 @@
 [info]  ✓ Compiled successfully
 
 [info]    Linting and checking validity of types ...
+
+[info]    Collecting page data ...
+
+[info]    Generating static pages (0/13) ...
+
+[info]    Generating static pages (3/13) 
+   Generating static pages (6/13) 
+
+[info]    Generating static pages (9/13) 
+ ✓ Generating static pages (13/13) 
+
+[info]    Finalizing page optimization ...
+   Collecting build traces ...
 

@@ -109,7 +109,7 @@ function PersonalReportsPage() {
     // Generate summary for each employee
     Object.entries(filteredEmployeeResults).forEach(([employeeId, empResults]) => {
       if (empResults.length === 0) return;
-
+      
       // Calculate average score across all assessments
       let totalScore = 0;
       let scoreCount = 0;
@@ -214,19 +214,19 @@ function PersonalReportsPage() {
       </div>
 
       <div className="relative z-10 min-h-screen py-6 lg:py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="mb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-8">
             <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-xl">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
                 <div className="mb-6 lg:mb-0">
-                  <button
-                    onClick={() => router.push('/admin')}
+              <button
+                onClick={() => router.push('/admin')}
                     className="flex items-center text-gray-600 hover:text-gray-900 mb-4 transition-colors"
-                  >
-                    <ArrowLeftIcon className="h-5 w-5 mr-2" />
-                    Back to Dashboard
-                  </button>
+              >
+                <ArrowLeftIcon className="h-5 w-5 mr-2" />
+                Back to Dashboard
+              </button>
                   <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
                     Personal Assessment Reports
                   </h1>
@@ -251,7 +251,7 @@ function PersonalReportsPage() {
                 </div>
               </div>
             </div>
-
+            
             <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
               <div className="flex items-center">
                 <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-3 rounded-xl">
@@ -261,8 +261,8 @@ function PersonalReportsPage() {
                   <p className="text-sm font-medium text-gray-500">Karyawan Dinilai</p>
                   <p className="text-2xl font-semibold text-gray-900">{filteredSummaries.length}</p>
                 </div>
-              </div>
-            </div>
+          </div>
+        </div>
 
             <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
               <div className="flex items-center">
@@ -294,7 +294,7 @@ function PersonalReportsPage() {
                 </div>
               </div>
             </div>
-          </div>
+                </div>
 
           {/* Filters */}
           <div className="bg-white rounded-2xl shadow-xl p-6 lg:p-8 mb-8">
@@ -326,10 +326,10 @@ function PersonalReportsPage() {
                     <p>Menampilkan data untuk assessment terpilih</p>
                   ) : (
                     <p>Menampilkan akumulasi dari semua assessment</p>
-                  )}
-                </div>
-              </div>
-            </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
 
             {selectedAssessmentData && (
               <div className="mt-6 p-4 bg-blue-50 rounded-xl">
@@ -340,9 +340,9 @@ function PersonalReportsPage() {
                   <p><strong>Status:</strong> {selectedAssessmentData.isActive ? 'Active' : 'Inactive'}</p>
                   {selectedAssessmentData.description && (
                     <p><strong>Description:</strong> {selectedAssessmentData.description}</p>
-                  )}
-                </div>
+                )}
               </div>
+            </div>
             )}
           </div>
 
@@ -351,7 +351,7 @@ function PersonalReportsPage() {
             <div className="px-6 lg:px-8 py-6 border-b border-gray-200">
               <h3 className="text-xl font-bold text-gray-900">
                 📊 Laporan Per Karyawan ({filteredSummaries.length})
-              </h3>
+                </h3>
             </div>
 
             {filteredSummaries.length === 0 ? (
@@ -391,19 +391,19 @@ function PersonalReportsPage() {
                     {filteredSummaries.map((employee) => (
                       <tr key={employee.employeeId} className="hover:bg-gray-50 transition-colors">
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
+                    <div className="flex items-center">
                             <div className="bg-gradient-to-r from-blue-500 to-cyan-500 p-2 rounded-lg">
                               <UserIcon className="h-5 w-5 text-white" />
-                            </div>
-                            <div className="ml-4">
+                  </div>
+                      <div className="ml-4">
                               <div className="text-sm font-medium text-gray-900">
                                 {employee.employeeName}
-                              </div>
+                      </div>
                               <div className="text-sm text-gray-500">
                                 ID: {employee.employeeId}
-                              </div>
-                            </div>
-                          </div>
+                    </div>
+                  </div>
+                </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
@@ -414,7 +414,7 @@ function PersonalReportsPage() {
                           <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getScoreColor(employee.averageScore)}`}>
                             <StarIcon className="h-4 w-4 mr-1" />
                             {employee.averageScore.toFixed(1)} - {getScoreLabel(employee.averageScore)}
-                          </span>
+                        </span>
                         </td>
                         <td className="px-6 py-4">
                           <div className="text-sm text-gray-900">{employee.latestAssessment}</div>
@@ -436,9 +436,9 @@ function PersonalReportsPage() {
                     ))}
                   </tbody>
                 </table>
-              </div>
+                  </div>
             )}
-          </div>
+                </div>
 
           {/* Info Section */}
           <div className="mt-8 bg-white rounded-2xl shadow-xl p-6 lg:p-8">
@@ -452,7 +452,7 @@ function PersonalReportsPage() {
                   <li>• Data diurutkan berdasarkan rata-rata score tertinggi</li>
                   <li>• Satu baris per karyawan menampilkan akumulasi penilaian</li>
                 </ul>
-              </div>
+                      </div>
               <div>
                 <h4 className="font-semibold mb-3">Score Interpretation:</h4>
                 <ul className="space-y-2">

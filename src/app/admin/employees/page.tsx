@@ -247,236 +247,236 @@ export default function EmployeesPage() {
       </div>
 
       <div className="relative z-10 min-h-screen py-6 lg:py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="mb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-8">
             <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-xl">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
                 <div className="mb-6 lg:mb-0">
-                  <button
-                    onClick={() => router.push('/admin')}
+              <button
+                onClick={() => router.push('/admin')}
                     className="flex items-center text-gray-600 hover:text-gray-900 mb-4 transition-colors"
-                  >
-                    <ArrowLeftIcon className="h-5 w-5 mr-2" />
-                    Back to Dashboard
-                  </button>
+              >
+                <ArrowLeftIcon className="h-5 w-5 mr-2" />
+                Back to Dashboard
+              </button>
                   <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
                     Setup Employees
                   </h1>
                   <p className="text-gray-600 text-lg">
                     Kelola data karyawan dan struktur organisasi
                   </p>
-                </div>
-                
-                <button
-                  onClick={() => setShowAddForm(true)}
-                  className="flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
-                >
-                  <PlusIcon className="h-5 w-5 mr-2" />
-                  Tambah Karyawan
-                </button>
-              </div>
             </div>
+            
+            <button
+              onClick={() => setShowAddForm(true)}
+                  className="flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+            >
+              <PlusIcon className="h-5 w-5 mr-2" />
+              Tambah Karyawan
+            </button>
+              </div>
           </div>
+        </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
-              <div className="flex items-center">
+            <div className="flex items-center">
                 <div className="bg-gradient-to-r from-blue-500 to-cyan-500 p-3 rounded-xl">
                   <UserGroupIcon className="h-8 w-8 text-white" />
                 </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500">Total Karyawan</p>
-                  <p className="text-2xl font-semibold text-gray-900">{employees.length}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">Hasil Filter</p>
-                <p className="text-2xl font-semibold text-gray-900">{filteredEmployees.length}</p>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">Lokasi Kerja</p>
-                <p className="text-2xl font-semibold text-gray-900">{availableLocations.length}</p>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">Template Jabatan</p>
-                <p className="text-2xl font-semibold text-gray-900">{availablePositions.length}</p>
+                <p className="text-sm font-medium text-gray-500">Total Karyawan</p>
+                <p className="text-2xl font-semibold text-gray-900">{employees.length}</p>
               </div>
             </div>
           </div>
 
-          {/* Filters */}
+            <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-500">Hasil Filter</p>
+              <p className="text-2xl font-semibold text-gray-900">{filteredEmployees.length}</p>
+            </div>
+          </div>
+
+            <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-500">Lokasi Kerja</p>
+              <p className="text-2xl font-semibold text-gray-900">{availableLocations.length}</p>
+            </div>
+          </div>
+
+            <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200 transform hover:scale-105">
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-500">Template Jabatan</p>
+              <p className="text-2xl font-semibold text-gray-900">{availablePositions.length}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Filters */}
           <div className="bg-white rounded-2xl shadow-xl p-6 lg:p-8 mb-8">
             <h2 className="text-xl font-bold text-gray-900 mb-6">🔍 Filter & Search</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
-              <div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
+            <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
-                <div className="relative">
-                  <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Cari nama..."
+              <div className="relative">
+                <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Cari nama..."
                     className="pl-10 w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Lokasi</label>
-                <select
-                  value={filterLocation}
-                  onChange={(e) => setFilterLocation(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                >
-                  <option value="">Semua Lokasi</option>
-                  {availableLocations.map(location => (
-                    <option key={location} value={location}>{location}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Jabatan</label>
-                <select
-                  value={filterPosition}
-                  onChange={(e) => setFilterPosition(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                >
-                  <option value="">Semua Jabatan</option>
-                  {availablePositions.map(position => (
-                    <option key={position} value={position}>{position}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Divisi</label>
-                <select
-                  value={filterDivision}
-                  onChange={(e) => setFilterDivision(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                >
-                  <option value="">Semua Divisi</option>
-                  {divisions.map(division => (
-                    <option key={division.id} value={division.name}>{division.name}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="flex items-end">
-                <button
-                  onClick={clearFilters}
-                  className="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-xl transition-all duration-200 transform hover:scale-105 w-full shadow-lg"
-                >
-                  Clear Filters
-                </button>
+                />
               </div>
             </div>
-          </div>
 
-          {/* Add Employee Modal */}
-          {showAddForm && (
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Lokasi</label>
+              <select
+                value={filterLocation}
+                onChange={(e) => setFilterLocation(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              >
+                <option value="">Semua Lokasi</option>
+                {availableLocations.map(location => (
+                  <option key={location} value={location}>{location}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Jabatan</label>
+              <select
+                value={filterPosition}
+                onChange={(e) => setFilterPosition(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              >
+                <option value="">Semua Jabatan</option>
+                {availablePositions.map(position => (
+                  <option key={position} value={position}>{position}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Divisi</label>
+              <select
+                value={filterDivision}
+                onChange={(e) => setFilterDivision(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              >
+                <option value="">Semua Divisi</option>
+                {divisions.map(division => (
+                  <option key={division.id} value={division.name}>{division.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex items-end">
+              <button
+                onClick={clearFilters}
+                  className="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-xl transition-all duration-200 transform hover:scale-105 w-full shadow-lg"
+              >
+                Clear Filters
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Add Employee Modal */}
+        {showAddForm && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
               <div className="bg-white rounded-2xl p-6 lg:p-8 w-full max-w-md mx-4 shadow-2xl">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">Tambah Karyawan Baru</h2>
-                
-                <form onSubmit={handleAddEmployee} className="space-y-4">
-                  <div>
+              
+              <form onSubmit={handleAddEmployee} className="space-y-4">
+                <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap *</label>
-                    <input
-                      type="text"
-                      value={newEmployee.name}
-                      onChange={(e) => setNewEmployee({...newEmployee, name: e.target.value})}
+                  <input
+                    type="text"
+                    value={newEmployee.name}
+                    onChange={(e) => setNewEmployee({...newEmployee, name: e.target.value})}
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                      placeholder="Masukkan nama lengkap"
-                      required
-                    />
-                  </div>
+                    placeholder="Masukkan nama lengkap"
+                    required
+                  />
+                </div>
 
-                  <div>
+                <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Jabatan (Template) *</label>
-                    <select
-                      value={newEmployee.position}
-                      onChange={(e) => setNewEmployee({...newEmployee, position: e.target.value})}
+                  <select
+                    value={newEmployee.position}
+                    onChange={(e) => setNewEmployee({...newEmployee, position: e.target.value})}
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                      required
-                    >
-                      <option value="">Pilih Jabatan</option>
-                      {availablePositions.map(position => (
-                        <option key={position} value={position}>{position}</option>
-                      ))}
-                    </select>
-                    {availablePositions.length === 0 && (
+                    required
+                  >
+                    <option value="">Pilih Jabatan</option>
+                    {availablePositions.map(position => (
+                      <option key={position} value={position}>{position}</option>
+                    ))}
+                  </select>
+                  {availablePositions.length === 0 && (
                       <p className="text-sm text-orange-600 mt-2">
-                        ⚠️ Belum ada template. Silakan buat template terlebih dahulu di Setup Assessment Templates.
-                      </p>
-                    )}
-                  </div>
+                      ⚠️ Belum ada template. Silakan buat template terlebih dahulu di Setup Assessment Templates.
+                    </p>
+                  )}
+                </div>
 
-                  <div>
+                <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Lokasi Kerja *</label>
-                    <select
-                      value={newEmployee.location}
-                      onChange={(e) => setNewEmployee({...newEmployee, location: e.target.value})}
+                  <select
+                    value={newEmployee.location}
+                    onChange={(e) => setNewEmployee({...newEmployee, location: e.target.value})}
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                      required
-                    >
-                      <option value="">Pilih Lokasi</option>
-                      {availableLocations.map(location => (
-                        <option key={location} value={location}>{location}</option>
-                      ))}
-                    </select>
-                    {availableLocations.length === 0 && (
+                    required
+                  >
+                    <option value="">Pilih Lokasi</option>
+                    {availableLocations.map(location => (
+                      <option key={location} value={location}>{location}</option>
+                    ))}
+                  </select>
+                  {availableLocations.length === 0 && (
                       <p className="text-sm text-orange-600 mt-2">
-                        ⚠️ Belum ada lokasi. Silakan buat lokasi terlebih dahulu di Setup Work Location.
-                      </p>
-                    )}
-                  </div>
+                      ⚠️ Belum ada lokasi. Silakan buat lokasi terlebih dahulu di Setup Work Location.
+                    </p>
+                  )}
+                </div>
 
-                  <div>
+                <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Divisi *</label>
-                    <select
-                      value={newEmployee.division}
-                      onChange={(e) => setNewEmployee({...newEmployee, division: e.target.value})}
+                  <select
+                    value={newEmployee.division}
+                    onChange={(e) => setNewEmployee({...newEmployee, division: e.target.value})}
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                      required
-                    >
-                      <option value="">Pilih Divisi</option>
-                      {divisions.map(division => (
-                        <option key={division.id} value={division.name}>{division.name}</option>
-                      ))}
-                    </select>
-                    {divisions.length === 0 && (
+                    required
+                  >
+                    <option value="">Pilih Divisi</option>
+                    {divisions.map(division => (
+                      <option key={division.id} value={division.name}>{division.name}</option>
+                    ))}
+                  </select>
+                  {divisions.length === 0 && (
                       <p className="text-sm text-orange-600 mt-2">
-                        ⚠️ Belum ada divisi. Silakan buat divisi terlebih dahulu di Setup Divisions.
-                      </p>
-                    )}
-                  </div>
+                      ⚠️ Belum ada divisi. Silakan buat divisi terlebih dahulu di Setup Divisions.
+                    </p>
+                  )}
+                </div>
 
-                  <div className="flex space-x-3 pt-4">
-                    <button
-                      type="submit"
-                      disabled={divisions.length === 0 || availablePositions.length === 0 || availableLocations.length === 0}
+                <div className="flex space-x-3 pt-4">
+                  <button
+                    type="submit"
+                    disabled={divisions.length === 0 || availablePositions.length === 0 || availableLocations.length === 0}
                       className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-                    >
-                      Tambah
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setShowAddForm(false)}
+                  >
+                    Tambah
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowAddForm(false)}
                       className="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
                     >
                       Batal
@@ -566,14 +566,14 @@ export default function EmployeesPage() {
                         setEditEmployee({ name: '', position: '', location: '', division: '' });
                       }}
                       className="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
-                    >
-                      Batal
-                    </button>
-                  </div>
-                </form>
-              </div>
+                  >
+                    Batal
+                  </button>
+                </div>
+              </form>
             </div>
-          )}
+          </div>
+        )}
 
           {/* Delete Confirmation Modal */}
           {showDeleteConfirm && selectedEmployee && (
@@ -612,53 +612,53 @@ export default function EmployeesPage() {
             </div>
           )}
 
-          {/* Employees Table */}
+        {/* Employees Table */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
             <div className="px-6 lg:px-8 py-6 border-b border-gray-200">
               <h3 className="text-xl font-bold text-gray-900">
                 👥 Daftar Karyawan ({filteredEmployees.length})
-              </h3>
-            </div>
+            </h3>
+          </div>
 
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Nama
-                    </th>
+                    Nama
+                  </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Jabatan (Template)
-                    </th>
+                    Jabatan (Template)
+                  </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Lokasi
-                    </th>
+                    Lokasi
+                  </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Divisi
-                    </th>
+                    Divisi
+                  </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredEmployees.map((employee) => (
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredEmployees.map((employee) => (
                     <tr key={employee.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="font-medium text-gray-900">{employee.name}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="font-medium text-gray-900">{employee.name}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
                         <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                          {employee.position}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-900">
-                        {employee.location}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-900">
-                        {employee.division}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {employee.position}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-900">
+                      {employee.location}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-900">
+                      {employee.division}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div className="flex space-x-3">
                           <button 
                             onClick={() => openEditForm(employee)}
@@ -666,37 +666,37 @@ export default function EmployeesPage() {
                             title="Edit karyawan"
                           >
                             <PencilIcon className="h-5 w-5" />
-                          </button>
+                        </button>
                           <button 
                             onClick={() => openDeleteConfirm(employee)}
                             className="text-red-600 hover:text-red-900 transition-colors"
                             title="Hapus karyawan"
                           >
                             <TrashIcon className="h-5 w-5" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
-              {filteredEmployees.length === 0 && (
+            {filteredEmployees.length === 0 && (
                 <div className="text-center py-12">
                   <UserGroupIcon className="mx-auto h-16 w-16 text-gray-400" />
                   <h3 className="mt-4 text-lg font-medium text-gray-900">Tidak ada karyawan</h3>
                   <p className="mt-2 text-gray-500">
-                    {searchTerm || filterLocation || filterPosition || filterDivision
-                      ? 'Tidak ada karyawan yang sesuai dengan filter'
-                      : 'Mulai dengan menambahkan karyawan baru'
-                    }
-                  </p>
-                </div>
-              )}
-            </div>
+                  {searchTerm || filterLocation || filterPosition || filterDivision
+                    ? 'Tidak ada karyawan yang sesuai dengan filter'
+                    : 'Mulai dengan menambahkan karyawan baru'
+                  }
+                </p>
+              </div>
+            )}
           </div>
+        </div>
 
-          {/* Info Section */}
+        {/* Info Section */}
           <div className="mt-8 bg-white rounded-2xl shadow-xl p-6 lg:p-8">
             <h3 className="text-xl font-bold text-gray-900 mb-4">💡 Info Setup Karyawan</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700">

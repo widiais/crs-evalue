@@ -55,7 +55,7 @@ export const divisionService = {
         createdAt: now,
         updatedAt: now
       });
-      
+
       return docRef.id;
     } catch (error) {
       console.error('Error adding division:', error);

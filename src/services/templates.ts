@@ -24,7 +24,7 @@ export const templateService = {
 
       const q = query(collection(db, 'criteria_templates'), orderBy('level', 'asc'));
       const snapshot = await getDocs(q);
-      
+
       return snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()

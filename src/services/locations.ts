@@ -22,7 +22,7 @@ export const locationService = {
 
       const q = query(collection(db, 'locations'), orderBy('name', 'asc'));
       const snapshot = await getDocs(q);
-      
+
       return snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
