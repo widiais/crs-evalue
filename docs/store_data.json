@@ -1,0 +1,426 @@
+[
+  {
+    "kode": 1,
+    "nama_store": "LC Ahmad Yani"
+  },
+  {
+    "kode": 2,
+    "nama_store": "LC Alfathu"
+  },
+  {
+    "kode": 3,
+    "nama_store": "LC Angkrek"
+  },
+  {
+    "kode": 4,
+    "nama_store": "LC Antapani"
+  },
+  {
+    "kode": 5,
+    "nama_store": "LC Anyer"
+  },
+  {
+    "kode": 6,
+    "nama_store": "LC Babakansari"
+  },
+  {
+    "kode": 7,
+    "nama_store": "LC Baleendah"
+  },
+  {
+    "kode": 8,
+    "nama_store": "LC BANTENG"
+  },
+  {
+    "kode": 9,
+    "nama_store": "LC Baros"
+  },
+  {
+    "kode": 10,
+    "nama_store": "LC Batununggal"
+  },
+  {
+    "kode": 11,
+    "nama_store": "LC BBS"
+  },
+  {
+    "kode": 12,
+    "nama_store": "LC BHAYANGKARA"
+  },
+  {
+    "kode": 13,
+    "nama_store": "LC Bojonegara"
+  },
+  {
+    "kode": 14,
+    "nama_store": "LC Bojongsoang"
+  },
+  {
+    "kode": 15,
+    "nama_store": "LC Bukit Barisan"
+  },
+  {
+    "kode": 16,
+    "nama_store": "LC Bulak Laut"
+  },
+  {
+    "kode": 17,
+    "nama_store": "LC CAGAR ALAM"
+  },
+  {
+    "kode": 18,
+    "nama_store": "LC Caringin"
+  },
+  {
+    "kode": 19,
+    "nama_store": "LC Cibaraja"
+  },
+  {
+    "kode": 20,
+    "nama_store": "LC Cibeber"
+  },
+  {
+    "kode": 21,
+    "nama_store": "LC Cibinong"
+  },
+  {
+    "kode": 22,
+    "nama_store": "LC Cidahu"
+  },
+  {
+    "kode": 23,
+    "nama_store": "LC cihampelas"
+  },
+  {
+    "kode": 24,
+    "nama_store": "LC CIKAJANG"
+  },
+  {
+    "kode": 25,
+    "nama_store": "LC Cikande"
+  },
+  {
+    "kode": 26,
+    "nama_store": "LC Cileunyi"
+  },
+  {
+    "kode": 27,
+    "nama_store": "LC Cimanggu"
+  },
+  {
+    "kode": 28,
+    "nama_store": "LC CIMANUK"
+  },
+  {
+    "kode": 29,
+    "nama_store": "LC CIPASIR"
+  },
+  {
+    "kode": 30,
+    "nama_store": "LC Cipocok"
+  },
+  {
+    "kode": 31,
+    "nama_store": "LC Ciracas"
+  },
+  {
+    "kode": 32,
+    "nama_store": "LC Ciruas"
+  },
+  {
+    "kode": 33,
+    "nama_store": "LC Cisoka"
+  },
+  {
+    "kode": 34,
+    "nama_store": "LC Ciwaru"
+  },
+  {
+    "kode": 35,
+    "nama_store": "LC Ciwaruga"
+  },
+  {
+    "kode": 36,
+    "nama_store": "LC Ciwidey"
+  },
+  {
+    "kode": 37,
+    "nama_store": "LC Derwati"
+  },
+  {
+    "kode": 38,
+    "nama_store": "LC Gading Tutuka"
+  },
+  {
+    "kode": 39,
+    "nama_store": "LC Galuhmas"
+  },
+  {
+    "kode": 40,
+    "nama_store": "LC Gardu Tanjak"
+  },
+  {
+    "kode": 41,
+    "nama_store": "LC GEGERKALONG"
+  },
+  {
+    "kode": 42,
+    "nama_store": "LC Grogol"
+  },
+  {
+    "kode": 43,
+    "nama_store": "LC Indihiang"
+  },
+  {
+    "kode": 44,
+    "nama_store": "LC Jatos"
+  },
+  {
+    "kode": 45,
+    "nama_store": "LC Jombang"
+  },
+  {
+    "kode": 46,
+    "nama_store": "LC Juanda"
+  },
+  {
+    "kode": 47,
+    "nama_store": "LC Kaligandu"
+  },
+  {
+    "kode": 48,
+    "nama_store": "LC Kalitimbang"
+  },
+  {
+    "kode": 49,
+    "nama_store": "LC Kasemen"
+  },
+  {
+    "kode": 50,
+    "nama_store": "LC Katapang"
+  },
+  {
+    "kode": 51,
+    "nama_store": "LC Kebon Dalam"
+  },
+  {
+    "kode": 52,
+    "nama_store": "LC Kelapa Dua"
+  },
+  {
+    "kode": 53,
+    "nama_store": "LC Kragilan"
+  },
+  {
+    "kode": 54,
+    "nama_store": "LC Kramatwatu"
+  },
+  {
+    "kode": 55,
+    "nama_store": "LC Krenceng"
+  },
+  {
+    "kode": 56,
+    "nama_store": "LC Labuan"
+  },
+  {
+    "kode": 57,
+    "nama_store": "LC Lebak Indah"
+  },
+  {
+    "kode": 58,
+    "nama_store": "LC Legok"
+  },
+  {
+    "kode": 59,
+    "nama_store": "LC Lopang"
+  },
+  {
+    "kode": 60,
+    "nama_store": "LC MAJALENGKA"
+  },
+  {
+    "kode": 61,
+    "nama_store": "LC Majasari"
+  },
+  {
+    "kode": 62,
+    "nama_store": "LC Margaasih"
+  },
+  {
+    "kode": 63,
+    "nama_store": "LC Margahayu"
+  },
+  {
+    "kode": 64,
+    "nama_store": "LC Mega Regency"
+  },
+  {
+    "kode": 65,
+    "nama_store": "LC Menes"
+  },
+  {
+    "kode": 66,
+    "nama_store": "LC Merak"
+  },
+  {
+    "kode": 67,
+    "nama_store": "LC Multatuli"
+  },
+  {
+    "kode": 68,
+    "nama_store": "LC Munjul"
+  },
+  {
+    "kode": 69,
+    "nama_store": "LC ONA SILIWANGI"
+  },
+  {
+    "kode": 70,
+    "nama_store": "LC Pakupatan"
+  },
+  {
+    "kode": 71,
+    "nama_store": "LC Palabuhan Ratu"
+  },
+  {
+    "kode": 72,
+    "nama_store": "LC Panam Simpang Satria"
+  },
+  {
+    "kode": 73,
+    "nama_store": "LC PANDANWANGI"
+  },
+  {
+    "kode": 74,
+    "nama_store": "LC Panimbang"
+  },
+  {
+    "kode": 75,
+    "nama_store": "LC PCI"
+  },
+  {
+    "kode": 76,
+    "nama_store": "LC Pemuda"
+  },
+  {
+    "kode": 77,
+    "nama_store": "LC PERJUANGAN"
+  },
+  {
+    "kode": 78,
+    "nama_store": "LC PERMATA CIMAHI"
+  },
+  {
+    "kode": 79,
+    "nama_store": "LC Perumnas Cirebon"
+  },
+  {
+    "kode": 80,
+    "nama_store": "LC Petir"
+  },
+  {
+    "kode": 81,
+    "nama_store": "LC Pipitan"
+  },
+  {
+    "kode": 82,
+    "nama_store": "LC RANCAMANYAR"
+  },
+  {
+    "kode": 83,
+    "nama_store": "LC Rumbai"
+  },
+  {
+    "kode": 84,
+    "nama_store": "LC Sarimanah"
+  },
+  {
+    "kode": 85,
+    "nama_store": "LC Seneja"
+  },
+  {
+    "kode": 86,
+    "nama_store": "LC Serdang"
+  },
+  {
+    "kode": 87,
+    "nama_store": "LC Siliwangi Tasik"
+  },
+  {
+    "kode": 88,
+    "nama_store": "LC SIMPANG LIMA"
+  },
+  {
+    "kode": 89,
+    "nama_store": "LC Singaparna"
+  },
+  {
+    "kode": 90,
+    "nama_store": "LC Sudirman Indramayu"
+  },
+  {
+    "kode": 91,
+    "nama_store": "LC Sukagalih"
+  },
+  {
+    "kode": 92,
+    "nama_store": "LC Sukamenak"
+  },
+  {
+    "kode": 93,
+    "nama_store": "LC SUMBER"
+  },
+  {
+    "kode": 94,
+    "nama_store": "LC Taman Cilegon Indah"
+  },
+  {
+    "kode": 95,
+    "nama_store": "LC Tegal"
+  },
+  {
+    "kode": 96,
+    "nama_store": "LC Tegal Cabe"
+  },
+  {
+    "kode": 97,
+    "nama_store": "LC Temu Putih"
+  },
+  {
+    "kode": 98,
+    "nama_store": "LC TUBAGUS ISMAIL"
+  },
+  {
+    "kode": 99,
+    "nama_store": "LC Ujung berung"
+  },
+  {
+    "kode": 100,
+    "nama_store": "LC Waringin Kurung"
+  },
+  {
+    "kode": 101,
+    "nama_store": "LC Warnasari"
+  },
+  {
+    "kode": 102,
+    "nama_store": "LC WARUNG GUNUNG"
+  },
+  {
+    "kode": 103,
+    "nama_store": "OFC Cibatu"
+  },
+  {
+    "kode": 104,
+    "nama_store": "OFC CiCURUG"
+  },
+  {
+    "kode": 105,
+    "nama_store": "OFC Koncara"
+  },
+  {
+    "kode": 106,
+    "nama_store": "OFC legok jabar"
+  }
+]

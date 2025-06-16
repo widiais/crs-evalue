@@ -1,0 +1,62 @@
+[
+  {
+    "kode": 1,
+    "level": "Magang"
+  },
+  {
+    "kode": 2,
+    "level": "Trainning"
+  },
+  {
+    "kode": 3,
+    "level": "Member"
+  },
+  {
+    "kode": 4,
+    "level": "Star"
+  },
+  {
+    "kode": 5,
+    "level": "All Star"
+  },
+  {
+    "kode": 6,
+    "level": "TL1"
+  },
+  {
+    "kode": 7,
+    "level": "TL2"
+  },
+  {
+    "kode": 8,
+    "level": "Junior SPV"
+  },
+  {
+    "kode": 9,
+    "level": "Middle SPV"
+  },
+  {
+    "kode": 10,
+    "level": "Senior SPV"
+  },
+  {
+    "kode": 11,
+    "level": "Junior Manager"
+  },
+  {
+    "kode": 12,
+    "level": "Middle Manager"
+  },
+  {
+    "kode": 13,
+    "level": "Senior Manager"
+  },
+  {
+    "kode": 14,
+    "level": "Regional Manager"
+  },
+  {
+    "kode": 15,
+    "level": "Division Head"
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "kode": 1,
+    "name": "Operational Store",
+    "description": "Divisi yang menangani operasional toko dan penjualan",
+    "isActive": true
+  },
+  {
+    "kode": 2,
+    "name": "FAD",
+    "description": "Finance and Administration Division",
+    "isActive": true
+  },
+  {
+    "kode": 3,
+    "name": "HCD",
+    "description": "Human Capital Development Division",
+    "isActive": true
+  },
+  {
+    "kode": 4,
+    "name": "IT",
+    "description": "Information Technology Division",
+    "isActive": true
+  }
+] 

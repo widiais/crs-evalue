@@ -184,7 +184,7 @@ export default function HomePage() {
                 <p>Hubungi administrator untuk mendapatkan akses</p>
                 
                 <button
-                  onClick={() => router.push('/admin')}
+                  onClick={() => router.push('/admin/login')}
                   className="inline-block text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200 hover:underline"
                 >
                   Masuk sebagai Administrator
