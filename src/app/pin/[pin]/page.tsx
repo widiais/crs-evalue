@@ -88,7 +88,7 @@ export default function AssessmentPage() {
   const employeeOptions = useMemo(() => 
     filteredEmployees.map(employee => ({
       value: employee.id,
-      label: `${employee.name} - ${employee.position} (${employee.location})`,
+      label: `${employee.name} (${employee.division})`,
       employee: employee
     }))
   , [filteredEmployees]);

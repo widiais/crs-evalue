@@ -712,152 +712,152 @@ export const assessmentTemplatesPart2: AssessmentTemplate[] = [
       {
         id: "ssup_fc_1",
         category: "Functional Competency",
-        text: "Menyusun strategi operasional jangka menengah (bulanan/kuartalan)"
+        text: "Merancang dan mengimplementasikan program kerja area"
       },
       {
         id: "ssup_fc_2",
         category: "Functional Competency",
-        text: "Mengoptimalkan efisiensi operasional lintas divisi"
+        text: "Memberikan pelatihan teknis lintas divisi"
       },
       {
         id: "ssup_fc_3",
         category: "Functional Competency",
-        text: "Mengelola budget operasional dan investasi kecil"
+        text: "Membuat evaluasi dan rekomendasi kebijakan teknis"
       },
       {
         id: "ssup_fc_4",
         category: "Functional Competency",
-        text: "Memastikan compliance terhadap regulasi dan standar perusahaan"
+        text: "Mengelola target dan performa outlet/tim secara menyeluruh"
       },
       {
         id: "ssup_fc_5",
         category: "Functional Competency",
-        text: "Mengembangkan sistem pelaporan dan monitoring KPI"
+        text: "Berkontribusi dalam pengembangan sistem operasional"
       },
       {
         id: "ssup_lm_1",
         category: "Leadership & Managerial",
-        text: "Membina dan mengembangkan kompetensi para supervisor"
+        text: "Mempimpin unit kerja dalam skala lebih luas"
       },
       {
         id: "ssup_lm_2",
         category: "Leadership & Managerial",
-        text: "Menyelaraskan target individu dengan objektif perusahaan"
+        text: "Mengelola tim lintas shift atau cabang kecil"
       },
       {
         id: "ssup_lm_3",
         category: "Leadership & Managerial",
-        text: "Memimpin transformasi dan perubahan operasional"
+        text: "Menyusun perencanaan kerja bulanan"
       },
       {
         id: "ssup_lm_4",
         category: "Leadership & Managerial",
-        text: "Melakukan succession planning untuk posisi supervisor"
+        text: "Menjadi role model dalam kepemimpinan yang adil dan efektif"
       },
       {
         id: "ssup_lm_5",
         category: "Leadership & Managerial",
-        text: "Mengelola konflik antar divisi dengan solusi win-win"
+        text: "Menerapkan sistem reward and punishment sederhana"
       },
       {
         id: "ssup_ss_1",
         category: "Soft Skills",
-        text: "Menjalin komunikasi strategis dengan stakeholder internal"
+        text: "Memimpin forum dan rapat kecil secara efektif"
       },
       {
         id: "ssup_ss_2",
         category: "Soft Skills",
-        text: "Menyusun presentasi dan laporan manajemen yang komprehensif"
+        text: "Mampu menyampaikan gagasan strategis secara meyakinkan"
       },
       {
         id: "ssup_ss_3",
         category: "Soft Skills",
-        text: "Memfasilitasi komunikasi lintas departemen"
+        text: "Membangun budaya komunikasi positif di unit kerja"
       },
       {
         id: "ssup_ss_4",
         category: "Soft Skills",
-        text: "Memberikan coaching untuk pengembangan leadership tim"
+        text: "Menjadi model interaksi sehat dan terbuka"
       },
       {
         id: "ssup_ss_5",
         category: "Soft Skills",
-        text: "Membangun network internal untuk kolaborasi efektif"
+        text: "Menangani perbedaan pendapat secara dewasa"
       },
       {
         id: "ssup_ps_1",
         category: "Problem Solving & Analytical Thinking",
-        text: "Menganalisis tren bisnis dan operasional untuk antisipasi masalah"
+        text: "Mengidentifikasi masalah antar tim/departemen"
       },
       {
         id: "ssup_ps_2",
         category: "Problem Solving & Analytical Thinking",
-        text: "Mengembangkan sistem preventif berbasis data historis"
+        text: "Membuat evaluasi performa dan rekomendasi kebijakan"
       },
       {
         id: "ssup_ps_3",
         category: "Problem Solving & Analytical Thinking",
-        text: "Menyelesaikan masalah kompleks dengan pendekatan sistemik"
+        text: "Mengelola proyek improvement teknis tim"
       },
       {
         id: "ssup_ps_4",
         category: "Problem Solving & Analytical Thinking",
-        text: "Membuat keputusan strategis berdasarkan analisis multi-faktor"
+        text: "Membuat analisa SWOT sederhana untuk unit kerja"
       },
       {
         id: "ssup_ps_5",
         category: "Problem Solving & Analytical Thinking",
-        text: "Mengembangkan inovasi proses untuk peningkatan kinerja"
+        text: "Menjadi referensi solusi untuk TL dan Supervisor lain"
       },
       {
         id: "ssup_cf_1",
         category: "Culture Fit & Organizational Commitment",
-        text: "Menjadi champion budaya perusahaan di level operasional"
+        text: "Menjaga konsistensi budaya kerja di beberapa unit"
       },
       {
         id: "ssup_cf_2",
         category: "Culture Fit & Organizational Commitment",
-        text: "Menyelaraskan nilai budaya dengan praktik kerja harian"
+        text: "Menginternalisasi nilai perusahaan dalam rencana kerja"
       },
       {
         id: "ssup_cf_3",
         category: "Culture Fit & Organizational Commitment",
-        text: "Membangun engagement karyawan melalui program budaya"
+        text: "Menjadi teladan dalam menjaga nilai budaya organisasi"
       },
       {
         id: "ssup_cf_4",
         category: "Culture Fit & Organizational Commitment",
-        text: "Menjadi role model dalam penerapan nilai perusahaan"
+        text: "Membuat program penguatan budaya tim"
       },
       {
         id: "ssup_cf_5",
         category: "Culture Fit & Organizational Commitment",
-        text: "Mengintegrasikan budaya dalam sistem reward dan recognition"
+        text: "Melakukan monitoring sikap dan loyalitas kerja"
       },
       {
         id: "ssup_ae_1",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Menerapkan prinsip kepemimpinan Islam dalam mengelola tim besar"
+        text: "Menginternalisasi nilai Islam dalam kebijakan unit kerja"
       },
       {
         id: "ssup_ae_2",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Menjadi teladan dalam mengintegrasikan nilai Islam dan bisnis"
+        text: "Menjadi teladan akhlak kerja islami untuk bawahan dan rekan"
       },
       {
         id: "ssup_ae_3",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Memastikan keputusan bisnis tidak bertentangan dengan syariat"
+        text: "Menolak praktik kerja yang melanggar prinsip agama"
       },
       {
         id: "ssup_ae_4",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Membina spiritualitas tim melalui program keagamaan"
+        text: "Menjaga hak-hak anggota tim dalam setiap keputusan"
       },
       {
         id: "ssup_ae_5",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Menjaga integritas dan amanah dalam tanggung jawab besar"
+        text: "Mengajak tim untuk menjaga ibadah dan akhlak di sela kesibukan"
       }
     ],
     section2: semangatSedjatiQuestions,
@@ -876,152 +876,152 @@ export const assessmentTemplatesPart2: AssessmentTemplate[] = [
       {
         id: "jmgr_fc_1",
         category: "Functional Competency",
-        text: "Mengelola P&L (Profit & Loss) untuk area yang dipimpin"
+        text: "Membuat strategi peningkatan performa tim"
       },
       {
         id: "jmgr_fc_2",
         category: "Functional Competency",
-        text: "Menyusun business plan tahunan untuk divisi"
+        text: "Menyusun anggaran operasional (budgeting) teknis"
       },
       {
         id: "jmgr_fc_3",
         category: "Functional Competency",
-        text: "Mengimplementasikan strategi perusahaan di level operasional"
+        text: "Menilai kebutuhan training teknis tim"
       },
       {
         id: "jmgr_fc_4",
         category: "Functional Competency",
-        text: "Mengelola proyek besar dan inisiatif strategis"
+        text: "Membangun sinergi antar departemen dalam aspek teknis"
       },
       {
         id: "jmgr_fc_5",
         category: "Functional Competency",
-        text: "Mengoptimalkan utilisasi sumber daya untuk pencapaian target"
+        text: "Menganalisis tren performa operasional untuk improvement"
       },
       {
         id: "jmgr_lm_1",
         category: "Leadership & Managerial",
-        text: "Memimpin transformasi organisasi di level divisi"
+        text: "Memimpin satuan kerja secara menyeluruh"
       },
       {
         id: "jmgr_lm_2",
         category: "Leadership & Managerial",
-        text: "Mengembangkan talent pipeline untuk posisi kunci"
+        text: "Membangun strategi tim berdasarkan target perusahaan"
       },
       {
         id: "jmgr_lm_3",
         category: "Leadership & Managerial",
-        text: "Membuat keputusan strategis yang berdampak jangka panjang"
+        text: "Menyusun sistem evaluasi dan pelatihan SDM"
       },
       {
         id: "jmgr_lm_4",
         category: "Leadership & Managerial",
-        text: "Mengelola change management dengan pendekatan holistik"
+        text: "Membina calon pemimpin (talent development)"
       },
       {
         id: "jmgr_lm_5",
         category: "Leadership & Managerial",
-        text: "Membangun organisasi yang agile dan responsif"
+        text: "Mengatur sinergi antar unit dalam satuan kerja"
       },
       {
         id: "jmgr_ss_1",
         category: "Soft Skills",
-        text: "Menjalin komunikasi strategis dengan senior management"
+        text: "Menyampaikan arahan dan keputusan dengan penuh wibawa"
       },
       {
         id: "jmgr_ss_2",
         category: "Soft Skills",
-        text: "Membangun partnership internal dan eksternal"
+        text: "Memberi motivasi verbal yang menyentuh tim"
       },
       {
         id: "jmgr_ss_3",
         category: "Soft Skills",
-        text: "Menyampaikan visi dan strategi dengan compelling communication"
+        text: "Menangani keluhan tim dengan pendekatan komunikatif"
       },
       {
         id: "jmgr_ss_4",
         category: "Soft Skills",
-        text: "Memfasilitasi kolaborasi lintas fungsi untuk pencapaian objektif"
+        text: "Memfasilitasi diskusi untuk mencari solusi bersama"
       },
       {
         id: "jmgr_ss_5",
         category: "Soft Skills",
-        text: "Mengembangkan budaya komunikasi terbuka dan feedback"
+        text: "Meningkatkan kepercayaan diri tim melalui pendekatan manusiawi"
       },
       {
         id: "jmgr_ps_1",
         category: "Problem Solving & Analytical Thinking",
-        text: "Menganalisis business intelligence untuk strategic decision making"
+        text: "Menyusun strategi solusi berbasis data lintas tim"
       },
       {
         id: "jmgr_ps_2",
         category: "Problem Solving & Analytical Thinking",
-        text: "Mengembangkan framework analisis untuk masalah kompleks"
+        text: "Menganalisis performa tim dengan alat evaluasi manajerial"
       },
       {
         id: "jmgr_ps_3",
         category: "Problem Solving & Analytical Thinking",
-        text: "Mengelola risiko bisnis dengan pendekatan proaktif"
+        text: "Menyusun target berbasis masalah riil di lapangan"
       },
       {
         id: "jmgr_ps_4",
         category: "Problem Solving & Analytical Thinking",
-        text: "Menciptakan solusi inovatif untuk tantangan bisnis"
+        text: "Menyusun alur pengambilan keputusan tim"
       },
       {
         id: "jmgr_ps_5",
         category: "Problem Solving & Analytical Thinking",
-        text: "Mengoptimalkan proses bisnis dengan pendekatan data-driven"
+        text: "Menyusun sistem monitoring berbasis indikator"
       },
       {
         id: "jmgr_cf_1",
         category: "Culture Fit & Organizational Commitment",
-        text: "Menjadi culture ambassador dalam setiap inisiatif bisnis"
+        text: "Menyusun sistem kerja dan evaluasi berbasis nilai budaya"
       },
       {
         id: "jmgr_cf_2",
         category: "Culture Fit & Organizational Commitment",
-        text: "Mengintegrasikan nilai budaya dalam strategic planning"
+        text: "Mempromosikan nilai perusahaan ke seluruh staf di unitnya"
       },
       {
         id: "jmgr_cf_3",
         category: "Culture Fit & Organizational Commitment",
-        text: "Membangun organizational culture yang mendukung high performance"
+        text: "Mendorong ketaatan budaya di seluruh rantai manajerial bawahannya"
       },
       {
         id: "jmgr_cf_4",
         category: "Culture Fit & Organizational Commitment",
-        text: "Menyelaraskan budaya lokal dengan corporate culture"
+        text: "Menyelaraskan budaya kerja dengan target kinerja"
       },
       {
         id: "jmgr_cf_5",
         category: "Culture Fit & Organizational Commitment",
-        text: "Mengukur dan meningkatkan culture engagement di divisi"
+        text: "Memberikan intervensi budaya saat tim mulai melenceng"
       },
       {
         id: "jmgr_ae_1",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Memimpin dengan prinsip khilafah dan amanah dalam bisnis"
+        text: "Menanamkan nilai-nilai Islam dalam kepemimpinan sehari-hari"
       },
       {
         id: "jmgr_ae_2",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Mengintegrasikan nilai-nilai Islam dalam corporate strategy"
+        text: "Mengedepankan etika dalam pengambilan keputusan manajerial"
       },
       {
         id: "jmgr_ae_3",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Memastikan praktik bisnis halal dan berkah"
+        text: "Menjadi pendamai dalam konflik kerja secara hikmah"
       },
       {
         id: "jmgr_ae_4",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Membina umat melalui platform bisnis dan kepemimpinan"
+        text: "Menyusun aturan atau sistem kerja berbasis nilai amanah dan adil"
       },
       {
         id: "jmgr_ae_5",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Menjadi teladan dalam menjalankan bisnis sebagai ibadah"
+        text: "Memberikan reward & punishment dengan pendekatan etis"
       }
     ],
     section2: semangatSedjatiQuestions,

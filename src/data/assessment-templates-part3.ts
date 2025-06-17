@@ -56,152 +56,152 @@ export const assessmentTemplatesPart3: AssessmentTemplate[] = [
       {
         id: "mmgr_fc_1",
         category: "Functional Competency",
-        text: "Mengelola multiple business units dengan P&L responsibility"
+        text: "Menentukan arah kebijakan operasional berdasarkan data"
       },
       {
         id: "mmgr_fc_2",
         category: "Functional Competency",
-        text: "Menyusun long-term strategic planning untuk divisi"
+        text: "Menyusun dan memantau pencapaian target jangka menengah"
       },
       {
         id: "mmgr_fc_3",
         category: "Functional Competency",
-        text: "Mengimplementasikan corporate strategy di level regional"
+        text: "Mengembangkan sistem kerja berbasis teknologi"
       },
       {
         id: "mmgr_fc_4",
         category: "Functional Competency",
-        text: "Mengelola portfolio project dan investment decision"
+        text: "Menganalisis root cause problem yang kompleks"
       },
       {
         id: "mmgr_fc_5",
         category: "Functional Competency",
-        text: "Mengoptimalkan resource allocation lintas business unit"
+        text: "Menyusun SOP lintas departemen"
       },
       {
         id: "mmgr_lm_1",
         category: "Leadership & Managerial",
-        text: "Memimpin organizational transformation di level menengah"
+        text: "Menyusun arah pengembangan SDM jangka menengah"
       },
       {
         id: "mmgr_lm_2",
         category: "Leadership & Managerial",
-        text: "Mengembangkan next-generation leaders untuk posisi strategis"
+        text: "Mengatur keseimbangan beban kerja tim"
       },
       {
         id: "mmgr_lm_3",
         category: "Leadership & Managerial",
-        text: "Membuat strategic decision dengan impact jangka panjang"
+        text: "Menjadi mentor bagi beberapa supervisor atau TL"
       },
       {
         id: "mmgr_lm_4",
         category: "Leadership & Managerial",
-        text: "Mengelola complex stakeholder management"
+        text: "Mengelola perubahan dan transisi organisasi"
       },
       {
         id: "mmgr_lm_5",
         category: "Leadership & Managerial",
-        text: "Membangun high-performance organization culture"
+        text: "Membangun komunikasi vertikal dan horizontal yang efektif"
       },
       {
         id: "mmgr_ss_1",
         category: "Soft Skills",
-        text: "Menjalin strategic partnership dengan eksternal stakeholder"
+        text: "Menjadi narasumber atau pembicara internal dengan kredibilitas"
       },
       {
         id: "mmgr_ss_2",
         category: "Soft Skills",
-        text: "Membangun influence dan network untuk business development"
+        text: "Mengelola komunikasi antar departemen dan lintas fungsi"
       },
       {
         id: "mmgr_ss_3",
         category: "Soft Skills",
-        text: "Menyampaikan corporate vision dengan inspiring communication"
+        text: "Menjadi negosiator yang efektif dalam kebijakan internal"
       },
       {
         id: "mmgr_ss_4",
         category: "Soft Skills",
-        text: "Memfasilitasi strategic dialogue lintas business unit"
+        text: "Menggunakan komunikasi strategis dalam perubahan organisasi"
       },
       {
         id: "mmgr_ss_5",
         category: "Soft Skills",
-        text: "Mengembangkan thought leadership dalam industri"
+        text: "Mengatur flow komunikasi agar tepat sasaran"
       },
       {
         id: "mmgr_ps_1",
         category: "Problem Solving & Analytical Thinking",
-        text: "Menganalisis market trend dan competitive landscape"
+        text: "Membuat analisis penyebab utama dari kegagalan strategis"
       },
       {
         id: "mmgr_ps_2",
         category: "Problem Solving & Analytical Thinking",
-        text: "Mengembangkan strategic framework untuk complex problem"
+        text: "Menggabungkan data kuantitatif dan kualitatif untuk keputusan"
       },
       {
         id: "mmgr_ps_3",
         category: "Problem Solving & Analytical Thinking",
-        text: "Mengelola strategic risk dengan comprehensive approach"
+        text: "Menyusun kerangka kerja pemecahan masalah regional/divisi"
       },
       {
         id: "mmgr_ps_4",
         category: "Problem Solving & Analytical Thinking",
-        text: "Menciptakan breakthrough innovation untuk growth"
+        text: "Menerapkan metode analisis (5 why's, root cause, dsb.)"
       },
       {
         id: "mmgr_ps_5",
         category: "Problem Solving & Analytical Thinking",
-        text: "Mengoptimalkan business model dengan data-driven insight"
+        text: "Menyusun proposal strategis perbaikan sistem"
       },
       {
         id: "mmgr_cf_1",
         category: "Culture Fit & Organizational Commitment",
-        text: "Menjadi culture architect dalam corporate transformation"
+        text: "Membina sinergi antar unit berdasarkan nilai budaya"
       },
       {
         id: "mmgr_cf_2",
         category: "Culture Fit & Organizational Commitment",
-        text: "Mengintegrasikan corporate values dalam strategic execution"
+        text: "Mengelola transformasi budaya kerja di lingkup divisi"
       },
       {
         id: "mmgr_cf_3",
         category: "Culture Fit & Organizational Commitment",
-        text: "Membangun culture of excellence dan continuous innovation"
+        text: "Mengawasi pelaksanaan budaya kerja dan komitmen lintas fungsi"
       },
       {
         id: "mmgr_cf_4",
         category: "Culture Fit & Organizational Commitment",
-        text: "Menyelaraskan local culture dengan global corporate standard"
+        text: "Menyusun pelatihan budaya kerja untuk posisi TL/Spv"
       },
       {
         id: "mmgr_cf_5",
         category: "Culture Fit & Organizational Commitment",
-        text: "Mengukur dan meningkatkan organizational health metrics"
+        text: "Menerjemahkan nilai perusahaan ke dalam SOP divisi"
       },
       {
         id: "mmgr_ae_1",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Memimpin dengan prinsip stewardship dan khalifah dalam bisnis"
+        text: "Membimbing TL/Spv tentang kepemimpinan yang amanah dan adil"
       },
       {
         id: "mmgr_ae_2",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Mengintegrasikan Islamic values dalam corporate governance"
+        text: "Menerapkan etika Islam dalam manajemen SDM"
       },
       {
         id: "mmgr_ae_3",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Memastikan sustainable business practices sesuai syariat"
+        text: "Menjadi role model kepemimpinan etis dan santun"
       },
       {
         id: "mmgr_ae_4",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Membina ecosystem bisnis yang membawa berkah"
+        text: "Menyusun sistem kerja yang mendukung lingkungan kerja islami"
       },
       {
         id: "mmgr_ae_5",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Menjadi role model dalam leadership Islami di korporasi"
+        text: "Menghindari segala bentuk kezhaliman atau manipulasi sistem"
       }
     ],
     section2: semangatSedjatiQuestions,
@@ -220,152 +220,152 @@ export const assessmentTemplatesPart3: AssessmentTemplate[] = [
       {
         id: "smgr_fc_1",
         category: "Functional Competency",
-        text: "Mengelola enterprise-wide strategic initiative"
+        text: "Menginisiasi inovasi dalam proses kerja besar"
       },
       {
         id: "smgr_fc_2",
         category: "Functional Competency",
-        text: "Menyusun corporate strategic roadmap jangka panjang"
+        text: "Bertanggung jawab atas efektivitas sistem kerja seluruh divisi"
       },
       {
         id: "smgr_fc_3",
         category: "Functional Competency",
-        text: "Mengoptimalkan corporate performance dan shareholder value"
+        text: "Menyusun roadmap pengembangan operasional"
       },
       {
         id: "smgr_fc_4",
         category: "Functional Competency",
-        text: "Mengelola merger, acquisition, dan strategic partnership"
+        text: "Menilai dan mengatur ulang struktur kerja bila perlu"
       },
       {
         id: "smgr_fc_5",
         category: "Functional Competency",
-        text: "Membangun competitive advantage yang sustainable"
+        text: "Menetapkan kebijakan teknis strategis perusahaan"
       },
       {
         id: "smgr_lm_1",
         category: "Leadership & Managerial",
-        text: "Memimpin enterprise transformation dan digital modernization"
+        text: "Menyusun strategi pengembangan SDM divisi"
       },
       {
         id: "smgr_lm_2",
         category: "Leadership & Managerial",
-        text: "Mengembangkan C-level leadership pipeline"
+        text: "Mengelola tim lintas fungsi dalam proyek atau unit besar"
       },
       {
         id: "smgr_lm_3",
         category: "Leadership & Managerial",
-        text: "Membuat corporate decision dengan strategic impact"
+        text: "Melakukan evaluasi kepemimpinan bawahan"
       },
       {
         id: "smgr_lm_4",
         category: "Leadership & Managerial",
-        text: "Mengelola board relationship dan investor communication"
+        text: "Memberikan coaching dan penguatan budaya kerja"
       },
       {
         id: "smgr_lm_5",
         category: "Leadership & Managerial",
-        text: "Membangun world-class organization capability"
+        text: "Memimpin transformasi struktural organisasi di divisinya"
       },
       {
         id: "smgr_ss_1",
         category: "Soft Skills",
-        text: "Menjalin strategic alliance dengan global partner"
+        text: "Menyampaikan visi dan strategi dengan bahasa inspiratif"
       },
       {
         id: "smgr_ss_2",
         category: "Soft Skills",
-        text: "Membangun corporate brand dan reputation management"
+        text: "Menjadi spokesperson divisi secara formal dan informal"
       },
       {
         id: "smgr_ss_3",
         category: "Soft Skills",
-        text: "Menyampaikan corporate message dengan executive presence"
+        text: "Mendorong budaya feedback terbuka dan positif"
       },
       {
         id: "smgr_ss_4",
         category: "Soft Skills",
-        text: "Memfasilitasi strategic conversation dengan key stakeholder"
+        text: "Membina sinergi antar departemen secara harmonis"
       },
       {
         id: "smgr_ss_5",
         category: "Soft Skills",
-        text: "Mengembangkan industry leadership dan thought influence"
+        text: "Menciptakan suasana kerja yang nyaman melalui komunikasi"
       },
       {
         id: "smgr_ps_1",
         category: "Problem Solving & Analytical Thinking",
-        text: "Menganalisis macro environment dan future scenario planning"
+        text: "Menganalisis masalah kompleks lintas departemen"
       },
       {
         id: "smgr_ps_2",
         category: "Problem Solving & Analytical Thinking",
-        text: "Mengembangkan strategic option dan contingency planning"
+        text: "Merancang solusi jangka panjang berbasis risiko dan dampak"
       },
       {
         id: "smgr_ps_3",
         category: "Problem Solving & Analytical Thinking",
-        text: "Mengelola enterprise risk dan crisis management"
+        text: "Mengelola program besar berbasis problem mapping"
       },
       {
         id: "smgr_ps_4",
         category: "Problem Solving & Analytical Thinking",
-        text: "Menciptakan disruptive innovation dan new business model"
+        text: "Menyusun rekomendasi kebijakan makro perusahaan"
       },
       {
         id: "smgr_ps_5",
         category: "Problem Solving & Analytical Thinking",
-        text: "Mengoptimalkan corporate strategy dengan advanced analytics"
+        text: "Menjadi mentor dalam metode berpikir analitis"
       },
       {
         id: "smgr_cf_1",
         category: "Culture Fit & Organizational Commitment",
-        text: "Menjadi chief culture officer dalam corporate evolution"
+        text: "Menentukan arah strategis budaya organisasi di divisinya"
       },
       {
         id: "smgr_cf_2",
         category: "Culture Fit & Organizational Commitment",
-        text: "Mengintegrasikan purpose dan values dalam business strategy"
+        text: "Menciptakan inisiatif budaya kerja untuk skala besar"
       },
       {
         id: "smgr_cf_3",
         category: "Culture Fit & Organizational Commitment",
-        text: "Membangun legacy culture untuk generasi mendatang"
+        text: "Menjadi role model budaya organisasi dan moral kerja"
       },
       {
         id: "smgr_cf_4",
         category: "Culture Fit & Organizational Commitment",
-        text: "Menyelaraskan stakeholder values dengan corporate mission"
+        text: "Menyusun evaluasi budaya dalam sistem penilaian kerja"
       },
       {
         id: "smgr_cf_5",
         category: "Culture Fit & Organizational Commitment",
-        text: "Mengukur dan meningkatkan corporate social impact"
+        text: "Menjaga semangat loyalitas di level menengah ke bawah"
       },
       {
         id: "smgr_ae_1",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Memimpin dengan filosofi rahmatan lil alameen dalam bisnis"
+        text: "Menyusun kebijakan berbasis maqashid syariah dalam dunia kerja"
       },
       {
         id: "smgr_ae_2",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Mengintegrasikan maqashid syariah dalam corporate strategy"
+        text: "Menjadi pelindung nilai-nilai akhlak dalam organisasi"
       },
       {
         id: "smgr_ae_3",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Membangun Islamic corporate governance yang exemplary"
+        text: "Menolak kebijakan atau sistem yang menyimpang dari prinsip Islam"
       },
       {
         id: "smgr_ae_4",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Membina ummah melalui corporate social responsibility"
+        text: "Menginspirasi divisi untuk menjadikan kerja sebagai ibadah"
       },
       {
         id: "smgr_ae_5",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Menjadi pioneer dalam Islamic business leadership"
+        text: "Membangun tim dengan semangat ukhuwah dan keadilan"
       }
     ],
     section2: semangatSedjatiQuestions,
@@ -384,152 +384,152 @@ export const assessmentTemplatesPart3: AssessmentTemplate[] = [
       {
         id: "rmgr_fc_1",
         category: "Functional Competency",
-        text: "Mengelola regional business portfolio dengan autonomous authority"
+        text: "Merancang strategi regional berbasis performa outlet"
       },
       {
         id: "rmgr_fc_2",
         category: "Functional Competency",
-        text: "Menyusun regional expansion strategy dan market penetration"
+        text: "Mengkoordinasi fungsi teknis lintas wilayah"
       },
       {
         id: "rmgr_fc_3",
         category: "Functional Competency",
-        text: "Mengoptimalkan regional resource dan geographic advantage"
+        text: "Menentukan prioritas pengembangan SDM regional"
       },
       {
         id: "rmgr_fc_4",
         category: "Functional Competency",
-        text: "Mengelola regional regulatory compliance dan government relation"
+        text: "Mengevaluasi dan merancang perubahan sistem regional"
       },
       {
         id: "rmgr_fc_5",
         category: "Functional Competency",
-        text: "Membangun regional competitive positioning yang unik"
+        text: "Menyediakan insight berbasis data untuk keputusan eksekutif"
       },
       {
         id: "rmgr_lm_1",
         category: "Leadership & Managerial",
-        text: "Memimpin regional transformation sebagai mini-CEO"
+        text: "Memimpin lintas wilayah dan unit secara makro"
       },
       {
         id: "rmgr_lm_2",
         category: "Leadership & Managerial",
-        text: "Mengembangkan regional leadership bench strength"
+        text: "Membangun jaringan komunikasi dan pengawasan regional"
       },
       {
         id: "rmgr_lm_3",
         category: "Leadership & Managerial",
-        text: "Membuat regional strategic decision dengan entrepreneurial spirit"
+        text: "Memberikan pelatihan manajerial kepada middle manager"
       },
       {
         id: "rmgr_lm_4",
         category: "Leadership & Managerial",
-        text: "Mengelola regional stakeholder ecosystem"
+        text: "Menentukan arah kebijakan kepemimpinan regional"
       },
       {
         id: "rmgr_lm_5",
         category: "Leadership & Managerial",
-        text: "Membangun regional excellence dan market leadership"
+        text: "Menjaga stabilitas dan sinergi kerja antar wilayah"
       },
       {
         id: "rmgr_ss_1",
         category: "Soft Skills",
-        text: "Menjalin regional network dan community engagement"
+        text: "Membangun jaringan komunikasi regional yang solid"
       },
       {
         id: "rmgr_ss_2",
         category: "Soft Skills",
-        text: "Membangun regional brand dan market reputation"
+        text: "Menyampaikan kebijakan dengan empati lintas wilayah"
       },
       {
         id: "rmgr_ss_3",
         category: "Soft Skills",
-        text: "Menyampaikan regional vision dengan charismatic leadership"
+        text: "Menjadi fasilitator utama komunikasi antara pusat dan daerah"
       },
       {
         id: "rmgr_ss_4",
         category: "Soft Skills",
-        text: "Memfasilitasi regional collaboration dan synergy"
+        text: "Menjaga hubungan kerja dengan pemangku kepentingan eksternal"
       },
       {
         id: "rmgr_ss_5",
         category: "Soft Skills",
-        text: "Mengembangkan regional thought leadership"
+        text: "Mengatasi perbedaan budaya kerja dengan diplomasi"
       },
       {
         id: "rmgr_ps_1",
         category: "Problem Solving & Analytical Thinking",
-        text: "Menganalisis regional market dynamics dan opportunity"
+        text: "Membuat analisa tren performa lintas outlet/wilayah"
       },
       {
         id: "rmgr_ps_2",
         category: "Problem Solving & Analytical Thinking",
-        text: "Mengembangkan regional strategy dan execution roadmap"
+        text: "Menyusun strategi regional untuk perbaikan performa"
       },
       {
         id: "rmgr_ps_3",
         category: "Problem Solving & Analytical Thinking",
-        text: "Mengelola regional risk dan business continuity"
+        text: "Menyampaikan insight ke pusat berdasarkan realitas lapangan"
       },
       {
         id: "rmgr_ps_4",
         category: "Problem Solving & Analytical Thinking",
-        text: "Menciptakan regional innovation dan differentiation"
+        text: "Menganalisis potensi krisis dan mitigasi risiko"
       },
       {
         id: "rmgr_ps_5",
         category: "Problem Solving & Analytical Thinking",
-        text: "Mengoptimalkan regional performance dengan intelligence system"
+        text: "Membuat sistem kerja preventif skala regional"
       },
       {
         id: "rmgr_cf_1",
         category: "Culture Fit & Organizational Commitment",
-        text: "Menjadi regional culture champion dan values ambassador"
+        text: "Menjamin keselarasan budaya di seluruh wilayah kerja"
       },
       {
         id: "rmgr_cf_2",
         category: "Culture Fit & Organizational Commitment",
-        text: "Mengintegrasikan local wisdom dengan corporate culture"
+        text: "Membina pimpinan cabang/unit dalam penerapan budaya"
       },
       {
         id: "rmgr_cf_3",
         category: "Culture Fit & Organizational Commitment",
-        text: "Membangun regional pride dan organizational belonging"
+        text: "Menyelesaikan konflik budaya antar cabang/area"
       },
       {
         id: "rmgr_cf_4",
         category: "Culture Fit & Organizational Commitment",
-        text: "Menyelaraskan regional culture dengan national standard"
+        text: "Menguatkan nilai-nilai organisasi melalui kegiatan regional"
       },
       {
         id: "rmgr_cf_5",
         category: "Culture Fit & Organizational Commitment",
-        text: "Mengukur dan meningkatkan regional engagement metrics"
+        text: "Menjadi representasi budaya perusahaan ke wilayah"
       },
       {
         id: "rmgr_ae_1",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Memimpin regional sebagai qowwam dengan amanah Allah"
+        text: "Menyebarkan nilai akhlak dan kerja islami di seluruh cabang wilayah"
       },
       {
         id: "rmgr_ae_2",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Mengintegrasikan Islamic principles dalam regional governance"
+        text: "Menjadi contoh pemimpin adil, sabar, dan bijak"
       },
       {
         id: "rmgr_ae_3",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Membangun regional ecosystem yang berkah dan halal"
+        text: "Mengelola keputusan sulit dengan pertimbangan syariah"
       },
       {
         id: "rmgr_ae_4",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Membina regional ummah melalui business platform"
+        text: "Menyusun pelatihan akhlak kerja untuk para supervisor dan manajer"
       },
       {
         id: "rmgr_ae_5",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Menjadi teladan regional dalam Islamic leadership"
+        text: "Menyelesaikan masalah tim dengan adab dan empati"
       }
     ],
     section2: semangatSedjatiQuestions,
@@ -548,152 +548,152 @@ export const assessmentTemplatesPart3: AssessmentTemplate[] = [
       {
         id: "dhead_fc_1",
         category: "Functional Competency",
-        text: "Mengelola divisional enterprise dengan full P&L accountability"
+        text: "Menyusun kebijakan teknis jangka panjang"
       },
       {
         id: "dhead_fc_2",
         category: "Functional Competency",
-        text: "Menyusun divisional vision dan long-term strategic direction"
+        text: "Memimpin transformasi sistem kerja skala besar"
       },
       {
         id: "dhead_fc_3",
         category: "Functional Competency",
-        text: "Mengoptimalkan divisional value creation dan shareholder return"
+        text: "Menciptakan inovasi fungsional yang berdampak besar"
       },
       {
         id: "dhead_fc_4",
         category: "Functional Competency",
-        text: "Mengelola divisional transformation dan future readiness"
+        text: "Bertanggung jawab atas performa seluruh divisi secara nasional"
       },
       {
         id: "dhead_fc_5",
         category: "Functional Competency",
-        text: "Membangun divisional legacy dan sustainable competitive advantage"
+        text: "Menyelaraskan kompetensi fungsional dengan visi perusahaan"
       },
       {
         id: "dhead_lm_1",
         category: "Leadership & Managerial",
-        text: "Memimpin divisional transformation sebagai visionary leader"
+        text: "Menjadi pemimpin visioner dalam organisasi"
       },
       {
         id: "dhead_lm_2",
         category: "Leadership & Managerial",
-        text: "Mengembangkan successor dan next-generation leadership"
+        text: "Menentukan arah strategis kepemimpinan perusahaan"
       },
       {
         id: "dhead_lm_3",
         category: "Leadership & Managerial",
-        text: "Membuat transformational decision dengan legacy impact"
+        text: "Membangun sistem pengembangan pemimpin masa depan"
       },
       {
         id: "dhead_lm_4",
         category: "Leadership & Managerial",
-        text: "Mengelola enterprise stakeholder dan board governance"
+        text: "Menjadi role model budaya kerja organisasi"
       },
       {
         id: "dhead_lm_5",
         category: "Leadership & Managerial",
-        text: "Membangun world-class divisional capability dan reputation"
+        text: "Mengelola krisis dan pengambilan keputusan strategis lintas divisi"
       },
       {
         id: "dhead_ss_1",
         category: "Soft Skills",
-        text: "Menjalin global partnership dan strategic alliance"
+        text: "Menjadi pemimpin komunikasi strategis perusahaan"
       },
       {
         id: "dhead_ss_2",
         category: "Soft Skills",
-        text: "Membangun divisional brand dan industry thought leadership"
+        text: "Menyampaikan gagasan transformasi dengan pengaruh besar"
       },
       {
         id: "dhead_ss_3",
         category: "Soft Skills",
-        text: "Menyampaikan divisional mission dengan transformational communication"
+        text: "Menjadi role model komunikasi, empati, dan inspirasi"
       },
       {
         id: "dhead_ss_4",
         category: "Soft Skills",
-        text: "Memfasilitasi enterprise dialogue dan stakeholder engagement"
+        text: "Membangun diplomasi internal dan eksternal yang kuat"
       },
       {
         id: "dhead_ss_5",
         category: "Soft Skills",
-        text: "Mengembangkan global influence dan industry recognition"
+        text: "Menyampaikan kebijakan besar dengan pendekatan humanis"
       },
       {
         id: "dhead_ps_1",
         category: "Problem Solving & Analytical Thinking",
-        text: "Menganalisis global trend dan future scenario modeling"
+        text: "Mengidentifikasi masalah sistemik dan menyusun kebijakan nasional"
       },
       {
         id: "dhead_ps_2",
         category: "Problem Solving & Analytical Thinking",
-        text: "Mengembangkan transformational strategy dan breakthrough solution"
+        text: "Menyusun strategi problem solving untuk transformasi besar"
       },
       {
         id: "dhead_ps_3",
         category: "Problem Solving & Analytical Thinking",
-        text: "Mengelola enterprise risk dan strategic uncertainty"
+        text: "Menganalisis data strategis dan dampaknya ke seluruh organisasi"
       },
       {
         id: "dhead_ps_4",
         category: "Problem Solving & Analytical Thinking",
-        text: "Menciptakan paradigm shift dan industry disruption"
+        text: "Membuat roadmap pemecahan masalah jangka panjang"
       },
       {
         id: "dhead_ps_5",
         category: "Problem Solving & Analytical Thinking",
-        text: "Mengoptimalkan divisional intelligence dengan AI-driven insight"
+        text: "Menjadi pengambil keputusan utama berbasis insight menyeluruh"
       },
       {
         id: "dhead_cf_1",
         category: "Culture Fit & Organizational Commitment",
-        text: "Menjadi chief culture architect dalam enterprise evolution"
+        text: "Menjadi penjaga utama nilai dan budaya organisasi"
       },
       {
         id: "dhead_cf_2",
         category: "Culture Fit & Organizational Commitment",
-        text: "Mengintegrasikan divine purpose dalam corporate mission"
+        text: "Menentukan arah budaya jangka panjang perusahaan"
       },
       {
         id: "dhead_cf_3",
         category: "Culture Fit & Organizational Commitment",
-        text: "Membangun generational culture dan institutional legacy"
+        text: "Menjadi wajah dan simbol nilai-nilai perusahaan"
       },
       {
         id: "dhead_cf_4",
         category: "Culture Fit & Organizational Commitment",
-        text: "Menyelaraskan global values dengan local authenticity"
+        text: "Mendorong konsistensi budaya dari atas ke bawah"
       },
       {
         id: "dhead_cf_5",
         category: "Culture Fit & Organizational Commitment",
-        text: "Mengukur dan meningkatkan enterprise social impact"
+        text: "Mengelola perubahan budaya kerja saat ada transformasi organisasi"
       },
       {
         id: "dhead_ae_1",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Memimpin divisional sebagai khalifah Allah dalam enterprise"
+        text: "Menjadi panutan akhlak kerja Islami tingkat nasional"
       },
       {
         id: "dhead_ae_2",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Mengintegrasikan divine guidance dalam strategic leadership"
+        text: "Menentukan arah kebijakan kerja berbasis nilai Islam"
       },
       {
         id: "dhead_ae_3",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Membangun enterprise yang menjadi rahmatan lil alameen"
+        text: "Menjadi pengawal utama kejujuran dan integritas organisasi"
       },
       {
         id: "dhead_ae_4",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Membina global ummah melalui enterprise platform"
+        text: "Menjaga keberlangsungan budaya kerja Islami di seluruh perusahaan"
       },
       {
         id: "dhead_ae_5",
         category: "Akhlak & Etika Kerja Islami",
-        text: "Menjadi global pioneer dalam Islamic enterprise leadership"
+        text: "Mengambil keputusan strategis berdasarkan keadilan dan amanah"
       }
     ],
     section2: semangatSedjatiQuestions,
