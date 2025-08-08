@@ -203,10 +203,10 @@ export default function DivisionReportPage() {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => router.push('/admin')}
-                className="flex items-center text-gray-600 hover:text-gray-900"
+                aria-label="Kembali"
+                className="p-2 rounded-md border border-gray-200 hover:bg-gray-50"
               >
-                <ArrowLeftIcon className="h-5 w-5 mr-2" />
-                Back to Dashboard
+                <ArrowLeftIcon className="h-5 w-5" />
               </button>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">Report Division</h1>

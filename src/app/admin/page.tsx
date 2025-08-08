@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import { 
   ChartBarIcon, 
   UserGroupIcon, 
@@ -20,6 +21,7 @@ import { seedInitialData, testFirebaseConnection } from '@/utils/seedData';
 
 export default function AdminDashboard() {
   const router = useRouter();
+  const { user, logout, isAuthenticated, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState({
     totalAssessments: 0,
@@ -118,6 +120,13 @@ export default function AdminDashboard() {
       color: 'bg-purple-500'
     },
     {
+      title: 'Report Location',
+      description: 'Laporan per lokasi kerja',
+      icon: MapPinIcon,
+      href: '/admin/reports/location',
+      color: 'bg-teal-500'
+    },
+    {
       title: 'Report Division',
       description: 'Laporan per divisi',
       icon: BuildingOfficeIcon,
@@ -144,6 +153,27 @@ export default function AdminDashboard() {
     }
   ];
 
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      router.push('/login');
+    }
+  }, [isAuthenticated, authLoading, router]);
+
+  // Show loading while checking auth
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  // Don't render if not authenticated
+  if (!isAuthenticated) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -159,19 +189,32 @@ export default function AdminDashboard() {
               </p>
             </div>
             
-            {/* Firebase Status */}
-            <div className="flex items-center space-x-2">
-              <CloudIcon className={`h-5 w-5 ${
-                firebaseStatus === 'connected' ? 'text-green-500' : 
-                firebaseStatus === 'error' ? 'text-red-500' : 'text-gray-400'
-              }`} />
-              <span className={`text-sm font-medium ${
-                firebaseStatus === 'connected' ? 'text-green-700' : 
-                firebaseStatus === 'error' ? 'text-red-700' : 'text-gray-500'
-              }`}>
-                {firebaseStatus === 'connected' ? 'Firebase Connected' : 
-                 firebaseStatus === 'error' ? 'Firebase Error' : 'Checking...'}
-              </span>
+            {/* Right header: Firebase status + Logout */}
+            <div className="flex items-center space-x-6">
+              <div className="flex items-center space-x-2">
+                <CloudIcon className={`h-5 w-5 ${
+                  firebaseStatus === 'connected' ? 'text-green-500' : 
+                  firebaseStatus === 'error' ? 'text-red-500' : 'text-gray-400'
+                }`} />
+                <span className={`text-sm font-medium ${
+                  firebaseStatus === 'connected' ? 'text-green-700' : 
+                  firebaseStatus === 'error' ? 'text-red-700' : 'text-gray-500'
+                }`}>
+                  {firebaseStatus === 'connected' ? 'Firebase Connected' : 
+                   firebaseStatus === 'error' ? 'Firebase Error' : 'Checking...'}
+                </span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <span className="text-sm text-gray-600">
+                  Selamat datang, {user?.name || user?.email}
+                </span>
+                <button
+                  onClick={() => { logout(); router.push('/'); }}
+                  className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-md text-sm font-medium transition-colors"
+                >
+                  Logout
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -232,33 +275,7 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
-
-        {/* Firebase Actions */}
-        <div className="bg-white rounded-lg shadow p-6 mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Firebase Management</h2>
-          <div className="flex space-x-4">
-            <button
-              onClick={handleSeedData}
-              disabled={loading}
-              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-            >
-              <PlayIcon className="h-5 w-5 mr-2" />
-              {loading ? 'Seeding...' : 'Seed Initial Data'}
-            </button>
-            
-            <button
-              onClick={checkFirebaseConnection}
-              className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-            >
-              <CloudIcon className="h-5 w-5 mr-2" />
-              Test Connection
-            </button>
-          </div>
-          <p className="text-sm text-gray-500 mt-2">
-            Seed initial data akan menambahkan sample karyawan dan assessment ke Firebase
-          </p>
-        </div>
-
+    
         {/* Setup Section */}
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">🔧 Setup & Configuration</h2>
@@ -369,7 +386,7 @@ export default function AdminDashboard() {
               onClick={() => router.push('/')}
               className="text-left p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
             >
-              <h3 className="font-medium text-gray-900">Kembali ke Homepage</h3>
+              <h3 className="font-medium text-gray-900"> ke Homepage</h3>
               <p className="text-sm text-gray-500">Ke halaman utama aplikasi</p>
             </button>
           </div>
@@ -377,4 +394,4 @@ export default function AdminDashboard() {
       </div>
     </div>
   );
-} 
+}

@@ -76,6 +76,29 @@ export const assessmentService = {
     }
   },
 
+  // Get assessment by ID
+  async getAssessmentById(id: string): Promise<Assessment | null> {
+    try {
+      if (!db) {
+        return mockAssessments.find(a => a.id === id) || null;
+      }
+      const ref = doc(db, 'assessments', id);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) return null;
+      const data: any = snap.data();
+      return {
+        id: snap.id,
+        ...data,
+        createdAt: data.createdAt?.toDate() || new Date(),
+        startDate: data.startDate?.toDate(),
+        endDate: data.endDate?.toDate(),
+      } as Assessment;
+    } catch (e) {
+      console.error('Error getAssessmentById:', e);
+      return null;
+    }
+  },
+
   // Create new assessment
   async createAssessment(assessment: Omit<Assessment, 'id'>): Promise<string> {
     try {
@@ -181,7 +204,7 @@ export const assessmentService = {
     }
   },
 
-  // Submit assessment result
+  // Submit assessment result (store at top-level collection)
   async submitAssessmentResult(result: Omit<AssessmentResult, 'id'>): Promise<string> {
     try {
       if (!db) {
@@ -251,6 +274,18 @@ export const assessmentService = {
     } catch (error) {
       console.error('Error getting assessment results:', error);
       return [];
+    }
+  },
+
+  // Delete a single assessment result by id
+  async deleteAssessmentResult(id: string): Promise<void> {
+    try {
+      if (!db) return;
+      const ref = doc(db, 'assessment_results', id);
+      await deleteDoc(ref);
+    } catch (error) {
+      console.error('Error deleting assessment result:', error);
+      throw error;
     }
   },
 

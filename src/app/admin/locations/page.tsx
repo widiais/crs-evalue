@@ -21,6 +21,8 @@ export default function LocationsPage() {
   const [submitting, setSubmitting] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingLocation, setEditingLocation] = useState<Location | null>(null);
+  const [searchHeadOffice, setSearchHeadOffice] = useState('');
+  const [searchStore, setSearchStore] = useState('');
   
   // Form state for new/edit location
   const [locationForm, setLocationForm] = useState({
@@ -178,10 +180,10 @@ export default function LocationsPage() {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => router.push('/admin')}
-                className="flex items-center text-gray-600 hover:text-gray-900"
+                aria-label="Kembali"
+                className="p-2 rounded-md border border-gray-200 hover:bg-gray-50"
               >
-                <ArrowLeftIcon className="h-5 w-5 mr-2" />
-                Back to Dashboard
+                <ArrowLeftIcon className="h-5 w-5" />
               </button>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">Setup Work Location</h1>
@@ -339,18 +341,32 @@ export default function LocationsPage() {
           </div>
         )}
 
-        {/* Locations by Category */}
+        {/* Locations by Category with search inputs aligned with section headers */}
         <div className="space-y-8">
           {Object.entries(groupedLocations).map(([category, categoryLocations]) => {
             const IconComponent = getCategoryIcon(category);
+            const term = category === 'Head Office' ? searchHeadOffice.trim().toLowerCase() : searchStore.trim().toLowerCase();
+            const filteredList = term
+              ? categoryLocations.filter(l =>
+                  l.name.toLowerCase().includes(term) ||
+                  l.city.toLowerCase().includes(term)
+                )
+              : categoryLocations;
             return (
               <div key={category} className="bg-white rounded-lg shadow overflow-hidden">
                 <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
-                  <div className="flex items-center">
+                  <div className="flex items-center justify-between gap-4">
                     <IconComponent className={`h-6 w-6 mr-3 ${getCategoryColor(category)}`} />
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {category} ({categoryLocations.length} lokasi)
+                    <h3 className="text-lg font-semibold text-gray-900 flex-1">
+                      {category} ({filteredList.length} lokasi)
                     </h3>
+                    <input
+                      type="text"
+                      value={category === 'Head Office' ? searchHeadOffice : searchStore}
+                      onChange={(e) => category === 'Head Office' ? setSearchHeadOffice(e.target.value) : setSearchStore(e.target.value)}
+                      className="w-64 border border-gray-300 rounded px-3 py-2 text-sm"
+                      placeholder={category === 'Head Office' ? 'Cari Head Office...' : 'Cari Store...'}
+                    />
                   </div>
                 </div>
 
@@ -376,7 +392,7 @@ export default function LocationsPage() {
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      {categoryLocations.map((location) => (
+                      {filteredList.map((location) => (
                         <tr key={location.id} className="hover:bg-gray-50">
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="font-medium text-gray-900">{location.name}</div>

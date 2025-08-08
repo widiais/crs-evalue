@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
   UserGroupIcon, 
@@ -10,6 +10,7 @@ import {
   TrashIcon,
   ArrowLeftIcon
 } from '@heroicons/react/24/outline';
+import * as XLSX from 'xlsx';
 import { employeeService } from '@/services/employees';
 import { divisionService, Division } from '@/services/divisions';
 import { templateService } from '@/services/templates';
@@ -29,6 +30,10 @@ export default function EmployeesPage() {
   const [filterPosition, setFilterPosition] = useState('');
   const [filterDivision, setFilterDivision] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
+  const [showImport, setShowImport] = useState(false);
+  const [previewRows, setPreviewRows] = useState<Array<{Name:string;Level:string;Division:string;Location:string;__errors?:string[]}>>([]);
+  const [isValidPreview, setIsValidPreview] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   
   // Form state for new employee
   const [newEmployee, setNewEmployee] = useState({
@@ -170,10 +175,10 @@ export default function EmployeesPage() {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => router.push('/admin')}
-                className="flex items-center text-gray-600 hover:text-gray-900"
+                aria-label="Kembali"
+                className="p-2 rounded-md border border-gray-200 hover:bg-gray-50"
               >
-                <ArrowLeftIcon className="h-5 w-5 mr-2" />
-                Back to Dashboard
+                <ArrowLeftIcon className="h-5 w-5" />
               </button>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">Setup Employees</h1>
@@ -181,6 +186,13 @@ export default function EmployeesPage() {
               </div>
             </div>
             
+          <div className="flex gap-3">
+            <button
+              onClick={() => setShowImport(true)}
+              className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+            >
+              Import Excel
+            </button>
             <button
               onClick={() => setShowAddForm(true)}
               className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
@@ -188,6 +200,7 @@ export default function EmployeesPage() {
               <PlusIcon className="h-5 w-5 mr-2" />
               Tambah Karyawan
             </button>
+          </div>
           </div>
         </div>
 
@@ -393,6 +406,186 @@ export default function EmployeesPage() {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+
+        {/* Import Modal */}
+        {showImport && (
+          <div className="fixed inset-0 z-50">
+            <div className="absolute inset-0 bg-black/50" onClick={() => setShowImport(false)} />
+            <div className="relative mx-auto mt-10 mb-10 w-full max-w-4xl bg-white rounded-xl shadow-lg overflow-hidden">
+              <div className="px-6 py-4 border-b flex items-center justify-between">
+                <h2 className="text-lg font-semibold">Import Karyawan dari Excel</h2>
+                <button onClick={() => setShowImport(false)} className="text-gray-500 hover:text-gray-700">✕</button>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  <div className="lg:col-span-2 space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Pilih File Excel</label>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept=".xlsx,.xls"
+                        onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) {
+                        setPreviewRows([]);
+                        setIsValidPreview(false);
+                        return;
+                      }
+                      try {
+                        const data = await file.arrayBuffer();
+                        const wb = XLSX.read(data);
+                        const ws = wb.Sheets['Employees'] || wb.Sheets[wb.SheetNames[0]];
+                        const rows: any[] = XLSX.utils.sheet_to_json(ws, { defval: '' });
+
+                        const normalized = rows.map((r: any) => ({
+                          Name: String(r.Name ?? r.name ?? '').trim(),
+                          Level: String(r.Level ?? r.level ?? '').trim(),
+                          Division: String(r.Division ?? r.division ?? '').trim(),
+                          Location: String(r.Location ?? r.location ?? '').trim(),
+                          __errors: [] as string[]
+                        }));
+
+                        const levelSet = new Set<string>(Array.from(new Set(templates.map(t => t.level))));
+                        const divisionSet = new Set(divisions.map(d => d.name));
+                        const locationSet = new Set(locations.map(l => l.name));
+
+                        for (const r of normalized) {
+                          if (!r.Name) r.__errors!.push('Name kosong');
+                          if (!r.Level) r.__errors!.push('Level kosong');
+                          if (!r.Division) r.__errors!.push('Division kosong');
+                          if (!r.Location) r.__errors!.push('Location kosong');
+                          if (r.Level && !levelSet.has(r.Level)) r.__errors!.push('Level tidak dikenal');
+                          if (r.Division && !divisionSet.has(r.Division)) r.__errors!.push('Division tidak dikenal');
+                          if (r.Location && !locationSet.has(r.Location)) r.__errors!.push('Location tidak dikenal');
+                        }
+                        const valid = normalized.length > 0 && normalized.every(r => (r.__errors?.length ?? 0) === 0);
+
+                        setPreviewRows(normalized);
+                        setIsValidPreview(valid);
+                      } catch (err) {
+                        console.error(err);
+                        alert('❌ Gagal memproses file. Pastikan format sesuai template.');
+                      }
+                        }}
+                        className="block w-full border border-gray-300 rounded-lg px-3 py-2"
+                      />
+                      <div className="flex items-center gap-3 mt-3">
+                        
+                        <span className="text-xs text-gray-500">Template berisi sheet Employees + referensi Level/Division/Location.</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-2">Format: .xlsx atau .xls. Gunakan sheet "Employees" untuk data.</p>
+                    </div>
+
+                    {previewRows.length > 0 && (
+                      <div className="bg-gray-50 p-4 rounded border">
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="font-medium">Preview Data</p>
+                          <span className={`text-xs px-2 py-1 rounded ${isValidPreview ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                            {isValidPreview ? 'Siap diimport' : 'Periksa  data/referensi'}
+                          </span>
+                        </div>
+                        <div className="overflow-auto max-h-80">
+                          <table className="min-w-full text-sm">
+                            <thead className="bg-white sticky top-0">
+                              <tr className="text-left">
+                                <th className="pr-4">Name</th>
+                                <th className="pr-4">Level</th>
+                                <th className="pr-4">Division</th>
+                                <th className="pr-4">Location</th>
+                                <th className="pr-4">Errors</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {previewRows.map((r, idx) => {
+                                const hasError = (r.__errors?.length ?? 0) > 0;
+                                return (
+                                  <tr key={idx} className={`border-t ${hasError ? 'bg-red-50' : ''}`}>
+                                    <td className="pr-4 py-1">{r.Name}</td>
+                                    <td className="pr-4 py-1">{r.Level}</td>
+                                    <td className="pr-4 py-1">{r.Division}</td>
+                                    <td className="pr-4 py-1">{r.Location}</td>
+                                    <td className="pr-4 py-1 text-xs text-red-600">{r.__errors?.join(', ')}</td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="bg-gray-50 p-4 rounded border">
+                      <p className="font-medium mb-2">Aksi</p>
+                      <div className="flex flex-col gap-3">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const wb = XLSX.utils.book_new();
+                            const employeesSheet = XLSX.utils.aoa_to_sheet([["Name","Level","Division","Location"]]);
+                            XLSX.utils.book_append_sheet(wb, employeesSheet, 'Employees');
+                            const levels = Array.from(new Set(templates.map(t => t.level))).sort();
+                            const levelSheet = XLSX.utils.aoa_to_sheet([["Level"], ...levels.map(l => [l])]);
+                            XLSX.utils.book_append_sheet(wb, levelSheet, 'Level');
+                            const divisionSheet = XLSX.utils.aoa_to_sheet([["Division"], ...divisions.map(d => [d.name])]);
+                            XLSX.utils.book_append_sheet(wb, divisionSheet, 'Division');
+                            const locationSheet = XLSX.utils.aoa_to_sheet([["Location"], ...locations.map((l: any) => [l.name])]);
+                            XLSX.utils.book_append_sheet(wb, locationSheet, 'Location');
+                            XLSX.writeFile(wb, 'employees_import_template.xlsx');
+                          }}
+                          className="px-3 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                        >
+                          Download Template Excel
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setPreviewRows([]);
+                            setIsValidPreview(false);
+                            if (fileInputRef.current) fileInputRef.current.value = '';
+                          }}
+                          className="px-3 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+                        >
+                          Clear Data
+                        </button>
+                        <button
+                          disabled={!isValidPreview || previewRows.length === 0}
+                          onClick={async () => {
+                            const levelSet = new Set<string>(Array.from(new Set(templates.map(t => t.level))));
+                            const divisionSet = new Set(divisions.map(d => d.name));
+                            const locationSet = new Set(locations.map(l => l.name));
+
+                            let imported = 0;
+                            for (const r of previewRows) {
+                              if (!r.Name || !r.Level || !r.Division || !r.Location) continue;
+                              if (!levelSet.has(r.Level) || !divisionSet.has(r.Division) || !locationSet.has(r.Location)) continue;
+                              await employeeService.addEmployee({ name: r.Name, position: r.Level as any, division: r.Division, location: r.Location as any });
+                              imported++;
+                            }
+                            await loadEmployees();
+                            alert(`✅ Import selesai. Berhasil menambahkan ${imported} karyawan.`);
+                            setPreviewRows([]);
+                            setIsValidPreview(false);
+                            setShowImport(false);
+                          }}
+                          className={`px-3 py-2 rounded text-white ${(!isValidPreview || previewRows.length === 0) ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'}`}
+                        >
+                          Proses Import
+                        </button>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-2">Pastikan preview di sebelah kiri sudah benar sebelum memproses.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="px-6 py-3 border-t bg-gray-50 text-right">
+                <button onClick={() => setShowImport(false)} className="px-4 py-2 bg-gray-200 rounded">Tutup</button>
+              </div>
             </div>
           </div>
         )}

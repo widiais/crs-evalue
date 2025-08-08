@@ -34,7 +34,7 @@ export default function SuccessPage() {
               onClick={() => router.push('/')}
               className="w-full btn-secondary"
             >
-              Kembali ke Halaman Utama
+               ke Halaman Utama
             </button>
           </div>
         </div>

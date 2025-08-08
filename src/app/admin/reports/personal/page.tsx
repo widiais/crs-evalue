@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
   DocumentChartBarIcon, 
@@ -40,9 +40,7 @@ export default function PersonalReportPage() {
   const [reportData, setReportData] = useState<PersonalReport | null>(null);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterLocation, setFilterLocation] = useState('');
-  const [filterPosition, setFilterPosition] = useState('');
-  const [filterDivision, setFilterDivision] = useState('');
+  const [allResults, setAllResults] = useState<AssessmentResult[]>([]);
 
   // Get unique positions from templates and locations
   const availablePositions = Array.from(new Set(templates.map(template => template.level))).sort();
@@ -55,17 +53,19 @@ export default function PersonalReportPage() {
   const loadInitialData = async () => {
     try {
       // Load all required data in parallel
-      const [employeesData, divisionsData, templatesData, locationsData] = await Promise.all([
+      const [employeesData, divisionsData, templatesData, locationsData, resultsData] = await Promise.all([
         employeeService.getAllEmployees(),
         divisionService.getActiveDivisions(),
         templateService.getAllTemplates(),
-        locationService.getAllLocations()
+        locationService.getAllLocations(),
+        assessmentService.getAllAssessmentResults()
       ]);
 
       setEmployees(employeesData);
       setDivisions(divisionsData);
       setTemplates(templatesData);
       setLocations(locationsData.filter(location => location.isActive));
+      setAllResults(resultsData);
     } catch (error) {
       console.error('Error loading initial data:', error);
     }
@@ -253,14 +253,26 @@ export default function PersonalReportPage() {
     document.body.removeChild(a);
   };
 
-  // Filter employees
-  const filteredEmployees = employees.filter(emp => {
-    const matchesSearch = emp.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesLocation = !filterLocation || emp.location === filterLocation;
-    const matchesPosition = !filterPosition || emp.position === filterPosition;
-    const matchesDivision = !filterDivision || emp.division === filterDivision;
-    return matchesSearch && matchesLocation && matchesPosition && matchesDivision;
-  });
+  // Build rows of employees that have at least one assessment
+  const employeesWithCounts = useMemo(() => {
+    if (employees.length === 0) return [] as Array<{ emp: Employee; count: number }>;
+    const counts = new Map<string, number>();
+    allResults.forEach(r => {
+      counts.set(r.targetUser.id, (counts.get(r.targetUser.id) || 0) + 1);
+    });
+    const rows = employees
+      .map(emp => ({ emp, count: counts.get(emp.id) || 0 }))
+      .filter(row => row.count > 0);
+    if (!searchTerm) return rows;
+    const term = searchTerm.toLowerCase();
+    return rows.filter(({ emp }) =>
+      emp.name.toLowerCase().includes(term) ||
+      emp.location.toLowerCase().includes(term) ||
+      emp.position.toLowerCase().includes(term)
+    );
+  }, [employees, allResults, searchTerm]);
+
+  // Detail view moved to /admin/reports/personal/[id]
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -274,7 +286,7 @@ export default function PersonalReportPage() {
                 className="flex items-center text-gray-600 hover:text-gray-900"
               >
                 <ArrowLeftIcon className="h-5 w-5 mr-2" />
-                Back to Dashboard
+                
               </button>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">Report Personal</h1>
@@ -294,240 +306,51 @@ export default function PersonalReportPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Employee Selection */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Pilih Karyawan</h3>
-              
-              {/* Search and Filters */}
-              <div className="space-y-4 mb-6">
-                <div className="relative">
-                  <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Cari nama..."
-                    className="pl-10 form-input"
-                  />
-                </div>
-
-                <select
-                  value={filterLocation}
-                  onChange={(e) => setFilterLocation(e.target.value)}
-                  className="form-input"
-                >
-                  <option value="">Semua Lokasi</option>
-                  {availableLocations.map(location => (
-                    <option key={location} value={location}>{location}</option>
-                  ))}
-                </select>
-
-                <select
-                  value={filterPosition}
-                  onChange={(e) => setFilterPosition(e.target.value)}
-                  className="form-input"
-                >
-                  <option value="">Semua Jabatan</option>
-                  {availablePositions.map(position => (
-                    <option key={position} value={position}>{position}</option>
-                  ))}
-                </select>
-
-                <select
-                  value={filterDivision}
-                  onChange={(e) => setFilterDivision(e.target.value)}
-                  className="form-input"
-                >
-                  <option value="">Semua Divisi</option>
-                  {divisions.map(division => (
-                    <option key={division.id} value={division.name}>{division.name}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Employee List */}
-              <div className="max-h-96 overflow-y-auto space-y-2">
-                {filteredEmployees.map(employee => (
-                  <div
-                    key={employee.id}
-                    onClick={() => handleSelectEmployee(employee)}
-                    className={`p-3 rounded-lg border cursor-pointer transition-colors ${
-                      selectedEmployee?.id === employee.id
-                        ? 'bg-blue-50 border-blue-200'
-                        : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
-                    }`}
-                  >
-                    <div className="flex items-center">
-                      <UserIcon className="h-5 w-5 text-gray-400 mr-3" />
-                      <div>
-                        <p className="font-medium text-gray-900">{employee.name}</p>
-                        <p className="text-sm text-gray-500">{employee.position} • {employee.location}</p>
-                        {employee.division && (
-                          <p className="text-xs text-gray-400">{employee.division}</p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                
-                {filteredEmployees.length === 0 && (
-                  <div className="text-center py-8">
-                    <UserIcon className="mx-auto h-12 w-12 text-gray-400" />
-                    <h3 className="mt-2 text-sm font-medium text-gray-900">No employees found</h3>
-                    <p className="mt-1 text-sm text-gray-500">
-                      Try adjusting your search or filters
-                    </p>
-                  </div>
-                )}
-              </div>
+        {/* List view */}
+        <div className="bg-white rounded-lg shadow">
+          <div className="px-6 py-4 border-b flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-gray-900">Daftar Karyawan dengan Report</h3>
+            <div className="relative">
+              <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Cari nama/lokasi/jabatan..."
+                className="pl-10 form-input"
+              />
             </div>
           </div>
-
-          {/* Report Content */}
-          <div className="lg:col-span-2">
-            {!selectedEmployee ? (
-              <div className="bg-white rounded-lg shadow p-12 text-center">
-                <DocumentChartBarIcon className="mx-auto h-16 w-16 text-gray-400" />
-                <h3 className="mt-4 text-lg font-medium text-gray-900">
-                  Pilih Karyawan untuk Melihat Report
-                </h3>
-                <p className="mt-2 text-gray-500">
-                  Pilih karyawan dari daftar di sebelah kiri untuk melihat laporan assessment personal
-                </p>
-              </div>
-            ) : loading ? (
-              <div className="bg-white rounded-lg shadow p-12 text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                <p className="mt-4 text-gray-600">Loading report...</p>
-              </div>
-            ) : reportData ? (
-              <div className="space-y-6">
-                {/* Employee Info Card */}
-                <div className="bg-white rounded-lg shadow p-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="bg-blue-100 p-3 rounded-full">
-                        <UserIcon className="h-8 w-8 text-blue-600" />
-                      </div>
-                      <div>
-                        <h2 className="text-xl font-semibold text-gray-900">
-                          {reportData.employee.name}
-                        </h2>
-                        <p className="text-gray-600">
-                          {reportData.employee.position} • {reportData.employee.division}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          📍 {reportData.employee.location}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-bold text-blue-600">
-                        {reportData.averageScore.toFixed(1)}
-                      </div>
-                      <div className="text-sm text-gray-500">Average Score</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Assessment Summary */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-white rounded-lg shadow p-6">
-                    <div className="flex items-center">
-                      <ChartBarIcon className="h-8 w-8 text-green-500" />
-                      <div className="ml-4">
-                        <p className="text-sm font-medium text-gray-500">Total Assessments</p>
-                        <p className="text-2xl font-semibold text-gray-900">
-                          {reportData.totalAssessments}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white rounded-lg shadow p-6">
-                    <div className="flex items-center">
-                      <CalendarIcon className="h-8 w-8 text-blue-500" />
-                      <div className="ml-4">
-                        <p className="text-sm font-medium text-gray-500">Last Assessment</p>
-                        <p className="text-lg font-semibold text-gray-900">
-                          {reportData.lastAssessment ? reportData.lastAssessment.toLocaleDateString('id-ID') : 'N/A'}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white rounded-lg shadow p-6">
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-500">Performance Level</p>
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${
-                        getScoreColor(reportData.averageScore)
-                      }`}>
-                        {getScoreLabel(reportData.averageScore)}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Competency Scores */}
-                <div className="bg-white rounded-lg shadow p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Competency Scores</h3>
-                  <div className="space-y-4">
-                    {Object.entries(reportData.competencyScores).map(([competency, score]) => (
-                      <div key={competency}>
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="text-sm font-medium text-gray-700">{competency}</span>
-                          <span className="text-sm font-medium text-gray-900">
-                            {score.toFixed(1)}/5.0
-                          </span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
-                            className="bg-blue-600 h-2 rounded-full" 
-                            style={{ width: `${(score / 5) * 100}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Work Spirit Scores */}
-                <div className="bg-white rounded-lg shadow p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Work Spirit Scores</h3>
-                  <div className="space-y-3">
-                    {reportData.workSpiritScores.map((score, index) => (
-                      <div key={index} className="flex justify-between items-start p-3 bg-gray-50 rounded-lg">
-                        <span className="text-sm font-medium text-gray-700 flex-1 mr-4">
-                          {reportData.workSpiritQuestions[index] || `Pertanyaan ${index + 1}`}
-                        </span>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
-                          getScoreColor(score)
-                        }`}>
-                          {score.toFixed(1)}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Recommendations */}
-                <div className="bg-white rounded-lg shadow p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Recommendations</h3>
-                  <div className="space-y-2">
-                    {reportData.recommendations.map((recommendation, index) => (
-                      <div key={index} className="flex items-start">
-                        <span className="text-blue-500 mr-2">•</span>
-                        <span className="text-gray-700">{recommendation}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ) : null}
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jabatan</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Assessment</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {employeesWithCounts.map(({ emp, count }) => (
+                  <tr key={emp.id} className="hover:bg-gray-50 cursor-pointer" onClick={() => router.push(`/admin/reports/personal/${emp.id}`)}>
+                    <td className="px-6 py-3">{emp.name}</td>
+                    <td className="px-6 py-3">{emp.location}</td>
+                    <td className="px-6 py-3">{emp.position}</td>
+                    <td className="px-6 py-3">{count}</td>
+                  </tr>
+                ))}
+                {employeesWithCounts.length === 0 && (
+                  <tr>
+                    <td colSpan={4} className="px-6 py-8 text-center text-gray-500">Belum ada data report</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
+
+        {/* Detail view intentionally removed per simplified list requirement */}
       </div>
     </div>
   );

@@ -45,7 +45,7 @@ export interface Employee {
 
 export interface Evaluator {
   name: string;
-  position: Position;
+  position: string;
   division: string; // Using string for division names
   status: RelationshipStatus;
 }
@@ -62,6 +62,8 @@ export interface AssessmentResult {
     category: string;
     average: number;
   }[];
+  // Optional: raw per-question scores for competency section (section1)
+  competencyQuestionScores?: number[];
   semangatScores: number[];
   recommendation: string;
   submittedAt: Date;

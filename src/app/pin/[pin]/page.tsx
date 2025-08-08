@@ -7,13 +7,17 @@ import { employeeService } from '@/services/employees';
 import { divisionService, Division } from '@/services/divisions';
 import { templateService } from '@/services/templates';
 import { locationService } from '@/services/locations';
-import { Assessment, Employee, Evaluator, CriteriaTemplate } from '@/types';
+import { Assessment, Employee, Evaluator, CriteriaTemplate, } from '@/types';
 import { RELATIONSHIP_STATUS } from '@/constants';
+import { POSITIONS } from '@/constants/positions';
+import { useAuth } from '@/contexts/AuthContext';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 
 export default function AssessmentPage() {
   const params = useParams();
   const router = useRouter();
   const pin = params.pin as string;
+  const { user } = useAuth();
 
   const [assessment, setAssessment] = useState<Assessment | null>(null);
   const [loading, setLoading] = useState(true);
@@ -40,6 +44,21 @@ export default function AssessmentPage() {
   // Get unique positions from templates and locations
   const availablePositions = Array.from(new Set(templates.map(template => template.level))).sort();
   const availableLocations = locations.map(location => location.name).sort();
+
+  // We now show evaluator position exactly as Montaz JobTitle on the form.
+
+  function mapJobTitleToDivision(jobTitle?: string): string {
+    if (!jobTitle) return 'Operations';
+    const jt = jobTitle.toLowerCase();
+    if (jt.includes('hr')) return 'HRD';
+    if (jt.includes('finance') || jt.includes('account')) return 'Finance';
+    if (jt.includes('marketing') || jt.includes('sales')) return 'Marketing';
+    if (jt.includes('it') || jt.includes('developer') || jt.includes('programmer')) return 'IT';
+    if (jt.includes('quality') || jt.includes('qa')) return 'Quality Assurance';
+    if (jt.includes('procure') || jt.includes('purchasing')) return 'Procurement';
+    if (jt.includes('legal')) return 'Legal';
+    return 'Operations';
+  }
 
   useEffect(() => {
     const loadData = async () => {
@@ -78,6 +97,18 @@ export default function AssessmentPage() {
       loadData();
     }
   }, [pin]);
+
+  // Prefill evaluator info from Montaz user data when available
+  useEffect(() => {
+    if (!user) return;
+    setEvaluator(prev => ({
+      ...prev,
+      name: user.name || `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim(),
+      position: user.jobTitle || 'Member',
+      division: prev.division,
+      status: prev.status
+    }));
+  }, [user]);
 
   // Filter employees when location or position changes
   useEffect(() => {
@@ -149,7 +180,7 @@ export default function AssessmentPage() {
             onClick={() => router.push('/')}
             className="mt-4 btn-primary"
           >
-            Kembali ke Halaman Utama
+             ke Halaman Utama
           </button>
         </div>
       </div>
@@ -160,13 +191,19 @@ export default function AssessmentPage() {
     <div className="min-h-screen py-8">
       <div className="max-w-2xl mx-auto px-4">
         <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="text-center mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <button onClick={() => router.push('/')} aria-label="Kembali" className="p-2 rounded-md border border-gray-200 hover:bg-gray-50">
+              <ArrowLeftIcon className="h-5 w-5" />
+            </button>
+            <div className="flex-1 text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
               {assessment?.title}
             </h1>
             <p className="text-gray-600">
               PIN: <span className="font-mono font-semibold">{pin}</span>
             </p>
+            </div>
+            <div className="w-9" />
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -233,29 +270,41 @@ export default function AssessmentPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="form-label">Nama Lengkap</label>
-                  <input
-                    type="text"
-                    value={evaluator.name}
-                    onChange={(e) => setEvaluator({...evaluator, name: e.target.value})}
-                    className="form-input"
-                    placeholder="Masukkan nama lengkap"
-                    required
-                  />
+                  {user ? (
+                    <div className="px-3 py-2 bg-gray-50 rounded border border-gray-200 text-gray-800">
+                      {evaluator.name}
+                    </div>
+                  ) : (
+                    <input
+                      type="text"
+                      value={evaluator.name}
+                      onChange={(e) => setEvaluator({...evaluator, name: e.target.value})}
+                      className="form-input"
+                      placeholder="Masukkan nama lengkap"
+                      required
+                    />
+                  )}
                 </div>
 
                 <div>
                   <label className="form-label">Jabatan Evaluator</label>
-                  <select
-                    value={evaluator.position || ''}
-                    onChange={(e) => setEvaluator({...evaluator, position: e.target.value as any})}
-                    className="form-input"
-                    required
-                  >
-                    <option value="">Pilih Jabatan</option>
-                    {availablePositions.map(position => (
-                      <option key={position} value={position}>{position}</option>
-                    ))}
-                  </select>
+                  {user ? (
+                    <div className="px-3 py-2 bg-gray-50 rounded border border-gray-200 text-gray-800">
+                      {evaluator.position}
+                    </div>
+                  ) : (
+                    <select
+                      value={evaluator.position || ''}
+                      onChange={(e) => setEvaluator({...evaluator, position: e.target.value as any})}
+                      className="form-input"
+                      required
+                    >
+                      <option value="">Pilih Jabatan</option>
+                      {availablePositions.map(position => (
+                        <option key={position} value={position}>{position}</option>
+                      ))}
+                    </select>
+                  )}
                 </div>
 
                 <div>
@@ -298,15 +347,7 @@ export default function AssessmentPage() {
             )}
 
             {/* Submit Buttons */}
-            <div className="flex justify-between">
-              <button
-                type="button"
-                onClick={() => router.push('/')}
-                className="px-6 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200"
-              >
-                Kembali
-              </button>
-              
+            <div className="flex justify-end">
               <button
                 type="submit"
                 disabled={!selectedEmployee || !evaluator.name || !evaluator.position || !evaluator.division || !evaluator.status}

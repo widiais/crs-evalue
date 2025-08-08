@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { assessmentService } from '@/services/assessments';
 import { templateService } from '@/services/templates';
 import { employeeService } from '@/services/employees';
@@ -214,6 +215,7 @@ export default function AssessmentFormPage() {
         },
         evaluator,
         scores: calculateCategoryAverages(),
+        competencyQuestionScores: Object.values(section1Scores),
         semangatScores: Object.values(section2Scores),
         recommendation,
         submittedAt: new Date()
@@ -255,7 +257,7 @@ export default function AssessmentFormPage() {
               onClick={() => router.push(`/pin/${pin}`)}
               className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
             >
-              Kembali
+              
             </button>
             <button
               onClick={() => router.push('/admin/templates')}
@@ -274,13 +276,13 @@ export default function AssessmentFormPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-6 py-4 rounded-lg">
-            <p>Data tidak lengkap. Silakan kembali dan pilih ulang.</p>
+            <p>Data tidak lengkap. Silakan  dan pilih ulang.</p>
           </div>
           <button
             onClick={() => router.push(`/pin/${pin}`)}
             className="mt-4 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
           >
-            Kembali
+            
           </button>
         </div>
       </div>
@@ -293,9 +295,13 @@ export default function AssessmentFormPage() {
         <div className="bg-white shadow rounded-lg">
           {/* Header */}
           <div className="px-6 py-4 border-b border-gray-200">
-            <h1 className="text-2xl font-bold text-gray-900">
-              Assessment Form - {assessment?.title}
-            </h1>
+            <div className="flex items-center justify-between mb-2">
+              <button onClick={() => router.push(`/pin/${pin}`)} aria-label="Kembali" className="p-2 rounded-md border border-gray-200 hover:bg-gray-50">
+                <ArrowLeftIcon className="h-5 w-5" />
+              </button>
+              <h1 className="text-2xl font-bold text-gray-900 flex-1 text-center">Assessment Form - {assessment?.title}</h1>
+              <div className="w-9" />
+            </div>
             <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
               <div>
                 <p><strong>Target:</strong> {employee?.name} ({employee?.position})</p>
@@ -414,14 +420,6 @@ export default function AssessmentFormPage() {
               )}
 
               <div className="flex gap-4">
-                <button
-                  type="button"
-                  onClick={() => router.push(`/pin/${pin}`)}
-                  className="btn-secondary"
-                  disabled={submitting}
-                >
-                  Kembali
-                </button>
                 <button
                   type="submit"
                   className="btn-primary flex-1"

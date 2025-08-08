@@ -222,7 +222,7 @@ export default function AdminAssessmentsPage() {
                 className="flex items-center text-gray-600 hover:text-gray-900"
               >
                 <ArrowLeftIcon className="h-5 w-5 mr-2" />
-                Back to Dashboard
+                
               </button>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">Setup Assessments</h1>
