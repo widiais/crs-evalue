@@ -108,6 +108,13 @@ export default function AdminDashboard() {
       gradient: 'from-purple-500 to-indigo-600'
     },
     {
+      title: 'Report Location',
+      description: 'Laporan per lokasi kerja',
+      icon: BuildingOfficeIcon,
+      href: '/admin/reports/location',
+      gradient: 'from-teal-500 to-cyan-600'
+    },
+    {
       title: 'Report Division',
       description: 'Laporan per divisi',
       icon: BuildingOfficeIcon,

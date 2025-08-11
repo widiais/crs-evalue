@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-static';
+
 import { useState, useEffect } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { 
@@ -221,6 +223,12 @@ export default function AssessmentFormPage() {
     setError('');
 
     try {
+      const competencyQuestionScores = template.section1.map((criteria, index) => ({
+        category: criteria.category,
+        text: criteria.text,
+        score: section1Scores[index]
+      }));
+
       const result: Omit<AssessmentResult, 'id'> = {
         assessmentId: assessment.id,
         targetUser: {
@@ -229,6 +237,7 @@ export default function AssessmentFormPage() {
         },
         evaluator,
         scores: calculateCategoryAverages(),
+        competencyQuestionScores,
         semangatScores: Object.values(section2Scores),
         recommendation,
         submittedAt: new Date()

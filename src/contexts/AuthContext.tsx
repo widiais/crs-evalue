@@ -1,100 +1,140 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { authService } from '@/services/auth';
+import { useRouter } from 'next/navigation';
 
 interface User {
   id: string;
-  username: string;
   email: string;
-  displayName: string;
+  name: string;
   role: string;
+  firstName: string;
+  lastName: string;
+  clientId: string;
+  userType: string;
+  jobTitle: string;
+  roleId: string;
 }
 
 interface AuthContextType {
   user: User | null;
-  isLoading: boolean;
-  isAuthorized: boolean;
-  signInWithCredentials: (username: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
+  loading: boolean;
+  login: (email: string, password: string) => Promise<{ success: boolean; message?: string }>;
+    loginAdmin: (username: string, password: string) => Promise<{ success: boolean; message?: string }>;
+  logout: () => void;
+  isAuthenticated: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Hardcoded admin credentials (in production, this should be in a secure database)
-const ADMIN_CREDENTIALS = {
-  username: 'admin',
-  password: 'admin123',
-  user: {
-    id: 'admin-001',
-    username: 'admin',
-    email: 'admin@crs-system.com',
-    displayName: 'Administrator',
-    role: 'admin'
-  }
-};
-
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    // Check if user is already logged in (from localStorage)
-    const savedUser = localStorage.getItem('crs_admin_user');
-    if (savedUser) {
+    // Prevent multiple initialization
+    if (initialized) return;
+    
+    const checkAuth = async () => {
       try {
-        setUser(JSON.parse(savedUser));
-      } catch (error) {
-        console.error('Error parsing saved user:', error);
-        localStorage.removeItem('crs_admin_user');
-      }
-    }
-    setIsLoading(false);
-  }, []);
+        // Skip auth check if not in browser environment
+        if (typeof window === 'undefined') {
+          setLoading(false);
+          setInitialized(true);
+          return;
+        }
 
-  const isAuthorized = user?.role === 'admin';
-
-  const signInWithCredentials = async (username: string, password: string) => {
-    try {
-      setIsLoading(true);
-      
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Check credentials
-      if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-        const adminUser = ADMIN_CREDENTIALS.user;
-        setUser(adminUser);
+        const token = authService.getToken();
+        const userData = authService.getUser();
         
-        // Save to localStorage for persistence
-        localStorage.setItem('crs_admin_user', JSON.stringify(adminUser));
+        if (token && userData) {
+          const isValid = await authService.validateToken();
+          
+          if (isValid) {
+            setUser(userData);
+          } else {
+            authService.logout();
+            setUser(null);
+          }
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        console.error('Auth check error:', error);
+        setUser(null);
+      } finally {
+        setLoading(false);
+        setInitialized(true);
+      }
+    };
+
+    // Delay auth check to avoid hydration mismatch
+    const timer = setTimeout(checkAuth, 100);
+    return () => clearTimeout(timer);
+  }, [initialized]);
+
+  const login = async (email: string, password: string) => {
+    try {
+      // console.log('Attempting login...');
+      const response = await authService.login({ email, password });
+      // console.log('Login response:', response);
+      
+      if (response.success && response.user) {
+        // console.log('Setting user:', response.user.name);
+        setUser(response.user);
+        return { success: true };
       } else {
-        throw new Error('Invalid username or password');
+        return { 
+          success: false, 
+          message: response.message || 'Login gagal' 
+        };
       }
     } catch (error) {
-      console.error('Error signing in:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
+      console.error('Login error in context:', error);
+      return { 
+        success: false, 
+        message: 'Terjadi kesalahan saat login' 
+      };
     }
   };
 
-  const logout = async () => {
+  const loginAdmin = async (username: string, password: string) => {
     try {
-      setUser(null);
-      localStorage.removeItem('crs_admin_user');
+      const response = await authService.loginAsAdmin(username, password);
+      if (response.success && response.user) {
+        setUser(response.user);
+        return { success: true };
+      }
+      return { success: false, message: response.message || 'Login admin gagal' };
     } catch (error) {
-      console.error('Error signing out:', error);
-      throw error;
+      return { success: false, message: 'Terjadi kesalahan saat login admin' };
     }
+  };
+
+  const logout = () => {
+    // console.log('Logging out...');
+    setUser(null);
+    authService.logout();
   };
 
   const value = {
     user,
-    isLoading,
-    isAuthorized,
-    signInWithCredentials,
-    logout
+    loading,
+    login,
+    loginAdmin,
+    logout,
+    isAuthenticated: !!user && !loading,
   };
+
+  // console.log('AuthContext state:', { 
+  //   user: !!user, 
+  //   loading, 
+  //   isAuthenticated: !!user && !loading,
+  //   initialized 
+  // });
 
   return (
     <AuthContext.Provider value={value}>
@@ -105,8 +145,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
+  // Jangan lempar error di production. Berikan fallback aman agar halaman tidak 500
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    return {
+      user: null,
+      loading: false,
+      login: async () => ({ success: false, message: 'Auth belum siap' }),
+      loginAdmin: async () => ({ success: false, message: 'Auth belum siap' }),
+      logout: () => {},
+      isAuthenticated: false,
+    };
   }
   return context;
-} 
+}

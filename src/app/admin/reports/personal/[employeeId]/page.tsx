@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { 
@@ -229,6 +229,50 @@ export default function EmployeeDetailPage() {
     return result.scores.reduce((sum, score) => sum + score.average, 0) / result.scores.length;
   };
 
+  // Aggregate per-question competency scores across filtered results (if available)
+  const competencyQuestionsByCategory = useMemo(() => {
+    const grouped: Record<string, Record<string, number[]>> = {};
+    filteredResults.forEach(r => {
+      r.competencyQuestionScores?.forEach(q => {
+        if (!grouped[q.category]) grouped[q.category] = {};
+        if (!grouped[q.category][q.text]) grouped[q.category][q.text] = [];
+        grouped[q.category][q.text].push(q.score);
+      });
+    });
+
+    const result: Record<string, { text: string; average: number }[]> = {};
+    Object.entries(grouped).forEach(([category, questions]) => {
+      result[category] = Object.entries(questions).map(([text, scores]) => ({
+        text,
+        average: scores.reduce((a, b) => a + b, 0) / scores.length
+      }));
+    });
+    return result;
+  }, [filteredResults]);
+
+  // Build PIN options based on this employee's results
+  const pinOptions = useMemo(() => {
+    const assessmentIds = Array.from(new Set(employeeResults.map(r => r.assessmentId)));
+    const options = assessmentIds
+      .map(id => assessments.find(a => a.id === id))
+      .filter((a): a is Assessment => Boolean(a))
+      .map(a => ({ id: a.id, pin: a.pin, title: a.title }));
+    // Sort by pin asc for consistency
+    return options.sort((x, y) => (x.pin || '').localeCompare(y.pin || ''));
+  }, [employeeResults, assessments]);
+
+  const handlePinChange = (value: string) => {
+    if (!employee) return;
+    const base = `/admin/reports/personal/${employee.id}`;
+    if (!value) {
+      router.push(base);
+    } else {
+      const params = new URLSearchParams();
+      params.set('assessment', value);
+      router.push(`${base}?${params.toString()}`);
+    }
+  };
+
   const handleDownloadPDF = async () => {
     if (!employee) return;
     
@@ -247,7 +291,8 @@ export default function EmployeeDetailPage() {
         employee,
         accumulatedStats,
         selectedAssessment,
-        assessments
+        assessments,
+        competencyQuestionsByCategory
       );
       
       // Create download link
@@ -360,7 +405,21 @@ export default function EmployeeDetailPage() {
                     )}
                   </p>
                 </div>
-                <div>
+                <div className="flex items-center gap-3">
+                  {/* PIN Selector */}
+                  <div className="hidden md:block">
+                    <label className="block text-xs text-gray-500 mb-1">Assessment PIN</label>
+                    <select
+                      value={selectedAssessment}
+                      onChange={(e) => handlePinChange(e.target.value)}
+                      className="px-8 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">Semua PIN</option>
+                      {pinOptions.map(opt => (
+                        <option key={opt.id} value={opt.id}>{opt.pin}</option>
+                      ))}
+                    </select>
+                  </div>
                   <button
                     data-pdf-btn
                     onClick={handleDownloadPDF}
@@ -441,6 +500,19 @@ export default function EmployeeDetailPage() {
                         {score.toFixed(1)}
                       </span>
                     </div>
+                    {/* Per-question details if available */}
+                    {competencyQuestionsByCategory[category] && competencyQuestionsByCategory[category].length > 0 && (
+                      <div className="mt-3 pt-3 border-t border-gray-200 space-y-2">
+                        {competencyQuestionsByCategory[category].map((q, idx) => (
+                          <div key={`${category}-${idx}`} className="flex items-start justify-between">
+                            <div className="text-xs text-gray-600 mr-3 flex-1">{q.text}</div>
+                            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getScoreColor(q.average)}`}>
+                              {q.average.toFixed(1)}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -651,18 +723,49 @@ export default function EmployeeDetailPage() {
                   {/* Competency Scores */}
                   <div className="bg-purple-50 rounded-xl p-6">
                     <h4 className="font-semibold text-purple-900 mb-4">Skor Kompetensi</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {viewingResult.scores.map((score, index) => (
-                        <div key={index} className="bg-white rounded-lg p-4 border border-purple-200">
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm font-medium text-purple-700">{score.category}</span>
-                            <span className={`px-3 py-1 rounded-full text-sm font-medium ${getScoreColor(score.average)}`}>
-                              {score.average.toFixed(1)}
-                            </span>
+                    {viewingResult.competencyQuestionScores && viewingResult.competencyQuestionScores.length > 0 ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {(
+                          viewingResult.scores.map(s => s.category)
+                        ).map((category, idx) => {
+                          const catAvg = viewingResult.scores.find(s => s.category === category)?.average ?? 0;
+                          const questions = viewingResult.competencyQuestionScores!.filter(q => q.category === category);
+                          return (
+                            <div key={`${category}-${idx}`} className="bg-white rounded-lg p-4 border border-purple-200">
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm font-medium text-purple-700">{category}</span>
+                                <span className={`px-3 py-1 rounded-full text-sm font-medium ${getScoreColor(catAvg)}`}>
+                                  {catAvg.toFixed(1)}
+                                </span>
+                              </div>
+                              <div className="mt-3 space-y-2">
+                                {questions.map((q, qIdx) => (
+                                  <div key={`${category}-q-${qIdx}`} className="flex items-start justify-between">
+                                    <div className="text-xs text-gray-700 mr-3 flex-1">{q.text}</div>
+                                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getScoreColor(q.score)}`}>
+                                      {q.score}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {viewingResult.scores.map((score, index) => (
+                          <div key={index} className="bg-white rounded-lg p-4 border border-purple-200">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm font-medium text-purple-700">{score.category}</span>
+                              <span className={`px-3 py-1 rounded-full text-sm font-medium ${getScoreColor(score.average)}`}>
+                                {score.average.toFixed(1)}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   {/* Semangat Scores */}

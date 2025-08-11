@@ -16,7 +16,8 @@ export const generateEmployeePDF = async (
   employee: Employee,
   accumulatedStats: AccumulatedStats,
   selectedAssessment: string,
-  assessments: Assessment[]
+  assessments: Assessment[],
+  competencyQuestionsByCategory?: Record<string, { text: string; average: number }[]>
 ) => {
   // Import React and PDF renderer dynamically
   const React = (await import('react')).default;
@@ -82,6 +83,29 @@ export const generateEmployeePDF = async (
       fontWeight: 'bold',
       color: '#1f2937',
       marginBottom: 6,
+    },
+    questionItem: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: 4,
+      marginTop: 2,
+      backgroundColor: '#f9fafb',
+      borderRadius: 3,
+    },
+    questionLabel: {
+      fontSize: 7,
+      color: '#4b5563',
+      flex: 1,
+    },
+    questionScore: {
+      fontSize: 7,
+      color: '#ffffff',
+      backgroundColor: '#3b82f6',
+      padding: '1 5',
+      borderRadius: 8,
+      minWidth: 24,
+      textAlign: 'center',
     },
     breakdownGrid: {
       flexDirection: 'row',
@@ -171,42 +195,30 @@ export const generateEmployeePDF = async (
         ])
       ]),
 
-      // Two column layout for breakdowns
-      React.createElement(View, { key: 'content', style: { flexDirection: 'row', gap: 8 } }, [
-        // Left Column
-        React.createElement(View, { key: 'left-col', style: { flex: 1 } }, [
-          // Competency Breakdown
-          Object.keys(accumulatedStats.competencyBreakdown).length > 0 ? 
-            React.createElement(View, { key: 'competency', style: styles.sectionContainer }, [
-              React.createElement(Text, { key: 'competency-title', style: styles.sectionTitle }, 'Kompetensi'),
-              ...Object.entries(accumulatedStats.competencyBreakdown).map(([category, score], index) =>
-                React.createElement(View, { key: `comp-${index}`, style: styles.breakdownItem }, [
-                  React.createElement(Text, { key: `comp-label-${index}`, style: styles.breakdownLabel }, 
-                    category.length > 25 ? category.substring(0, 25) + '...' : category
+      // Competency Breakdown (with per-question details)
+      Object.keys(accumulatedStats.competencyBreakdown).length > 0 ? 
+        React.createElement(View, { key: 'competency', style: styles.sectionContainer }, [
+          React.createElement(Text, { key: 'competency-title', style: styles.sectionTitle }, 'Kompetensi'),
+          ...Object.entries(accumulatedStats.competencyBreakdown).map(([category, score], index) => {
+            const questions = competencyQuestionsByCategory?.[category] || [];
+            return React.createElement(View, { key: `comp-${index}`, wrap: false, style: { marginBottom: 4 } }, [
+              React.createElement(View, { key: `comp-row-${index}`, style: styles.breakdownItem }, [
+                React.createElement(Text, { key: `comp-label-${index}`, style: styles.breakdownLabel }, 
+                  category.length > 60 ? category.substring(0, 60) + '...' : category
+                ),
+                React.createElement(Text, { key: `comp-score-${index}`, style: styles.breakdownScore }, score.toFixed(1))
+              ]),
+              ...questions.map((q, qIdx) => 
+                React.createElement(View, { key: `q-${index}-${qIdx}`, style: styles.questionItem, wrap: false }, [
+                  React.createElement(Text, { key: `q-label-${index}-${qIdx}`, style: styles.questionLabel }, 
+                    q.text.length > 90 ? q.text.substring(0, 90) + '...' : q.text
                   ),
-                  React.createElement(Text, { key: `comp-score-${index}`, style: styles.breakdownScore }, score.toFixed(1))
+                  React.createElement(Text, { key: `q-score-${index}-${qIdx}`, style: styles.questionScore }, q.average.toFixed(1))
                 ])
               )
-            ]) : null,
-        ]),
-
-        // Right Column  
-        React.createElement(View, { key: 'right-col', style: { flex: 1 } }, [
-          // Semangat Breakdown
-          Object.keys(accumulatedStats.semangatBreakdown).length > 0 ? 
-            React.createElement(View, { key: 'semangat', style: styles.sectionContainer }, [
-              React.createElement(Text, { key: 'semangat-title', style: styles.sectionTitle }, 'Semangat'),
-              ...Object.entries(accumulatedStats.semangatBreakdown).map(([question, score], index) =>
-                React.createElement(View, { key: `sem-${index}`, style: styles.breakdownItem }, [
-                  React.createElement(Text, { key: `sem-label-${index}`, style: styles.breakdownLabel }, 
-                    question.length > 25 ? question.substring(0, 25) + '...' : question
-                  ),
-                  React.createElement(Text, { key: `sem-score-${index}`, style: styles.breakdownScore }, score.toFixed(1))
-                ])
-              )
-            ]) : null,
-        ])
-      ]),
+            ]);
+          })
+        ]) : null,
 
       // Recommendation Counts (Full Width, Compact)
       Object.keys(accumulatedStats.recommendationCounts).length > 0 ? 
@@ -225,6 +237,21 @@ export const generateEmployeePDF = async (
               )
           )
         ]) : null,
+
+      // Semangat Breakdown (moved to bottom)
+      Object.keys(accumulatedStats.semangatBreakdown).length > 0 ? 
+        React.createElement(View, { key: 'semangat', style: styles.sectionContainer }, [
+          React.createElement(Text, { key: 'semangat-title', style: styles.sectionTitle }, 'Semangat'),
+          ...Object.entries(accumulatedStats.semangatBreakdown).map(([question, score], index) =>
+            React.createElement(View, { key: `sem-${index}`, style: styles.breakdownItem, wrap: false }, [
+              React.createElement(Text, { key: `sem-label-${index}`, style: styles.breakdownLabel }, 
+                question.length > 60 ? question.substring(0, 60) + '...' : question
+              ),
+              React.createElement(Text, { key: `sem-score-${index}`, style: styles.breakdownScore }, score.toFixed(1))
+            ])
+          )
+        ]) : null,
+
 
       // Footer (Compact)
       React.createElement(View, { key: 'footer', style: styles.footer }, [

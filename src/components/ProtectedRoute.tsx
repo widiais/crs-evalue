@@ -14,7 +14,7 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { user, isLoading, isAuthorized } = useAuth();
+  const { user, loading: isLoading, isAuthenticated } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -36,8 +36,8 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     );
   }
 
-  // Show unauthorized message if user is not authorized
-  if (user && !isAuthorized) {
+  // We don't have role-based authorization yet; only check authentication
+  if (user && !isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-400 via-red-500 to-red-600 flex items-center justify-center p-4">
         <div className="max-w-md w-full">
@@ -51,7 +51,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
             </h1>
             
             <p className="text-gray-600 mb-6">
-              User <strong>{user.username}</strong> tidak memiliki izin untuk mengakses panel admin.
+              Anda belum memiliki izin untuk mengakses panel ini.
             </p>
             
             <div className="space-y-3">

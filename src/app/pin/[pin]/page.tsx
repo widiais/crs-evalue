@@ -1,6 +1,10 @@
 'use client';
 
+// Force static export to avoid SSR function on Firebase (Windows build path issue)
+export const dynamic = 'force-static';
+
 import { useState, useEffect, useMemo } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import { useParams, useRouter } from 'next/navigation';
 import { 
   UserGroupIcon, 
@@ -25,6 +29,7 @@ export default function AssessmentPage() {
   const params = useParams();
   const router = useRouter();
   const pin = params.pin as string;
+  const { user } = useAuth();
 
   const [assessment, setAssessment] = useState<Assessment | null>(null);
   const [loading, setLoading] = useState(true);
@@ -92,6 +97,17 @@ export default function AssessmentPage() {
       employee: employee
     }))
   , [filteredEmployees]);
+
+  // Prefill evaluator name and position from Montaz login (AuthContext)
+  useEffect(() => {
+    if (user) {
+      setEvaluator(prev => ({
+        ...prev,
+        name: prev.name && prev.name.length > 0 ? prev.name : (user.name || user.email || ''),
+        position: (prev.position as any) || (user.jobTitle as any),
+      }));
+    }
+  }, [user]);
 
   // Custom styles for react-select
   const selectStyles = {
@@ -317,7 +333,7 @@ export default function AssessmentPage() {
 
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Target Employee Selection Card */}
-            <div className="bg-white rounded-2xl shadow-xl p-6 lg:p-8">
+              <div className="bg-white rounded-2xl shadow-xl p-6 lg:p-8">
               <div className="flex items-center mb-6">
                 <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-3 rounded-xl mr-4">
                   <UserGroupIcon className="h-6 w-6 text-white" />
@@ -429,11 +445,11 @@ export default function AssessmentPage() {
                   </label>
                   <input
                     type="text"
-                    value={evaluator.name}
-                    onChange={(e) => setEvaluator({...evaluator, name: e.target.value})}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                    placeholder="Masukkan nama lengkap"
-                    required
+                    value={evaluator.name || ''}
+                    readOnly
+                    disabled
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-600"
+                    placeholder="Nama otomatis dari akun Montaz"
                   />
                 </div>
 
@@ -441,17 +457,14 @@ export default function AssessmentPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Jabatan Evaluator
                   </label>
-                  <select
-                    value={evaluator.position || ''}
-                    onChange={(e) => setEvaluator({...evaluator, position: e.target.value as any})}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white transition-colors"
-                    required
-                  >
-                    <option value="">Pilih Jabatan</option>
-                    {availablePositions.map(position => (
-                      <option key={position} value={position}>{position}</option>
-                    ))}
-                  </select>
+                  <input
+                    type="text"
+                    value={(evaluator.position as any) || ''}
+                    readOnly
+                    disabled
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-600"
+                    placeholder="Jabatan otomatis dari akun Montaz"
+                  />
                 </div>
 
                 <div>
@@ -549,7 +562,7 @@ export default function AssessmentPage() {
               
               <button
                 type="submit"
-                disabled={!selectedEmployee || !evaluator.name || !evaluator.position || !evaluator.division || !evaluator.status}
+                disabled={!selectedEmployee || !evaluator.division || !evaluator.status}
                   className="flex items-center justify-center px-8 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 shadow-lg"
               >
                   <span>Mulai Assessment</span>

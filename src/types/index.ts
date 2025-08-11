@@ -81,6 +81,12 @@ export interface AssessmentResult {
     category: string;
     average: number;
   }[];
+  // Optional: detailed competency scores per question
+  competencyQuestionScores?: {
+    category: string;
+    text: string;
+    score: number;
+  }[];
   semangatScores: number[];
   recommendation: string;
   submittedAt: Date;

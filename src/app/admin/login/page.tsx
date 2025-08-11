@@ -16,7 +16,7 @@ import {
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const { signInWithCredentials, isLoading } = useAuth();
+  const { loginAdmin, loading: isLoading } = useAuth();
   const [formData, setFormData] = useState({
     username: '',
     password: ''
@@ -47,7 +47,7 @@ export default function AdminLoginPage() {
       setIsSigningIn(true);
       setError(null);
       
-      await signInWithCredentials(formData.username, formData.password);
+      await loginAdmin(formData.username, formData.password);
       
       // Redirect to admin dashboard after successful login
       router.push('/admin');

@@ -9,7 +9,6 @@ import {
   ChartBarIcon,
   BuildingOfficeIcon,
   UsersIcon,
-  EyeIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   ArrowDownTrayIcon,
@@ -42,6 +41,7 @@ export default function PersonalReportPage() {
   const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);
   const [assessments, setAssessments] = useState<Assessment[]>([]);
   const [assessmentResults, setAssessmentResults] = useState<AssessmentResult[]>([]);
+  const [assessmentCounts, setAssessmentCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
@@ -66,6 +66,16 @@ export default function PersonalReportPage() {
   useEffect(() => {
     filterEmployees();
   }, [employees, assessmentResults, searchTerm, selectedLocation, selectedDivision, selectedPin]);
+
+  // Compute total assessments per employee (overall)
+  useEffect(() => {
+    const counts: Record<string, number> = {};
+    assessmentResults.forEach(result => {
+      const empId = result.targetUser.id;
+      counts[empId] = (counts[empId] || 0) + 1;
+    });
+    setAssessmentCounts(counts);
+  }, [assessmentResults]);
 
   const loadData = async () => {
     try {
@@ -95,16 +105,14 @@ export default function PersonalReportPage() {
       const selectedAssessment = assessments.find(a => a.pin === selectedPin);
       if (selectedAssessment) {
         relevantResults = assessmentResults.filter(result => result.assessmentId === selectedAssessment.id);
+      } else {
+        relevantResults = [];
       }
     }
 
-    // Get employee IDs that have assessment results
+    // Only include employees who have at least one assessment in the relevant set
     const employeeIdsWithResults = new Set(relevantResults.map(result => result.targetUser.id));
-    
-    // Filter employees based on assessment results
-    if (selectedPin) {
-      filtered = filtered.filter(emp => employeeIdsWithResults.has(emp.id));
-    }
+    filtered = filtered.filter(emp => employeeIdsWithResults.has(emp.id));
 
     // Apply other filters
     if (searchTerm) {
@@ -666,13 +674,17 @@ export default function PersonalReportPage() {
                       Divisi
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
+                      Total Assessment
                     </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {paginatedEmployees.map((employee) => (
-                    <tr key={employee.id} className="hover:bg-gray-50 transition-colors">
+                    <tr
+                      key={employee.id}
+                      className="hover:bg-gray-50 transition-colors cursor-pointer"
+                      onClick={() => handleEmployeeClick(employee)}
+                    >
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-2 rounded-full mr-3">
@@ -695,14 +707,10 @@ export default function PersonalReportPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-gray-900">
                         {employee.division}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <button
-                          onClick={() => handleEmployeeClick(employee)}
-                          className="bg-purple-100 text-purple-700 px-4 py-2 rounded-lg hover:bg-purple-200 transition-colors flex items-center"
-                        >
-                          <EyeIcon className="h-4 w-4 mr-2" />
-                          Lihat Laporan
-                        </button>
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-900">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          {assessmentCounts[employee.id] || 0}
+                        </span>
                       </td>
                     </tr>
                   ))}

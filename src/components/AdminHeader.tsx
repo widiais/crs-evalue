@@ -16,9 +16,9 @@ export default function AdminHeader() {
   const { user, logout } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     try {
-      await logout();
+      logout();
       router.push('/');
     } catch (error) {
       console.error('Error logging out:', error);
@@ -57,10 +57,10 @@ export default function AdminHeader() {
                 
                 <div className="text-left">
                   <p className="text-sm font-medium text-gray-700">
-                    {user?.displayName || 'Admin'}
+                    {user?.name || 'Admin'}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {user?.username || 'admin'}
+                    {user?.email || 'admin@crs-system.com'}
                   </p>
                 </div>
                 
@@ -75,7 +75,7 @@ export default function AdminHeader() {
                   {/* User Info */}
                   <div className="px-4 py-3 border-b border-gray-100">
                     <p className="text-sm font-medium text-gray-900">
-                      {user?.displayName || 'Admin User'}
+                      {user?.name || 'Admin User'}
                     </p>
                     <p className="text-xs text-gray-500 truncate">
                       {user?.email || 'admin@crs-system.com'}
