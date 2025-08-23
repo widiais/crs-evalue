@@ -7,7 +7,7 @@ import {
   PlusIcon, 
   EyeIcon,
   ArrowLeftIcon,
-  PencilIcon,
+
   ClockIcon,
   KeyIcon,
   PlayIcon,
@@ -17,7 +17,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { assessmentService } from '@/services/assessments';
 import { templateService } from '@/services/templates';
-import { generatePIN } from '@/utils/generatePIN';
+
 import { Assessment, CriteriaTemplate } from '@/types';
 import { POSITIONS } from '@/constants/positions';
 
@@ -26,20 +26,6 @@ export default function AdminAssessmentsPage() {
   const [assessments, setAssessments] = useState<Assessment[]>([]);
   const [templates, setTemplates] = useState<CriteriaTemplate[]>([]);
   const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-  const [showCreateForm, setShowCreateForm] = useState(false);
-  const [editingAssessment, setEditingAssessment] = useState<Assessment | null>(null);
-  
-  const [assessmentForm, setAssessmentForm] = useState({
-    title: '',
-    description: '',
-    pin: '',
-    startDate: '',
-    endDate: '',
-    selectedTemplates: [] as string[],
-    isActive: true,
-    manualPin: false
-  });
 
   useEffect(() => {
     loadData();
@@ -61,107 +47,9 @@ export default function AdminAssessmentsPage() {
     }
   };
 
-  const resetForm = () => {
-    setAssessmentForm({
-      title: '',
-      description: '',
-      pin: '',
-      startDate: '',
-      endDate: '',
-      selectedTemplates: [],
-      isActive: true,
-      manualPin: false
-    });
-    setEditingAssessment(null);
-  };
 
-  const generateNewPIN = () => {
-    const newPin = generatePIN();
-    setAssessmentForm({...assessmentForm, pin: newPin});
-  };
 
-  const toggleTemplateSelection = (templateId: string) => {
-    setAssessmentForm(prev => ({
-      ...prev,
-      selectedTemplates: prev.selectedTemplates.includes(templateId)
-        ? prev.selectedTemplates.filter(id => id !== templateId)
-        : [...prev.selectedTemplates, templateId]
-    }));
-  };
 
-  const handleSubmitAssessment = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!assessmentForm.title.trim()) {
-      alert('Judul assessment harus diisi');
-      return;
-    }
-
-    if (!assessmentForm.pin.trim()) {
-      alert('PIN harus diisi atau generate PIN baru');
-      return;
-    }
-
-    if (assessmentForm.selectedTemplates.length === 0) {
-      alert('Minimal pilih 1 template assessment');
-      return;
-    }
-
-    // Check PIN uniqueness (only for new assessments)
-    if (!editingAssessment && assessments.some(a => a.pin === assessmentForm.pin.toUpperCase())) {
-      alert('PIN sudah digunakan, silakan gunakan PIN lain');
-      return;
-    }
-
-    setSubmitting(true);
-    try {
-      const assessmentData = {
-        title: assessmentForm.title.trim(),
-        description: assessmentForm.description.trim(),
-        templateIds: assessmentForm.selectedTemplates,
-        pin: assessmentForm.pin.toUpperCase(),
-        isActive: assessmentForm.isActive,
-        startDate: assessmentForm.startDate ? new Date(assessmentForm.startDate) : undefined,
-        endDate: assessmentForm.endDate ? new Date(assessmentForm.endDate) : undefined,
-        createdAt: new Date(),
-        createdBy: 'admin'
-      };
-
-      if (editingAssessment) {
-        // Update existing assessment
-        await assessmentService.updateAssessment(editingAssessment.id, assessmentData);
-        alert('✅ Assessment berhasil diperbarui!');
-      } else {
-        // Create new assessment
-        await assessmentService.createAssessment(assessmentData);
-        alert('✅ Assessment berhasil dibuat!');
-      }
-
-      resetForm();
-      setShowCreateForm(false);
-      loadData();
-    } catch (error) {
-      console.error('Error saving assessment:', error);
-      alert('❌ Gagal menyimpan assessment');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleEditAssessment = (assessment: Assessment) => {
-    setAssessmentForm({
-      title: assessment.title,
-      description: assessment.description || '',
-      pin: assessment.pin,
-      startDate: assessment.startDate ? new Date(assessment.startDate).toISOString().split('T')[0] : '',
-      endDate: assessment.endDate ? new Date(assessment.endDate).toISOString().split('T')[0] : '',
-      selectedTemplates: assessment.templateIds,
-      isActive: assessment.isActive,
-      manualPin: true
-    });
-    setEditingAssessment(assessment);
-    setShowCreateForm(true);
-  };
 
   const toggleAssessmentStatus = async (assessment: Assessment) => {
     try {
@@ -250,11 +138,7 @@ export default function AdminAssessmentsPage() {
             </div>
             
             <button
-              onClick={() => {
-                resetForm();
-                    generateNewPIN();
-                setShowCreateForm(true);
-              }}
+              onClick={() => router.push('/admin/assessments/create')}
                   className="flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
             >
               <PlusIcon className="h-5 w-5 mr-2" />
@@ -319,157 +203,7 @@ export default function AdminAssessmentsPage() {
           </div>
         </div>
 
-        {/* Create/Edit Assessment Form Modal */}
-        {showCreateForm && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-              <div className="bg-white rounded-2xl p-6 lg:p-8 w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto shadow-2xl">
-                <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                {editingAssessment ? 'Edit Assessment' : 'Buat Assessment Baru'}
-              </h3>
-              
-              <form onSubmit={handleSubmitAssessment} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Judul Assessment *</label>
-                    <input
-                      type="text"
-                      value={assessmentForm.title}
-                      onChange={(e) => setAssessmentForm({...assessmentForm, title: e.target.value})}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                      placeholder="Contoh: Performance Review Q4 2024"
-                      required
-                    />
-                  </div>
 
-                  <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">PIN Assessment *</label>
-                    <div className="flex space-x-2">
-                      <input
-                        type="text"
-                        value={assessmentForm.pin}
-                        onChange={(e) => setAssessmentForm({...assessmentForm, pin: e.target.value.toUpperCase()})}
-                          className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                        placeholder="Masukkan PIN atau generate otomatis"
-                        maxLength={8}
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={generateNewPIN}
-                          className="px-4 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
-                      >
-                        Generate PIN
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
-                  <textarea
-                    value={assessmentForm.description}
-                    onChange={(e) => setAssessmentForm({...assessmentForm, description: e.target.value})}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                    rows={3}
-                    placeholder="Deskripsi singkat tentang assessment ini..."
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Tanggal Mulai</label>
-                    <input
-                      type="date"
-                      value={assessmentForm.startDate}
-                      onChange={(e) => setAssessmentForm({...assessmentForm, startDate: e.target.value})}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                    />
-                  </div>
-                  
-                  <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Tanggal Berakhir</label>
-                    <input
-                      type="date"
-                      value={assessmentForm.endDate}
-                      onChange={(e) => setAssessmentForm({...assessmentForm, endDate: e.target.value})}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                    />
-                  </div>
-                </div>
-
-                {/* Template Selection by Position */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Pilih Template Assessment berdasarkan Jabatan *</label>
-                    <div className="space-y-4 max-h-60 overflow-y-auto bg-gray-50 rounded-xl p-4">
-                    {POSITIONS.map(position => {
-                      const positionTemplates = getTemplatesByPosition(position);
-                      
-                      if (positionTemplates.length === 0) return null;
-                      
-                      return (
-                          <div key={position} className="border border-gray-200 rounded-xl p-4 bg-white">
-                          <h4 className="font-medium text-gray-900 mb-3">{position}</h4>
-                          <div className="space-y-2">
-                            {positionTemplates.map(template => (
-                                <label key={template.id} className="flex items-center p-2 hover:bg-gray-50 rounded-lg">
-                                <input
-                                  type="checkbox"
-                                  checked={assessmentForm.selectedTemplates.includes(template.id)}
-                                  onChange={() => toggleTemplateSelection(template.id)}
-                                    className="mr-3 w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                                />
-                                <div>
-                                  <p className="text-sm font-medium text-gray-900">Template {template.level}</p>
-                                  <p className="text-xs text-gray-500">
-                                    {template.section1.length} pertanyaan kompetensi, {template.section2.length} pertanyaan semangat
-                                  </p>
-                                </div>
-                              </label>
-                            ))}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <p className="text-xs text-gray-500 mt-2">
-                    Pilih template yang sesuai dengan jabatan yang akan dinilai dalam assessment ini
-                  </p>
-                </div>
-
-                  <div className="flex items-center p-4 bg-gray-50 rounded-xl">
-                  <input
-                    type="checkbox"
-                    checked={assessmentForm.isActive}
-                    onChange={(e) => setAssessmentForm({...assessmentForm, isActive: e.target.checked})}
-                      className="mr-3 w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                  />
-                  <label className="text-sm text-gray-700">Assessment aktif (dapat diakses evaluator)</label>
-                </div>
-
-                <div className="flex space-x-3 pt-4">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowCreateForm(false);
-                      resetForm();
-                    }}
-                      className="flex-1 px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
-                    disabled={submitting}
-                  >
-                    Batal
-                  </button>
-                  <button
-                    type="submit"
-                      className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-50 shadow-lg"
-                    disabled={submitting}
-                  >
-                    {submitting ? 'Menyimpan...' : editingAssessment ? 'Update Assessment' : 'Buat Assessment'}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
 
         {/* Assessments Table */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -573,13 +307,7 @@ export default function AdminAssessmentsPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           <div className="flex space-x-3">
-                          <button
-                            onClick={() => handleEditAssessment(assessment)}
-                              className="text-blue-600 hover:text-blue-900 transition-colors"
-                            title="Edit"
-                          >
-                              <PencilIcon className="h-5 w-5" />
-                          </button>
+
                           <button
                             onClick={() => router.push(`/admin/reports/personal?assessment=${assessment.id}`)}
                               className="text-green-600 hover:text-green-900 transition-colors"

@@ -36,6 +36,12 @@ export interface Assessment {
   endDate?: Date;
   createdAt: Date;
   createdBy: string;
+  filters?: {
+    levels?: string[];
+    divisions?: string[];
+    locations?: string[];
+    employeeCount?: number;
+  };
 }
 
 export interface CriteriaTemplate {

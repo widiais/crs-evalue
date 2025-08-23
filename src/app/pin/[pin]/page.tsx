@@ -148,21 +148,62 @@ export default function AssessmentPage() {
         setAssessment(assessmentData);
 
         // Load all required data in parallel
-        const [employees, divisionsData, templatesData, locationsData] = await Promise.all([
+        const [allEmployeesData, divisionsData, templatesData, locationsData] = await Promise.all([
           employeeService.getAllEmployees(),
           divisionService.getActiveDivisions(),
           templateService.getAllTemplates(),
           locationService.getAllLocations()
         ]);
 
-        setAllEmployees(employees);
-        setFilteredEmployees(employees);
+        // Filter employees based on assessment criteria if available
+        let filteredEmployeesData = allEmployeesData;
+
+        if (assessmentData.filters) {
+          // Apply level filter from assessment
+          if (assessmentData.filters.levels && assessmentData.filters.levels.length > 0) {
+            filteredEmployeesData = filteredEmployeesData.filter(emp =>
+              assessmentData.filters!.levels!.includes(emp.position)
+            );
+          }
+
+          // Apply division filter from assessment
+          if (assessmentData.filters.divisions && assessmentData.filters.divisions.length > 0) {
+            filteredEmployeesData = filteredEmployeesData.filter(emp =>
+              emp.division && assessmentData.filters!.divisions!.includes(emp.division)
+            );
+          }
+
+          // Apply location filter from assessment
+          if (assessmentData.filters.locations && assessmentData.filters.locations.length > 0) {
+            filteredEmployeesData = filteredEmployeesData.filter(emp =>
+              assessmentData.filters!.locations!.includes(emp.location)
+            );
+          }
+        }
+
+        setAllEmployees(filteredEmployeesData);
+        setFilteredEmployees(filteredEmployeesData);
         setDivisions(divisionsData);
         setTemplates(templatesData);
-        // Filter for active locations only
-        const activeLocations = locationsData.filter(location => location.isActive);
-        setLocations(activeLocations);
-        setFilteredLocations(activeLocations);
+
+        // Filter locations based on filtered employees and assessment criteria
+        let relevantLocations = locationsData.filter(location => location.isActive);
+
+        if (assessmentData.filters && assessmentData.filters.locations && assessmentData.filters.locations.length > 0) {
+          // If assessment has specific location filters, only show those locations
+          relevantLocations = relevantLocations.filter(location =>
+            assessmentData.filters!.locations!.includes(location.name)
+          );
+        } else {
+          // Otherwise, show only locations that have employees in the filtered set
+          const employeeLocations = Array.from(new Set(filteredEmployeesData.map(emp => emp.location)));
+          relevantLocations = relevantLocations.filter(location =>
+            employeeLocations.includes(location.name)
+          );
+        }
+
+        setLocations(relevantLocations);
+        setFilteredLocations(relevantLocations);
       } catch (err) {
         console.error('Error loading data:', err);
         setError('Terjadi kesalahan saat memuat data');
